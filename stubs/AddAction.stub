@@ -1,0 +1,23 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Generate\Actions;
+
+use App\Generate\{name};
+
+final class Add{name}
+{
+    public function handle(array $data): int
+    {
+        $model = new {name}();
+
+        $model->fill($data);
+
+        $model->save();
+
+        $model->refresh();
+
+        return $model->id;
+    }
+}

@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Generate;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class {name}Request extends FormRequest
+{
+    public function rules(): array
+    {
+        return [
+            {rules}
+        ];
+    }
+
+    public function authorize(): bool
+    {
+        return true;
+    }
+}

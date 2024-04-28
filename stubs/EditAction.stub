@@ -1,0 +1,21 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Generate\Actions;
+
+use App\Generate\{name};
+
+final class Edit{name}
+{
+    public function handle(int $id, array $data): int
+    {
+        $model = {name}::query()->where('id', $id)->first();
+        
+        $model->fill($data);
+
+        $model->save();
+
+        return $model->id;
+    }
+}
