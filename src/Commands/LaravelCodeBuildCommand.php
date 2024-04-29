@@ -125,7 +125,7 @@ class LaravelCodeBuildCommand extends Command
                 'Http/Requests',
                 'Http/Controllers',
                 'routes',
-                'resource/views'
+                'resources/views'
             ];
 
             if(! $fileSystem->isDirectory($genPath)) {
