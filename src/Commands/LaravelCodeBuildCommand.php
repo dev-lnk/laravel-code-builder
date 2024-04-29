@@ -2,10 +2,7 @@
 
 namespace DevLnk\LaravelCodeBuilder\Commands;
 
-use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
-use DevLnk\LaravelCodeBuilder\Services\Builders\AddActionBuilder;
 use DevLnk\LaravelCodeBuilder\Services\Builders\BuildFactory;
-use DevLnk\LaravelCodeBuilder\Services\Builders\ModelBuilder;
 use DevLnk\LaravelCodeBuilder\Services\CodePath\CodePath;
 use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructure;
 use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructureFactory;
@@ -50,10 +47,10 @@ class LaravelCodeBuildCommand extends Command
         $path = config('code_builder.generation_path') ?? select(
             label: 'Where to generate the result?',
             options: [
-                '_project' => 'In the project directories',
+                '_default' => 'In the project directories',
                 'Generation' => 'To the generation folder: `app/Generation`'
             ],
-            default: '_project'
+            default: '_default'
         );
 
         $this->prepareGeneration($path);
@@ -67,36 +64,58 @@ class LaravelCodeBuildCommand extends Command
         );
 
         $buildFactory->call(BuildType::MODEL, $this->stubDir.'Model');
+        $this->info('The model was created successfully!');
+
+        $buildFactory->call(BuildType::ADD_ACTION, $this->stubDir.'AddAction');
+        $this->info('The AddAction was created successfully!');
     }
 
     private function prepareGeneration(string $path): void
     {
-        $isDir = $path !== '_project';
+        $isDir = $path !== '_default';
 
         $fileSystem = new Filesystem();
 
         $genPath = app_path($path);
 
         if($isDir) {
+            $generateDirs = [
+                'Models',
+                'Actions'
+            ];
+
             if(! $fileSystem->isDirectory($genPath)) {
                 $fileSystem->makeDirectory($genPath, recursive: true);
                 $fileSystem->put($genPath . '/.gitignore', "*\n!.gitignore");
             }
 
-            if(! $fileSystem->isDirectory($genPath . '/Models')) {
-                $fileSystem->makeDirectory($genPath . '/Models');
+            foreach ($generateDirs as $dir) {
+                if(! $fileSystem->isDirectory($genPath . '/' . $dir)) {
+                    $fileSystem->makeDirectory($genPath . '/' . $dir);
+                }
+            }
+        } else {
+            $generateProjectDirs = [
+                'Actions'
+            ];
+
+            foreach ($generateProjectDirs as $dir) {
+                if(! $fileSystem->isDirectory(app_path($dir))) {
+                    $fileSystem->makeDirectory(app_path($dir));
+                }
             }
         }
 
-        $modelName = $this->codeStructure->entity()->ucFirstSingular() . '.php';
-
         $this->codePath
             ->model(
-                $modelName,
-                $isDir ? $genPath . "/Models"
-                    : app_path('Models'),
-                $isDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Models'
-                    : 'App\\Models'
+                $this->codeStructure->entity()->ucFirstSingular() . '.php',
+                $isDir ? $genPath . "/Models" : app_path('Models'),
+                $isDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Models' : 'App\\Models'
+            )
+            ->addAction(
+                'Add' .$this->codeStructure->entity()->ucFirstSingular() . 'Action.php',
+                $isDir ? $genPath . "/Actions" : app_path('Actions'),
+                $isDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Actions' : 'App\\Actions'
             )
         ;
     }

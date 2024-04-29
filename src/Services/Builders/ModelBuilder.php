@@ -5,19 +5,24 @@ declare(strict_types=1);
 namespace DevLnk\LaravelCodeBuilder\Services\Builders;
 
 use DevLnk\LaravelCodeBuilder\Enums\StubValue;
+use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
 use DevLnk\LaravelCodeBuilder\Services\StubBuilder;
+use DevLnk\LaravelCodeBuilder\Types\BuildType;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 class ModelBuilder extends AbstractBuilder
 {
     /**
      * @throws FileNotFoundException
+     * @throws NotFoundCodePathException
      */
     public function build(): void
     {
         if($this->onlyFlag && $this->onlyFlag !== 'model') {
             return;
         }
+
+        $modelPath = $this->codePath->path(BuildType::MODEL);
 
         StubBuilder::make($this->stubFile)
             ->setKey(
@@ -37,8 +42,8 @@ class ModelBuilder extends AbstractBuilder
                 StubValue::TABLE->key(),
                 StubValue::TABLE->value() . " '{$this->codeStructure->table()}';",
                 $this->codeStructure->table() !== $this->codeStructure->entity()->str()->plural()->snake()->value()
-            )->makeFromStub($this->path->file(), [
-                '{namespace}' => $this->path->namespace(),
+            )->makeFromStub($modelPath->file(), [
+                '{namespace}' => $modelPath->namespace(),
                 '{class}' => $this->codeStructure->entity()->ucFirstSingular(),
                 '{fillable}' => $this->codeStructure->columnsToModel(),
             ])

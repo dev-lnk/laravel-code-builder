@@ -28,7 +28,13 @@ final readonly class BuildFactory
         match($buildType) {
             BuildType::MODEL => ModelBuilder::make(
                 $this->codeStructure,
-                $this->codePath->path(BuildType::MODEL),
+                $this->codePath,
+                $this->onlyFlag,
+                $stub,
+            )->build(),
+            BuildType::ADD_ACTION => AddActionBuilder::make(
+                $this->codeStructure,
+                $this->codePath,
                 $this->onlyFlag,
                 $stub,
             )->build()

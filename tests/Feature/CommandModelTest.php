@@ -4,6 +4,7 @@ namespace DevLnk\LaravelCodeBuilder\Tests\Feature;
 
 use DevLnk\LaravelCodeBuilder\Tests\TestCase;
 use Illuminate\Filesystem\Filesystem;
+use PHPUnit\Framework\Attributes\Test;
 
 class CommandModelTest extends TestCase
 {
@@ -21,7 +22,7 @@ class CommandModelTest extends TestCase
     {
         $this->artisan('code:build product --only=model')
             ->expectsQuestion('Table', 'products')
-            ->expectsQuestion('Where to generate the result?', '_project')
+            ->expectsQuestion('Where to generate the result?', '_default')
         ;
 
         $this->assertFileExists($this->modelPath . 'Product.php');
@@ -44,11 +45,40 @@ class CommandModelTest extends TestCase
         $this->assertStringContainsString('sort_number', $file);
     }
 
+    #[Test]
+    public function testProductCustomName()
+    {
+        $this->artisan('code:build foo --only=model')
+            ->expectsQuestion('Table', 'products')
+            ->expectsQuestion('Where to generate the result?', '_default')
+        ;
+
+        $this->assertFileExists($this->modelPath . 'Foo.php');
+
+        $file = (new Filesystem())->get($this->modelPath . 'Foo.php');
+
+        $this->assertStringContainsString('namespace App\Models;', $file);
+        $this->assertStringContainsString('use Illuminate\Database\Eloquent\Model;', $file);
+        $this->assertStringContainsString('protected $fillable = [', $file);
+        $this->assertStringContainsString('class Foo extends Model', $file);
+        $this->assertStringContainsString('use SoftDeletes;', $file);
+        $this->assertStringNotContainsString('public $timestamps = false;', $file);
+        $this->assertStringNotContainsString("protected \$table = 'products';", $file);
+
+        $this->assertStringContainsString('title', $file);
+        $this->assertStringContainsString('content', $file);
+        $this->assertStringContainsString('sort_number', $file);
+        $this->assertStringContainsString('user_id', $file);
+        $this->assertStringContainsString('category_id', $file);
+        $this->assertStringContainsString('is_active', $file);
+        $this->assertStringContainsString('sort_number', $file);
+    }
+
     public function testCategory()
     {
         $this->artisan('code:build category --only=model')
             ->expectsQuestion('Table', 'categories')
-            ->expectsQuestion('Where to generate the result?', '_project')
+            ->expectsQuestion('Where to generate the result?', '_default')
         ;
 
         $this->assertFileExists($this->modelPath . 'Category.php');
@@ -69,6 +99,7 @@ class CommandModelTest extends TestCase
     {
         $file = new Filesystem();
         $file->delete($this->modelPath . 'Product.php');
+        $file->delete($this->modelPath . 'Foo.php');
         $file->delete($this->modelPath . 'Category.php');
 
         parent::tearDown();

@@ -7,4 +7,6 @@ namespace DevLnk\LaravelCodeBuilder\Types;
 final class BuildType
 {
     CONST MODEL = 'model';
+
+    CONST ADD_ACTION = 'addAction';
 }

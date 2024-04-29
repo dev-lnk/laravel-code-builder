@@ -8,9 +8,9 @@ use {model_namespace};
 
 final class Add{name}
 {
-    public function handle(array $data): {name}
+    public function handle(array $data): {model_name}
     {
-        $model = new {name}();
+        $model = new {model_name}();
 
         $model->fill($data);
 

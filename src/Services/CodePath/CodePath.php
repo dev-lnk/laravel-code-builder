@@ -14,22 +14,29 @@ final class CodePath
      */
     private array $paths = [];
 
-    public function model(string $name, string $dir, string $namespace): self
-    {
-        if(isset($this->paths[BuildType::MODEL])) {
-            return $this;
-        }
-
-        $this->paths[BuildType::MODEL] = new ModelPath($name, $dir, $namespace);
-
-        return $this;
-    }
-
     /**
      * @throws NotFoundCodePathException
      */
     public function path(string $alias): CodePathContract
     {
         return $this->paths[$alias] ?? throw new NotFoundCodePathException();
+    }
+
+    public function model(string $name, string $dir, string $namespace): self
+    {
+        if(isset($this->paths[BuildType::MODEL])) {
+            return $this;
+        }
+        $this->paths[BuildType::MODEL] = new ModelPath($name, $dir, $namespace);
+        return $this;
+    }
+
+    public function addAction(string $name, string $dir, string $namespace): self
+    {
+        if(isset($this->paths[BuildType::ADD_ACTION])) {
+            return $this;
+        }
+        $this->paths[BuildType::ADD_ACTION] = new AddActionPath($name, $dir, $namespace);
+        return $this;
     }
 }

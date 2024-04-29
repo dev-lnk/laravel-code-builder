@@ -27,4 +27,9 @@ abstract readonly class AbstractPath implements CodePathContract
     {
         return $this->namespace;
     }
+
+    public function rawName(): string
+    {
+        return str_replace('.php', '', $this->name());
+    }
 }
