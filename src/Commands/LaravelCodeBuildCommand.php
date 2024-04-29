@@ -14,6 +14,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Schema;
 use Throwable;
 
+use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\select;
 
 class LaravelCodeBuildCommand extends Command
@@ -23,6 +24,11 @@ class LaravelCodeBuildCommand extends Command
     private CodePath $codePath;
 
     private CodeStructure $codeStructure;
+
+    /**
+     * @var array<string, string>
+     */
+    private array $replaceCautions = [];
 
     /**
      * @throws FileNotFoundException|Throwable
@@ -77,38 +83,87 @@ class LaravelCodeBuildCommand extends Command
         );
 
         if(! $onlyFlag || $onlyFlag === BuildType::MODEL) {
-            $buildFactory->call(BuildType::MODEL, $stubDir .'Model');
-            $this->info('Model was created successfully!');
+            $confirmed = true;
+            if(isset($this->replaceCautions[BuildType::MODEL])) {
+                $confirmed = confirm($this->replaceCautions[BuildType::MODEL]);
+            }
+
+            if($confirmed) {
+                $buildFactory->call(BuildType::MODEL, $stubDir .'Model');
+                $this->info('Model was created successfully!');
+            }
         }
 
         if(! $onlyFlag || $onlyFlag === BuildType::ADD_ACTION) {
-            $buildFactory->call(BuildType::ADD_ACTION, $stubDir .'AddAction');
-            $this->info('AddAction was created successfully!');
+            $confirmed = true;
+            if(isset($this->replaceCautions[BuildType::ADD_ACTION])) {
+                $confirmed = confirm($this->replaceCautions[BuildType::ADD_ACTION]);
+            }
+
+            if($confirmed) {
+                $buildFactory->call(BuildType::ADD_ACTION, $stubDir . 'AddAction');
+                $this->info('AddAction was created successfully!');
+            }
         }
 
         if(! $onlyFlag || $onlyFlag === BuildType::EDIT_ACTION) {
-            $buildFactory->call(BuildType::EDIT_ACTION, $stubDir .'EditAction');
-            $this->info('EditAction was created successfully!');
+            $confirmed = true;
+            if(isset($this->replaceCautions[BuildType::EDIT_ACTION])) {
+                $confirmed = confirm($this->replaceCautions[BuildType::EDIT_ACTION]);
+            }
+
+            if($confirmed) {
+                $buildFactory->call(BuildType::EDIT_ACTION, $stubDir . 'EditAction');
+                $this->info('EditAction was created successfully!');
+            }
         }
 
         if(! $onlyFlag || $onlyFlag === BuildType::REQUEST) {
-            $buildFactory->call(BuildType::REQUEST, $stubDir .'Request');
-            $this->info('FormRequest was created successfully!');
+            $confirmed = true;
+            if(isset($this->replaceCautions[BuildType::REQUEST])) {
+                $confirmed = confirm($this->replaceCautions[BuildType::REQUEST]);
+            }
+
+            if($confirmed) {
+                $buildFactory->call(BuildType::REQUEST, $stubDir . 'Request');
+                $this->info('FormRequest was created successfully!');
+            }
         }
 
         if(! $onlyFlag || $onlyFlag === BuildType::CONTROLLER) {
-            $buildFactory->call(BuildType::CONTROLLER, $stubDir .'Controller');
-            $this->info('Controller was created successfully!');
+            $confirmed = true;
+            if(isset($this->replaceCautions[BuildType::CONTROLLER])) {
+                $confirmed = confirm($this->replaceCautions[BuildType::CONTROLLER]);
+            }
+
+            if($confirmed) {
+                $buildFactory->call(BuildType::CONTROLLER, $stubDir . 'Controller');
+                $this->info('Controller was created successfully!');
+            }
         }
 
         if(! $onlyFlag || $onlyFlag === BuildType::ROUTE) {
-            $buildFactory->call(BuildType::ROUTE, $stubDir .'Route');
-            $this->info('Route was created successfully!');
+            $confirmed = true;
+            if(isset($this->replaceCautions[BuildType::ROUTE])) {
+                $confirmed = confirm($this->replaceCautions[BuildType::ROUTE]);
+            }
+
+            if($confirmed) {
+                $buildFactory->call(BuildType::ROUTE, $stubDir . 'Route');
+                $this->info('Route was created successfully!');
+            }
         }
 
         if(! $onlyFlag || $onlyFlag === BuildType::FORM) {
-            $buildFactory->call(BuildType::FORM, $stubDir .'Form');
-            $this->info('Form was created successfully!');
+            $confirmed = true;
+            if(isset($this->replaceCautions[BuildType::FORM])) {
+                $confirmed = confirm($this->replaceCautions[BuildType::FORM]);
+            }
+
+            if($confirmed) {
+                $buildFactory->call(BuildType::FORM, $stubDir . 'Form');
+                $this->info('Form was created successfully!');
+            }
         }
     }
 
@@ -186,5 +241,23 @@ class LaravelCodeBuildCommand extends Command
                 ''
             )
         ;
+
+        if(! $isDir) {
+            $this->replaceCautions = [
+                BuildType::MODEL => "Model already exists, are you sure you want to replace it?",
+                BuildType::ADD_ACTION => "AddAction already exists, are you sure you want to replace it?",
+                BuildType::EDIT_ACTION => "EditAction already exists, are you sure you want to replace it?",
+                BuildType::REQUEST => "Request already exists, are you sure you want to replace it?",
+                BuildType::CONTROLLER => "Controller already exists, are you sure you want to replace it?",
+                BuildType::ROUTE => "Route already exists, are you sure you want to replace it?",
+                BuildType::FORM => "Form already exists, are you sure you want to replace it?",
+            ];
+
+            foreach ($this->replaceCautions as $buildType => $caution) {
+                if(! $fileSystem->isFile($this->codePath->path($buildType)->file())) {
+                    unset($this->replaceCautions[$buildType]);
+                }
+            }
+        }
     }
 }
