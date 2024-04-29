@@ -18,10 +18,6 @@ class ModelBuilder extends AbstractBuilder
      */
     public function build(): void
     {
-        if($this->onlyFlag && $this->onlyFlag !== 'model') {
-            return;
-        }
-
         $modelPath = $this->codePath->path(BuildType::MODEL);
 
         StubBuilder::make($this->stubFile)

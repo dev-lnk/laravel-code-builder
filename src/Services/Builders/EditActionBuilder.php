@@ -17,10 +17,6 @@ final class EditActionBuilder extends AbstractBuilder
      */
     public function build(): void
     {
-        if($this->onlyFlag && $this->onlyFlag !== 'editAction') {
-            return;
-        }
-
         $actionPath = $this->codePath->path(BuildType::EDIT_ACTION);
         $modelPath = $this->codePath->path(BuildType::MODEL);
 

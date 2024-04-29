@@ -16,7 +16,7 @@ final readonly class BuildFactory
     public function __construct(
         private CodeStructure $codeStructure,
         private CodePath $codePath,
-        private ?string $onlyFlag
+
     ) {
     }
 
@@ -31,25 +31,21 @@ final readonly class BuildFactory
             BuildType::MODEL => ModelBuilder::make(
                 $this->codeStructure,
                 $this->codePath,
-                $this->onlyFlag,
                 $stub,
             )->build(),
             BuildType::ADD_ACTION => AddActionBuilder::make(
                 $this->codeStructure,
                 $this->codePath,
-                $this->onlyFlag,
                 $stub,
             )->build(),
             BuildType::EDIT_ACTION => EditActionBuilder::make(
                 $this->codeStructure,
                 $this->codePath,
-                $this->onlyFlag,
                 $stub,
             )->build(),
             BuildType::REQUEST => RequestBuilder::make(
                 $this->codeStructure,
                 $this->codePath,
-                $this->onlyFlag,
                 $stub,
             )->build(),
             default => throw new NotFoundBuilderException()

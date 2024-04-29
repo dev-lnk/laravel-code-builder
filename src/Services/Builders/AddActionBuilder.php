@@ -17,10 +17,6 @@ class AddActionBuilder extends AbstractBuilder
      */
     public function build(): void
     {
-        if($this->onlyFlag && $this->onlyFlag !== 'addAction') {
-            return;
-        }
-
         $actionPath = $this->codePath->path(BuildType::ADD_ACTION);
         $modelPath = $this->codePath->path(BuildType::MODEL);
 

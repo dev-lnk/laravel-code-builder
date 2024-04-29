@@ -72,20 +72,27 @@ class LaravelCodeBuildCommand extends Command
         $buildFactory = new BuildFactory(
             $this->codeStructure,
             $this->codePath,
-            (string) $onlyFlag
         );
 
-        $buildFactory->call(BuildType::MODEL, $this->stubDir.'Model');
-        $this->info('The model was created successfully!');
+        if(! $onlyFlag || $onlyFlag === BuildType::MODEL) {
+            $buildFactory->call(BuildType::MODEL, $this->stubDir.'Model');
+            $this->info('The model was created successfully!');
+        }
 
-        $buildFactory->call(BuildType::ADD_ACTION, $this->stubDir.'AddAction');
-        $this->info('The AddAction was created successfully!');
+        if(! $onlyFlag || $onlyFlag === BuildType::ADD_ACTION) {
+            $buildFactory->call(BuildType::ADD_ACTION, $this->stubDir.'AddAction');
+            $this->info('The AddAction was created successfully!');
+        }
 
-        $buildFactory->call(BuildType::EDIT_ACTION, $this->stubDir.'EditAction');
-        $this->info('The EditAction was created successfully!');
+        if(! $onlyFlag || $onlyFlag === BuildType::EDIT_ACTION) {
+            $buildFactory->call(BuildType::EDIT_ACTION, $this->stubDir.'EditAction');
+            $this->info('The EditAction was created successfully!');
+        }
 
-        $buildFactory->call(BuildType::REQUEST, $this->stubDir.'Request');
-        $this->info('The FormRequest was created successfully!');
+        if(! $onlyFlag || $onlyFlag === BuildType::REQUEST) {
+            $buildFactory->call(BuildType::REQUEST, $this->stubDir.'Request');
+            $this->info('The FormRequest was created successfully!');
+        }
     }
 
     private function prepareGeneration(string $path): void

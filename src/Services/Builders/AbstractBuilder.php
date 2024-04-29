@@ -16,7 +16,6 @@ abstract class AbstractBuilder implements BuilderContract
     public function __construct(
         protected CodeStructure $codeStructure,
         protected CodePath $codePath,
-        protected ?string $onlyFlag,
         protected string $stubFile,
     ) {
     }

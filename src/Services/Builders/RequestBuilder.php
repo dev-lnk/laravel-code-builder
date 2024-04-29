@@ -17,10 +17,6 @@ final class RequestBuilder extends AbstractBuilder
      */
     public function build(): void
     {
-        if($this->onlyFlag && $this->onlyFlag !== 'request') {
-            return;
-        }
-
         $requestPath = $this->codePath->path(BuildType::REQUEST);
 
         StubBuilder::make($this->stubFile)
