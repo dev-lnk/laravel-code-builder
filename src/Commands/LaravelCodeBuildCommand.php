@@ -2,11 +2,12 @@
 
 namespace DevLnk\LaravelCodeBuilder\Commands;
 
+use DevLnk\LaravelCodeBuilder\Enums\BuildType;
+use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
 use DevLnk\LaravelCodeBuilder\Services\Builders\BuildFactory;
 use DevLnk\LaravelCodeBuilder\Services\CodePath\CodePath;
 use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructure;
 use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructureFactory;
-use DevLnk\LaravelCodeBuilder\Types\BuildType;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
@@ -29,6 +30,19 @@ class LaravelCodeBuildCommand extends Command
      * @var array<string, string>
      */
     private array $replaceCautions = [];
+
+    /**
+     * @var array<int, BuildType> $builders
+     */
+    private array $builders = [
+        BuildType::MODEL,
+        BuildType::ADD_ACTION,
+        BuildType::EDIT_ACTION,
+        BuildType::REQUEST,
+        BuildType::CONTROLLER,
+        BuildType::ROUTE,
+        BuildType::FORM,
+    ];
 
     /**
      * @throws FileNotFoundException|Throwable
@@ -82,91 +96,24 @@ class LaravelCodeBuildCommand extends Command
             $this->codePath,
         );
 
-        if(! $onlyFlag || $onlyFlag === BuildType::MODEL) {
-            $confirmed = true;
-            if(isset($this->replaceCautions[BuildType::MODEL])) {
-                $confirmed = confirm($this->replaceCautions[BuildType::MODEL]);
-            }
+        foreach ($this->builders as $builder) {
+            if(! $onlyFlag || $onlyFlag === $builder->value) {
+                $confirmed = true;
+                if(isset($this->replaceCautions[$builder->value])) {
+                    $confirmed = confirm($this->replaceCautions[$builder->value]);
+                }
 
-            if($confirmed) {
-                $buildFactory->call(BuildType::MODEL, $stubDir .'Model');
-                $this->info('Model was created successfully!');
-            }
-        }
-
-        if(! $onlyFlag || $onlyFlag === BuildType::ADD_ACTION) {
-            $confirmed = true;
-            if(isset($this->replaceCautions[BuildType::ADD_ACTION])) {
-                $confirmed = confirm($this->replaceCautions[BuildType::ADD_ACTION]);
-            }
-
-            if($confirmed) {
-                $buildFactory->call(BuildType::ADD_ACTION, $stubDir . 'AddAction');
-                $this->info('AddAction was created successfully!');
-            }
-        }
-
-        if(! $onlyFlag || $onlyFlag === BuildType::EDIT_ACTION) {
-            $confirmed = true;
-            if(isset($this->replaceCautions[BuildType::EDIT_ACTION])) {
-                $confirmed = confirm($this->replaceCautions[BuildType::EDIT_ACTION]);
-            }
-
-            if($confirmed) {
-                $buildFactory->call(BuildType::EDIT_ACTION, $stubDir . 'EditAction');
-                $this->info('EditAction was created successfully!');
-            }
-        }
-
-        if(! $onlyFlag || $onlyFlag === BuildType::REQUEST) {
-            $confirmed = true;
-            if(isset($this->replaceCautions[BuildType::REQUEST])) {
-                $confirmed = confirm($this->replaceCautions[BuildType::REQUEST]);
-            }
-
-            if($confirmed) {
-                $buildFactory->call(BuildType::REQUEST, $stubDir . 'Request');
-                $this->info('FormRequest was created successfully!');
-            }
-        }
-
-        if(! $onlyFlag || $onlyFlag === BuildType::CONTROLLER) {
-            $confirmed = true;
-            if(isset($this->replaceCautions[BuildType::CONTROLLER])) {
-                $confirmed = confirm($this->replaceCautions[BuildType::CONTROLLER]);
-            }
-
-            if($confirmed) {
-                $buildFactory->call(BuildType::CONTROLLER, $stubDir . 'Controller');
-                $this->info('Controller was created successfully!');
-            }
-        }
-
-        if(! $onlyFlag || $onlyFlag === BuildType::ROUTE) {
-            $confirmed = true;
-            if(isset($this->replaceCautions[BuildType::ROUTE])) {
-                $confirmed = confirm($this->replaceCautions[BuildType::ROUTE]);
-            }
-
-            if($confirmed) {
-                $buildFactory->call(BuildType::ROUTE, $stubDir . 'Route');
-                $this->info('Route was created successfully!');
-            }
-        }
-
-        if(! $onlyFlag || $onlyFlag === BuildType::FORM) {
-            $confirmed = true;
-            if(isset($this->replaceCautions[BuildType::FORM])) {
-                $confirmed = confirm($this->replaceCautions[BuildType::FORM]);
-            }
-
-            if($confirmed) {
-                $buildFactory->call(BuildType::FORM, $stubDir . 'Form');
-                $this->info('Form was created successfully!');
+                if($confirmed) {
+                    $buildFactory->call($builder->value, $stubDir . $builder->stub());
+                    $this->info($builder->stub() . ' was created successfully!');
+                }
             }
         }
     }
 
+    /**
+     * @throws NotFoundCodePathException
+     */
     private function prepareGeneration(string $path): void
     {
         $isDir = $path !== '_default';
@@ -243,19 +190,9 @@ class LaravelCodeBuildCommand extends Command
         ;
 
         if(! $isDir) {
-            $this->replaceCautions = [
-                BuildType::MODEL => "Model already exists, are you sure you want to replace it?",
-                BuildType::ADD_ACTION => "AddAction already exists, are you sure you want to replace it?",
-                BuildType::EDIT_ACTION => "EditAction already exists, are you sure you want to replace it?",
-                BuildType::REQUEST => "Request already exists, are you sure you want to replace it?",
-                BuildType::CONTROLLER => "Controller already exists, are you sure you want to replace it?",
-                BuildType::ROUTE => "Route already exists, are you sure you want to replace it?",
-                BuildType::FORM => "Form already exists, are you sure you want to replace it?",
-            ];
-
-            foreach ($this->replaceCautions as $buildType => $caution) {
-                if(! $fileSystem->isFile($this->codePath->path($buildType)->file())) {
-                    unset($this->replaceCautions[$buildType]);
+            foreach ($this->builders as $buildType) {
+                if($fileSystem->isFile($this->codePath->path($buildType->value)->file())) {
+                    $this->replaceCautions[$buildType->value] = $buildType->stub() . " already exists, are you sure you want to replace it?";
                 }
             }
         }

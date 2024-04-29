@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace DevLnk\LaravelCodeBuilder\Services\Builders;
 
+use DevLnk\LaravelCodeBuilder\Enums\BuildType;
 use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
 use DevLnk\LaravelCodeBuilder\Services\StubBuilder;
-use DevLnk\LaravelCodeBuilder\Types\BuildType;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 class AddActionBuilder extends AbstractBuilder
@@ -17,8 +17,8 @@ class AddActionBuilder extends AbstractBuilder
      */
     public function build(): void
     {
-        $actionPath = $this->codePath->path(BuildType::ADD_ACTION);
-        $modelPath = $this->codePath->path(BuildType::MODEL);
+        $actionPath = $this->codePath->path(BuildType::ADD_ACTION->value);
+        $modelPath = $this->codePath->path(BuildType::MODEL->value);
 
         StubBuilder::make($this->stubFile)
             ->makeFromStub($actionPath->file(), [

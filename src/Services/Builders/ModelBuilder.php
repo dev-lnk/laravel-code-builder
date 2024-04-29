@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace DevLnk\LaravelCodeBuilder\Services\Builders;
 
+use DevLnk\LaravelCodeBuilder\Enums\BuildType;
 use DevLnk\LaravelCodeBuilder\Enums\StubValue;
 use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
 use DevLnk\LaravelCodeBuilder\Services\StubBuilder;
-use DevLnk\LaravelCodeBuilder\Types\BuildType;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 class ModelBuilder extends AbstractBuilder
@@ -18,7 +18,7 @@ class ModelBuilder extends AbstractBuilder
      */
     public function build(): void
     {
-        $modelPath = $this->codePath->path(BuildType::MODEL);
+        $modelPath = $this->codePath->path(BuildType::MODEL->value);
 
         StubBuilder::make($this->stubFile)
             ->setKey(

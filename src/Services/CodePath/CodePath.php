@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace DevLnk\LaravelCodeBuilder\Services\CodePath;
 
+use DevLnk\LaravelCodeBuilder\Enums\BuildType;
 use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
-use DevLnk\LaravelCodeBuilder\Types\BuildType;
 
 final class CodePath
 {
@@ -24,64 +24,64 @@ final class CodePath
 
     public function model(string $name, string $dir, string $namespace): self
     {
-        if(isset($this->paths[BuildType::MODEL])) {
+        if(isset($this->paths[BuildType::MODEL->value])) {
             return $this;
         }
-        $this->paths[BuildType::MODEL] = new ModelPath($name, $dir, $namespace);
+        $this->paths[BuildType::MODEL->value] = new ModelPath($name, $dir, $namespace);
         return $this;
     }
 
     public function addAction(string $name, string $dir, string $namespace): self
     {
-        if(isset($this->paths[BuildType::ADD_ACTION])) {
+        if(isset($this->paths[BuildType::ADD_ACTION->value])) {
             return $this;
         }
-        $this->paths[BuildType::ADD_ACTION] = new AddActionPath($name, $dir, $namespace);
+        $this->paths[BuildType::ADD_ACTION->value] = new AddActionPath($name, $dir, $namespace);
         return $this;
     }
 
     public function editAction(string $name, string $dir, string $namespace): self
     {
-        if(isset($this->paths[BuildType::EDIT_ACTION])) {
+        if(isset($this->paths[BuildType::EDIT_ACTION->value])) {
             return $this;
         }
-        $this->paths[BuildType::EDIT_ACTION] = new EditActionPath($name, $dir, $namespace);
+        $this->paths[BuildType::EDIT_ACTION->value] = new EditActionPath($name, $dir, $namespace);
         return $this;
     }
 
     public function request(string $name, string $dir, string $namespace): self
     {
-        if(isset($this->paths[BuildType::REQUEST])) {
+        if(isset($this->paths[BuildType::REQUEST->value])) {
             return $this;
         }
-        $this->paths[BuildType::REQUEST] = new RequestPath($name, $dir, $namespace);
+        $this->paths[BuildType::REQUEST->value] = new RequestPath($name, $dir, $namespace);
         return $this;
     }
 
     public function controller(string $name, string $dir, string $namespace): self
     {
-        if(isset($this->paths[BuildType::CONTROLLER])) {
+        if(isset($this->paths[BuildType::CONTROLLER->value])) {
             return $this;
         }
-        $this->paths[BuildType::CONTROLLER] = new ControllerPath($name, $dir, $namespace);
+        $this->paths[BuildType::CONTROLLER->value] = new ControllerPath($name, $dir, $namespace);
         return $this;
     }
 
     public function route(string $name, string $dir, string $namespace): self
     {
-        if(isset($this->paths[BuildType::ROUTE])) {
+        if(isset($this->paths[BuildType::ROUTE->value])) {
             return $this;
         }
-        $this->paths[BuildType::ROUTE] = new RoutePath($name, $dir, $namespace);
+        $this->paths[BuildType::ROUTE->value] = new RoutePath($name, $dir, $namespace);
         return $this;
     }
 
     public function form(string $name, string $dir, string $namespace): self
     {
-        if(isset($this->paths[BuildType::FORM])) {
+        if(isset($this->paths[BuildType::FORM->value])) {
             return $this;
         }
-        $this->paths[BuildType::FORM] = new FormPath($name, $dir, $namespace);
+        $this->paths[BuildType::FORM->value] = new FormPath($name, $dir, $namespace);
         return $this;
     }
 }

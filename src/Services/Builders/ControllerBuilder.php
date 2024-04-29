@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace DevLnk\LaravelCodeBuilder\Services\Builders;
 
+use DevLnk\LaravelCodeBuilder\Enums\BuildType;
 use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
 use DevLnk\LaravelCodeBuilder\Services\StubBuilder;
-use DevLnk\LaravelCodeBuilder\Types\BuildType;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 final class ControllerBuilder extends AbstractBuilder
@@ -18,10 +18,10 @@ final class ControllerBuilder extends AbstractBuilder
      */
     public function build(): void
     {
-        $controllerPath = $this->codePath->path(BuildType::CONTROLLER);
-        $addActionPath = $this->codePath->path(BuildType::ADD_ACTION);
-        $editActionPath = $this->codePath->path(BuildType::EDIT_ACTION);
-        $requestPath = $this->codePath->path(BuildType::REQUEST);
+        $controllerPath = $this->codePath->path(BuildType::CONTROLLER->value);
+        $addActionPath = $this->codePath->path(BuildType::ADD_ACTION->value);
+        $editActionPath = $this->codePath->path(BuildType::EDIT_ACTION->value);
+        $requestPath = $this->codePath->path(BuildType::REQUEST->value);
 
         StubBuilder::make($this->stubFile)
             ->makeFromStub($controllerPath->file(), [
