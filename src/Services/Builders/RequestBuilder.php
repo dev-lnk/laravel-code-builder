@@ -22,7 +22,7 @@ final class RequestBuilder extends AbstractBuilder
         StubBuilder::make($this->stubFile)
             ->makeFromStub($requestPath->file(), [
                 '{namespace}' => $requestPath->namespace(),
-                '{name}' => $this->codeStructure->entity()->ucFirstSingular(),
+                '{name}' => $requestPath->rawName(),
                 '{rules}' => $this->codeStructure->columnsToRules(),
             ]);
     }

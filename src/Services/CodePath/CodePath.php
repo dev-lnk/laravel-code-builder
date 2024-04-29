@@ -57,4 +57,13 @@ final class CodePath
         $this->paths[BuildType::REQUEST] = new RequestPath($name, $dir, $namespace);
         return $this;
     }
+
+    public function controller(string $name, string $dir, string $namespace): self
+    {
+        if(isset($this->paths[BuildType::CONTROLLER])) {
+            return $this;
+        }
+        $this->paths[BuildType::CONTROLLER] = new ControllerPath($name, $dir, $namespace);
+        return $this;
+    }
 }

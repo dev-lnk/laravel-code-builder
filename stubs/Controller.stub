@@ -1,0 +1,30 @@
+<?php
+
+namespace {namespace};
+
+use Illuminate\Http\RedirectResponse;
+use App\Http\Controllers\Controller;
+use {add_action_namespace};
+use {edit_action_namespace};
+use {request_namespace};
+
+class {name} extends Controller
+{
+    public function store({request_name} $request, {add_action_name} $action): RedirectResponse
+    {
+        $data = $request->validated();
+        
+        $model = $action->handle($data);
+
+        return back();
+    }
+
+    public function edit({request_name} $request, {edit_action_name} $action): RedirectResponse
+    {
+        $data = $request->validated();
+
+        $model = $action->handle((int) $data['id'], $data);
+
+        return back();
+    }
+}

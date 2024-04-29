@@ -93,6 +93,11 @@ class LaravelCodeBuildCommand extends Command
             $buildFactory->call(BuildType::REQUEST, $this->stubDir.'Request');
             $this->info('The FormRequest was created successfully!');
         }
+
+        if(! $onlyFlag || $onlyFlag === BuildType::CONTROLLER) {
+            $buildFactory->call(BuildType::CONTROLLER, $this->stubDir.'Controller');
+            $this->info('The Controller was created successfully!');
+        }
     }
 
     private function prepareGeneration(string $path): void
@@ -107,7 +112,8 @@ class LaravelCodeBuildCommand extends Command
             $generateDirs = [
                 'Models',
                 'Actions',
-                'Http/Requests'
+                'Http/Requests',
+                'Http/Controllers',
             ];
 
             if(! $fileSystem->isDirectory($genPath)) {
@@ -123,7 +129,8 @@ class LaravelCodeBuildCommand extends Command
         } else {
             $generateProjectDirs = [
                 'Actions',
-                'Http/Requests'
+                'Http/Requests',
+                'Http/Controllers',
             ];
 
             foreach ($generateProjectDirs as $dir) {
@@ -151,6 +158,10 @@ class LaravelCodeBuildCommand extends Command
                 $this->codeStructure->entity()->ucFirstSingular() . 'Request.php',
                 $isDir ? $genPath . "/Http/Requests" : app_path('Http/Requests'),
                 $isDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Http\\Requests' : 'App\\Http\\Requests'
+            )->controller(
+                $this->codeStructure->entity()->ucFirstSingular() . 'Controller.php',
+                $isDir ? $genPath . "/Http/Controllers" : app_path('Http/Controllers'),
+                $isDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Http\\Controllers' : 'App\\Http\\Controllers'
             )
         ;
     }

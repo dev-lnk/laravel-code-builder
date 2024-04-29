@@ -13,4 +13,6 @@ final class BuildType
     CONST EDIT_ACTION = 'editAction';
 
     CONST REQUEST = 'request';
+
+    CONST CONTROLLER = 'controller';
 }
