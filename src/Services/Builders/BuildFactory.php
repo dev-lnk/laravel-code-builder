@@ -58,6 +58,11 @@ final readonly class BuildFactory
                 $this->codePath,
                 $stub,
             )->build(),
+            BuildType::FORM => FormBuilder::make(
+                $this->codeStructure,
+                $this->codePath,
+                $stub,
+            )->build(),
             default => throw new NotFoundBuilderException()
         };
     }

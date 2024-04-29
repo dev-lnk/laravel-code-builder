@@ -17,4 +17,6 @@ final class BuildType
     CONST CONTROLLER = 'controller';
 
     CONST ROUTE = 'route';
+
+    CONST FORM = 'form';
 }

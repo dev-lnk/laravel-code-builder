@@ -63,6 +63,11 @@ final class ColumnStructure
         return $this->column() === 'deleted_at';
     }
 
+    public function isId(): bool
+    {
+        return  SqlTypeMap::from($this->type())->isIdType();
+    }
+
     public function isLaravelTimestamp(): bool
     {
         return $this->isCreatedAt() || $this->isUpdatedAt() || $this->isDeletedAt();

@@ -139,4 +139,39 @@ class CodeStructure
 
         return $result;
     }
+
+    public function columnsToForm(): string
+    {
+        $result = "";
+
+        foreach ($this->columns as $column) {
+            if(
+                in_array($column->column(), $this->dateColumns())
+                || $column->isId()
+            ) {
+                continue;
+            }
+
+            $result .= str("<div>")
+                ->newLine()
+                ->append("\t\t")
+                ->append("<label for=\"{$column->column()}\">{$column->column()}</label>")
+                ->newLine()
+                ->append("\t\t")
+                ->append("<input id=\"{$column->column()}\" name=\"{$column->column()}\"")
+                ->prepend("\t")
+                ->prepend("\n")
+                ->when($column->inputType() !== 'text',
+                    fn($str) => $str->append(" type=\"{$column->inputType()}\"")
+                )
+                ->append('/>')
+                ->newLine()
+                ->append("\t")
+                ->append('</div>')
+                ->value()
+            ;
+        }
+
+        return $result;
+    }
 }

@@ -1,3 +1,4 @@
-<form>
-    {inputs}
+<form action="{{ route('{name}.store') }}" method="POST">
+    @csrf{inputs}
+    <button type="submit">Submit</button>
 </form>

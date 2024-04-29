@@ -103,6 +103,11 @@ class LaravelCodeBuildCommand extends Command
             $buildFactory->call(BuildType::ROUTE, $this->stubDir.'Route');
             $this->info('Route was created successfully!');
         }
+
+        if(! $onlyFlag || $onlyFlag === BuildType::FORM) {
+            $buildFactory->call(BuildType::FORM, $this->stubDir.'Form');
+            $this->info('Form was created successfully!');
+        }
     }
 
     private function prepareGeneration(string $path): void
@@ -120,6 +125,7 @@ class LaravelCodeBuildCommand extends Command
                 'Http/Requests',
                 'Http/Controllers',
                 'routes',
+                'resource/views'
             ];
 
             if(! $fileSystem->isDirectory($genPath)) {
@@ -172,6 +178,10 @@ class LaravelCodeBuildCommand extends Command
             )->route(
                 $this->codeStructure->entity()->lower(). '.php',
                 $isDir ? $genPath . "/routes" : base_path('routes'),
+                ''
+            )->form(
+                $this->codeStructure->entity()->lower(). '.blade.php',
+                $isDir ? $genPath . "/resources/views" : base_path('resources/views'),
                 ''
             )
         ;

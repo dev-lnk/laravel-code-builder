@@ -75,4 +75,13 @@ final class CodePath
         $this->paths[BuildType::ROUTE] = new RoutePath($name, $dir, $namespace);
         return $this;
     }
+
+    public function form(string $name, string $dir, string $namespace): self
+    {
+        if(isset($this->paths[BuildType::FORM])) {
+            return $this;
+        }
+        $this->paths[BuildType::FORM] = new FormPath($name, $dir, $namespace);
+        return $this;
+    }
 }
