@@ -56,6 +56,17 @@ final class StubBuilder
         );
     }
 
+    /**
+     * @param array<string, string> $replace
+     *
+     * @return string
+     */
+    public function getFromStub(array $replace = []): string
+    {
+        $this->removeKeys()->replaceKeys($this->replacers);
+        return $this->replaceKeys($replace);
+    }
+
     public function setKey(string $key, string $text, bool|Closure $isAdd = true): self
     {
         $isAdd = is_callable($isAdd) ? $isAdd() : $isAdd;

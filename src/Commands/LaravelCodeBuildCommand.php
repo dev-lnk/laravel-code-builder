@@ -53,6 +53,8 @@ class LaravelCodeBuildCommand extends Command
 
         $this->codeStructure = CodeStructureFactory::makeFromTable((string) $table, (string) $entity);
 
+        $this->codeStructure->setStubDir($this->stubDir);
+
         $path = config('code_builder.generation_path') ?? select(
             label: 'Where to generate the result?',
             options: [
@@ -143,7 +145,6 @@ class LaravelCodeBuildCommand extends Command
                 'Actions',
                 'Http/Requests',
                 'Http/Controllers',
-                'routes',
             ];
 
             foreach ($generateProjectDirs as $dir) {

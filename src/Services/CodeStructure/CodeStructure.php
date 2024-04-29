@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace DevLnk\LaravelCodeBuilder\Services\CodeStructure;
 
 use DevLnk\LaravelCodeBuilder\Enums\SqlTypeMap;
+use DevLnk\LaravelCodeBuilder\Services\StubBuilder;
 use DevLnk\LaravelCodeBuilder\Support\NameStr;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 class CodeStructure
 {
@@ -15,6 +17,8 @@ class CodeStructure
     private array $columns = [];
 
     private readonly NameStr $entity;
+
+    private string $stubDir;
 
     private bool $isCreatedAt = false;
 
@@ -27,6 +31,16 @@ class CodeStructure
         string $entity
     ) {
         $this->entity = new NameStr(str($entity)->camel()->value());
+    }
+
+    public function setStubDir(string $stubDir): void
+    {
+        $this->stubDir = $stubDir;
+    }
+
+    public function stubDir(): string
+    {
+        return $this->stubDir;
     }
 
     public function table(): string
@@ -140,6 +154,9 @@ class CodeStructure
         return $result;
     }
 
+    /**
+     * @throws FileNotFoundException
+     */
     public function columnsToForm(): string
     {
         $result = "";
@@ -152,23 +169,18 @@ class CodeStructure
                 continue;
             }
 
-            $result .= str("<div>")
-                ->newLine()
-                ->append("\t\t")
-                ->append("<label for=\"{$column->column()}\">{$column->column()}</label>")
-                ->newLine()
-                ->append("\t\t")
-                ->append("<input id=\"{$column->column()}\" name=\"{$column->column()}\"")
-                ->prepend("\t")
+            $type = $column->inputType() !== 'text' ? " type=\"{$column->inputType()}\"" : '';
+
+            $input = StubBuilder::make($this->stubDir().'Input')
+                ->getFromStub([
+                    '{column}' => $column->column(),
+                    '{label}' => $column->column(),
+                    '{type}' => $type
+                ])
+            ;
+
+            $result .= str($input)
                 ->prepend("\n")
-                ->when($column->inputType() !== 'text',
-                    fn($str) => $str->append(" type=\"{$column->inputType()}\"")
-                )
-                ->append('/>')
-                ->newLine()
-                ->append("\t")
-                ->append('</div>')
-                ->value()
             ;
         }
 
