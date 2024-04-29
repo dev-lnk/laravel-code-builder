@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DevLnk\LaravelCodeBuilder\CodeBuilder;
+namespace DevLnk\LaravelCodeBuilder\Services\CodeStructure;
 
 use DevLnk\LaravelCodeBuilder\Enums\SqlTypeMap;
 use DevLnk\LaravelCodeBuilder\Support\NameStr;
@@ -14,7 +14,7 @@ class CodeStructure
      */
     private array $columns = [];
 
-    private NameStr $entity;
+    private readonly NameStr $entity;
 
     private bool $isCreatedAt = false;
 
@@ -41,6 +41,10 @@ class CodeStructure
 
     public function addColumn(ColumnStructure $column): void
     {
+        if(in_array($column, $this->columns)) {
+            return;
+        }
+
         $this->columns[] = $column;
 
         $this->setTimestamps($column);

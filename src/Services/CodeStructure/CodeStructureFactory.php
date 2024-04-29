@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DevLnk\LaravelCodeBuilder\CodeBuilder;
+namespace DevLnk\LaravelCodeBuilder\Services\CodeStructure;
 
 use DevLnk\LaravelCodeBuilder\Enums\SqlTypeMap;
 use Illuminate\Support\Facades\Schema;

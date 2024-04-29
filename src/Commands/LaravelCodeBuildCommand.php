@@ -2,11 +2,14 @@
 
 namespace DevLnk\LaravelCodeBuilder\Commands;
 
-use DevLnk\LaravelCodeBuilder\CodeBuilder\CodeStructure;
-use DevLnk\LaravelCodeBuilder\CodeBuilder\CodeStructureFactory;
-use DevLnk\LaravelCodeBuilder\Enums\StubValue;
-use DevLnk\LaravelCodeBuilder\Services\CodePath;
-use DevLnk\LaravelCodeBuilder\Services\StubBuilder;
+use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
+use DevLnk\LaravelCodeBuilder\Services\Builders\AddActionBuilder;
+use DevLnk\LaravelCodeBuilder\Services\Builders\BuildFactory;
+use DevLnk\LaravelCodeBuilder\Services\Builders\ModelBuilder;
+use DevLnk\LaravelCodeBuilder\Services\CodePath\CodePath;
+use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructure;
+use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructureFactory;
+use DevLnk\LaravelCodeBuilder\Types\BuildType;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
@@ -19,11 +22,11 @@ class LaravelCodeBuildCommand extends Command
 {
     protected $signature = 'code:build {entity} {table?} {--only=}';
 
-    private ?string $only = null;
-
     private string $stubDir = __DIR__ . '/../../stubs/';
 
     private CodePath $codePath;
+
+    private CodeStructure $codeStructure;
 
     /**
      * @throws FileNotFoundException|Throwable
@@ -42,7 +45,7 @@ class LaravelCodeBuildCommand extends Command
             default: 'jobs'
         );
 
-        $codeStructure = CodeStructureFactory::makeFromTable($table, $this->argument('entity'));
+        $this->codeStructure = CodeStructureFactory::makeFromTable($table, $this->argument('entity'));
 
         $path = config('code_builder.generation_path') ?? select(
             label: 'Where to generate the result?',
@@ -53,14 +56,20 @@ class LaravelCodeBuildCommand extends Command
             default: '_project'
         );
 
-        $this->prepareGeneration($path, $codeStructure);
+        $this->prepareGeneration($path);
 
-        $this->only = $this->option('only');
+        $onlyFlag = $this->option('only');
 
-        $this->makeModel($codeStructure);
+        $buildFactory = new BuildFactory(
+            $this->codeStructure,
+            $this->codePath,
+            $onlyFlag
+        );
+
+        $buildFactory->call(BuildType::MODEL, $this->stubDir.'Model');
     }
 
-    private function prepareGeneration(string $path, CodeStructure $codeStructure): void
+    private function prepareGeneration(string $path): void
     {
         $isDir = $path !== '_project';
 
@@ -79,50 +88,16 @@ class LaravelCodeBuildCommand extends Command
             }
         }
 
-        $modelName = $codeStructure->entity()->ucFirstSingular() . '.php';
+        $modelName = $this->codeStructure->entity()->ucFirstSingular() . '.php';
 
         $this->codePath
-            ->setModel(
-                $isDir ? $genPath . "/Models/$modelName"
-                    : app_path('Models') . "/$modelName",
+            ->model(
+                $modelName,
+                $isDir ? $genPath . "/Models"
+                    : app_path('Models'),
                 $isDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Models'
                     : 'App\\Models'
             )
-        ;
-    }
-
-    /**
-     * @throws FileNotFoundException|Throwable
-     */
-    private function makeModel(CodeStructure $codeStructure): void
-    {
-        if($this->only && $this->only !== 'model') {
-            return;
-        }
-
-        StubBuilder::make($this->stubDir.'Model')
-            ->setKey(
-                StubValue::USE_SOFT_DELETES->key(),
-                StubValue::USE_SOFT_DELETES->value(),
-                $codeStructure->isSoftDeletes()
-            )
-            ->setKey(
-                StubValue::SOFT_DELETES->key(),
-                StubValue::SOFT_DELETES->value(),
-                $codeStructure->isSoftDeletes()
-            )->setKey(
-                StubValue::TIMESTAMPS->key(),
-                StubValue::TIMESTAMPS->value(),
-                ! $codeStructure->isTimestamps()
-            )->setKey(
-                StubValue::TABLE->key(),
-                StubValue::TABLE->value() . " '{$codeStructure->table()}';",
-                $codeStructure->table() !== $codeStructure->entity()->str()->plural()->snake()->value()
-            )->makeFromStub($this->codePath->modelDir(), [
-                '{namespace}' => $this->codePath->modelNamespace(),
-                '{class}' => $codeStructure->entity()->ucFirstSingular(),
-                '{fillable}' => $codeStructure->columnsToModel(),
-            ])
         ;
     }
 }
