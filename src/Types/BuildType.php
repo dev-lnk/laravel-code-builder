@@ -9,4 +9,6 @@ final class BuildType
     CONST MODEL = 'model';
 
     CONST ADD_ACTION = 'addAction';
+
+    CONST EDIT_ACTION = 'editAction';
 }

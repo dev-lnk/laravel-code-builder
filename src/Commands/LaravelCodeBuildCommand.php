@@ -68,6 +68,9 @@ class LaravelCodeBuildCommand extends Command
 
         $buildFactory->call(BuildType::ADD_ACTION, $this->stubDir.'AddAction');
         $this->info('The AddAction was created successfully!');
+
+        $buildFactory->call(BuildType::EDIT_ACTION, $this->stubDir.'EditAction');
+        $this->info('The EditAction was created successfully!');
     }
 
     private function prepareGeneration(string $path): void
@@ -114,6 +117,10 @@ class LaravelCodeBuildCommand extends Command
             )
             ->addAction(
                 'Add' .$this->codeStructure->entity()->ucFirstSingular() . 'Action.php',
+                $isDir ? $genPath . "/Actions" : app_path('Actions'),
+                $isDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Actions' : 'App\\Actions'
+            )->editAction(
+                'Edit' .$this->codeStructure->entity()->ucFirstSingular() . 'Action.php',
                 $isDir ? $genPath . "/Actions" : app_path('Actions'),
                 $isDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Actions' : 'App\\Actions'
             )

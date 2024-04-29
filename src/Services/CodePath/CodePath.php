@@ -39,4 +39,13 @@ final class CodePath
         $this->paths[BuildType::ADD_ACTION] = new AddActionPath($name, $dir, $namespace);
         return $this;
     }
+
+    public function editAction(string $name, string $dir, string $namespace): self
+    {
+        if(isset($this->paths[BuildType::EDIT_ACTION])) {
+            return $this;
+        }
+        $this->paths[BuildType::EDIT_ACTION] = new EditActionPath($name, $dir, $namespace);
+        return $this;
+    }
 }

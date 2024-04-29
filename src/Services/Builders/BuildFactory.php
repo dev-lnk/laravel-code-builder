@@ -37,6 +37,12 @@ final readonly class BuildFactory
                 $this->codePath,
                 $this->onlyFlag,
                 $stub,
+            )->build(),
+            BuildType::EDIT_ACTION => EditActionBuilder::make(
+                $this->codeStructure,
+                $this->codePath,
+                $this->onlyFlag,
+                $stub,
             )->build()
         };
     }

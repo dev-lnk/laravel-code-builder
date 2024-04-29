@@ -2,13 +2,11 @@
 
 namespace {namespace};
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 {use_soft_deletes}
 use Illuminate\Database\Eloquent\Model;
 
 class {class} extends Model
 {
-    use HasFactory;
 {soft_deletes}
 
 {timestamps}

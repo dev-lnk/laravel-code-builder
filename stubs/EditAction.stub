@@ -2,20 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Generate\Actions;
+namespace {namespace};
 
-use App\Generate\{name};
+use {model_namespace};
 
 final class Edit{name}
 {
-    public function handle(int $id, array $data): int
+    public function handle(int $id, array $data): {model_name}
     {
-        $model = {name}::query()->where('id', $id)->first();
+        $model = {model_name}::query()->where('id', $id)->first();
         
         $model->fill($data);
 
         $model->save();
 
-        return $model->id;
+        $model->refresh();
+
+        return $model;
     }
 }
