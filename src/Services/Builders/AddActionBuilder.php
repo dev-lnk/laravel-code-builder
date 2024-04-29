@@ -24,7 +24,7 @@ class AddActionBuilder extends AbstractBuilder
             ->makeFromStub($actionPath->file(), [
                 '{namespace}' => $actionPath->namespace(),
                 '{model_namespace}' => $modelPath->namespace() . '\\' . $modelPath->rawName(),
-                '{name}' => $this->codeStructure->entity()->ucFirstSingular() . 'Action',
+                '{name}' => $actionPath->rawName(),
                 '{model_name}' => $modelPath->rawName(),
             ]);
     }

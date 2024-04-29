@@ -33,6 +33,7 @@ final class CommandControllerTest extends TestCase
         $this->assertFileExists($this->path . 'ProductController.php');
 
         $file = $this->filesystem->get($this->path . 'ProductController.php');
+        $this->assertStringContainsString('class ProductController extends Controller', $file);
         $this->assertStringContainsString('public function store(ProductRequest $request, AddProductAction $action): RedirectResponse', $file);
         $this->assertStringContainsString('ProductRequest $request, EditProductAction $action', $file);
     }

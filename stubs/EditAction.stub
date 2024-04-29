@@ -6,7 +6,7 @@ namespace {namespace};
 
 use {model_namespace};
 
-final class Edit{name}
+final class {name}
 {
     public function handle(int $id, array $data): {model_name}
     {
