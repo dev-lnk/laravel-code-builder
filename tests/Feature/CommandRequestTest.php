@@ -12,9 +12,13 @@ class CommandRequestTest extends TestCase
 {
     private string $path = '';
 
+    private Filesystem $filesystem;
+
     public function setUp(): void
     {
         parent::setUp();
+
+        $this->filesystem = new Filesystem();
 
         $this->path = app_path('Http/Requests/');
     }
@@ -28,7 +32,7 @@ class CommandRequestTest extends TestCase
 
         $this->assertFileExists($this->path . 'ProductRequest.php');
 
-        $file = (new Filesystem())->get($this->path . 'ProductRequest.php');
+        $file = $this->filesystem->get($this->path . 'ProductRequest.php');
         $this->assertStringContainsString('class ProductRequest extends FormRequest', $file);
         $this->assertStringContainsString("'id' => ['int', 'nullable']", $file);
         $this->assertStringContainsString("'title' => ['string', 'nullable']", $file);
@@ -47,7 +51,7 @@ class CommandRequestTest extends TestCase
 
         $this->assertFileExists($this->path . 'UserRequest.php');
 
-        $file = (new Filesystem())->get($this->path . 'UserRequest.php');
+        $file = $this->filesystem->get($this->path . 'UserRequest.php');
         $this->assertStringContainsString('class UserRequest extends FormRequest', $file);
         $this->assertStringContainsString("'email' => ['email', 'nullable']", $file);
         $this->assertStringContainsString("'password' => ['password', 'nullable']", $file);
@@ -74,10 +78,10 @@ class CommandRequestTest extends TestCase
 
     public function tearDown(): void
     {
-        $file = new Filesystem();
-        $file->delete($this->path . 'ProductRequest.php');
-        $file->delete($this->path . 'FooRequest.php');
-        $file->delete($this->path . 'UserRequest.php');
+
+        $this->filesystem->delete($this->path . 'ProductRequest.php');
+        $this->filesystem->delete($this->path . 'FooRequest.php');
+        $this->filesystem->delete($this->path . 'UserRequest.php');
 
         parent::tearDown();
     }

@@ -18,9 +18,9 @@ final class CommandControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->path = app_path('Http/Controllers/');
-
         $this->filesystem = new Filesystem();
+
+        $this->path = app_path('Http/Controllers/');
     }
 
     #[Test]

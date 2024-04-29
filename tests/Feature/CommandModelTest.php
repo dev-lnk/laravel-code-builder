@@ -8,13 +8,17 @@ use PHPUnit\Framework\Attributes\Test;
 
 class CommandModelTest extends TestCase
 {
-    private string $modelPath = '';
+    private string $path = '';
+
+    private Filesystem $filesystem;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->modelPath = app_path('Models/');
+        $this->filesystem = new Filesystem();
+
+        $this->path = app_path('Models/');
     }
 
     #[Test]
@@ -25,9 +29,9 @@ class CommandModelTest extends TestCase
             ->expectsQuestion('Where to generate the result?', '_default')
         ;
 
-        $this->assertFileExists($this->modelPath . 'Product.php');
+        $this->assertFileExists($this->path . 'Product.php');
 
-        $file = (new Filesystem())->get($this->modelPath . 'Product.php');
+        $file = $this->filesystem->get($this->path . 'Product.php');
 
         $this->assertStringContainsString('namespace App\Models;', $file);
         $this->assertStringContainsString('use Illuminate\Database\Eloquent\Model;', $file);
@@ -53,9 +57,9 @@ class CommandModelTest extends TestCase
             ->expectsQuestion('Where to generate the result?', '_default')
         ;
 
-        $this->assertFileExists($this->modelPath . 'Foo.php');
+        $this->assertFileExists($this->path . 'Foo.php');
 
-        $file = (new Filesystem())->get($this->modelPath . 'Foo.php');
+        $file = $this->filesystem->get($this->path . 'Foo.php');
 
         $this->assertStringContainsString('namespace App\Models;', $file);
         $this->assertStringContainsString('use Illuminate\Database\Eloquent\Model;', $file);
@@ -81,9 +85,9 @@ class CommandModelTest extends TestCase
             ->expectsQuestion('Where to generate the result?', '_default')
         ;
 
-        $this->assertFileExists($this->modelPath . 'Category.php');
+        $this->assertFileExists($this->path . 'Category.php');
 
-        $file = (new Filesystem())->get($this->modelPath . 'Category.php');
+        $file = $this->filesystem->get($this->path . 'Category.php');
 
         $this->assertStringContainsString('namespace App\Models;', $file);
         $this->assertStringContainsString('use Illuminate\Database\Eloquent\Model;', $file);
@@ -97,10 +101,9 @@ class CommandModelTest extends TestCase
 
     public function tearDown(): void
     {
-        $file = new Filesystem();
-        $file->delete($this->modelPath . 'Product.php');
-        $file->delete($this->modelPath . 'Foo.php');
-        $file->delete($this->modelPath . 'Category.php');
+        $this->filesystem->delete($this->path . 'Product.php');
+        $this->filesystem->delete($this->path . 'Foo.php');
+        $this->filesystem->delete($this->path . 'Category.php');
 
         parent::tearDown();
     }

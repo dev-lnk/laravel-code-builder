@@ -12,9 +12,13 @@ class CommandAddActionTest extends TestCase
 {
     private string $path = '';
 
+    private Filesystem $filesystem;
+
     public function setUp(): void
     {
         parent::setUp();
+
+        $this->filesystem = new Filesystem();
 
         $this->path = app_path('Actions/');
     }
@@ -28,7 +32,7 @@ class CommandAddActionTest extends TestCase
 
         $this->assertFileExists($this->path . 'AddProductAction.php');
 
-        $file = (new Filesystem())->get($this->path . 'AddProductAction.php');
+        $file = $this->filesystem->get($this->path . 'AddProductAction.php');
 
         $this->assertStringContainsString('use App\Models\Product;', $file);
         $this->assertStringContainsString('final class AddProductAction', $file);
@@ -45,7 +49,7 @@ class CommandAddActionTest extends TestCase
 
         $this->assertFileExists($this->path . 'AddFooAction.php');
 
-        $file = (new Filesystem())->get($this->path . 'AddFooAction.php');
+        $file = $this->filesystem->get($this->path . 'AddFooAction.php');
 
         $this->assertStringContainsString('use App\Models\Foo;', $file);
         $this->assertStringContainsString('final class AddFooAction', $file);
@@ -55,9 +59,8 @@ class CommandAddActionTest extends TestCase
 
     public function tearDown(): void
     {
-        $file = new Filesystem();
-        $file->delete($this->path . 'AddProductAction.php');
-        $file->delete($this->path . 'AddFooAction.php');
+        $this->filesystem->delete($this->path . 'AddProductAction.php');
+        $this->filesystem->delete($this->path . 'AddFooAction.php');
 
         parent::tearDown();
     }
