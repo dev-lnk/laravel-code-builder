@@ -66,4 +66,13 @@ final class CodePath
         $this->paths[BuildType::CONTROLLER] = new ControllerPath($name, $dir, $namespace);
         return $this;
     }
+
+    public function route(string $name, string $dir, string $namespace): self
+    {
+        if(isset($this->paths[BuildType::ROUTE])) {
+            return $this;
+        }
+        $this->paths[BuildType::ROUTE] = new RoutePath($name, $dir, $namespace);
+        return $this;
+    }
 }

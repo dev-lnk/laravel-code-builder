@@ -53,6 +53,11 @@ final readonly class BuildFactory
                 $this->codePath,
                 $stub,
             )->build(),
+            BuildType::ROUTE => RouteBuilder::make(
+                $this->codeStructure,
+                $this->codePath,
+                $stub,
+            )->build(),
             default => throw new NotFoundBuilderException()
         };
     }

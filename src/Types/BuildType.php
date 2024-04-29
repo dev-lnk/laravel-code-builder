@@ -15,4 +15,6 @@ final class BuildType
     CONST REQUEST = 'request';
 
     CONST CONTROLLER = 'controller';
+
+    CONST ROUTE = 'route';
 }

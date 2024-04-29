@@ -19,11 +19,11 @@ class {name} extends Controller
         return back();
     }
 
-    public function edit({request_name} $request, {edit_action_name} $action): RedirectResponse
+    public function edit(string $id, {request_name} $request, {edit_action_name} $action): RedirectResponse
     {
         $data = $request->validated();
 
-        $model = $action->handle((int) $data['id'], $data);
+        $model = $action->handle((int) $id, $data);
 
         return back();
     }

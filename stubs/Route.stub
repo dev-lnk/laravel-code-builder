@@ -1,9 +1,9 @@
 <?php
 
-use App\Generate\{name}Controller;
+use {controller_namespace};
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('')->controller({name}Controller::class)->group(function (){
-    Route::post('add', 'add')->name('add');
-    Route::post('edit', 'edit')->name('edit');
+Route::prefix('{name}')->controller({controller_name}::class)->group(function (): void {
+    Route::post('/', 'store')->name('{name}.store');
+    Route::post('/{name}/{$id}', 'edit')->name('{name}.edit');
 });

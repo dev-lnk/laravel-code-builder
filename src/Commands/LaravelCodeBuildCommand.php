@@ -76,27 +76,32 @@ class LaravelCodeBuildCommand extends Command
 
         if(! $onlyFlag || $onlyFlag === BuildType::MODEL) {
             $buildFactory->call(BuildType::MODEL, $this->stubDir.'Model');
-            $this->info('The model was created successfully!');
+            $this->info('Model was created successfully!');
         }
 
         if(! $onlyFlag || $onlyFlag === BuildType::ADD_ACTION) {
             $buildFactory->call(BuildType::ADD_ACTION, $this->stubDir.'AddAction');
-            $this->info('The AddAction was created successfully!');
+            $this->info('AddAction was created successfully!');
         }
 
         if(! $onlyFlag || $onlyFlag === BuildType::EDIT_ACTION) {
             $buildFactory->call(BuildType::EDIT_ACTION, $this->stubDir.'EditAction');
-            $this->info('The EditAction was created successfully!');
+            $this->info('EditAction was created successfully!');
         }
 
         if(! $onlyFlag || $onlyFlag === BuildType::REQUEST) {
             $buildFactory->call(BuildType::REQUEST, $this->stubDir.'Request');
-            $this->info('The FormRequest was created successfully!');
+            $this->info('FormRequest was created successfully!');
         }
 
         if(! $onlyFlag || $onlyFlag === BuildType::CONTROLLER) {
             $buildFactory->call(BuildType::CONTROLLER, $this->stubDir.'Controller');
-            $this->info('The Controller was created successfully!');
+            $this->info('Controller was created successfully!');
+        }
+
+        if(! $onlyFlag || $onlyFlag === BuildType::ROUTE) {
+            $buildFactory->call(BuildType::ROUTE, $this->stubDir.'Route');
+            $this->info('Route was created successfully!');
         }
     }
 
@@ -114,6 +119,7 @@ class LaravelCodeBuildCommand extends Command
                 'Actions',
                 'Http/Requests',
                 'Http/Controllers',
+                'routes',
             ];
 
             if(! $fileSystem->isDirectory($genPath)) {
@@ -131,6 +137,7 @@ class LaravelCodeBuildCommand extends Command
                 'Actions',
                 'Http/Requests',
                 'Http/Controllers',
+                'routes',
             ];
 
             foreach ($generateProjectDirs as $dir) {
@@ -162,6 +169,10 @@ class LaravelCodeBuildCommand extends Command
                 $this->codeStructure->entity()->ucFirstSingular() . 'Controller.php',
                 $isDir ? $genPath . "/Http/Controllers" : app_path('Http/Controllers'),
                 $isDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Http\\Controllers' : 'App\\Http\\Controllers'
+            )->route(
+                $this->codeStructure->entity()->lower(). '.php',
+                $isDir ? $genPath . "/routes" : base_path('routes'),
+                ''
             )
         ;
     }
