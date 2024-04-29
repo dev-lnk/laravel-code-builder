@@ -172,6 +172,7 @@ enum SqlTypeMap: string
             'bigint' => self::BIG_INTEGER,
             'mediumint' => self::MEDIUM_INTEGER,
             'int' => self::INTEGER,
+            'integer' => self::INTEGER,
             'smallint' => self::SMALL_INTEGER,
             'tinyint' => self::TINY_INTEGER,
             'bigint unsigned' => self::UNSIGNED_BIG_INTEGER,

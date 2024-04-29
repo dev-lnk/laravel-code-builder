@@ -11,4 +11,6 @@ final class BuildType
     CONST ADD_ACTION = 'addAction';
 
     CONST EDIT_ACTION = 'editAction';
+
+    CONST REQUEST = 'request';
 }

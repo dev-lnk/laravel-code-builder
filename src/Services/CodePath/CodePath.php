@@ -48,4 +48,13 @@ final class CodePath
         $this->paths[BuildType::EDIT_ACTION] = new EditActionPath($name, $dir, $namespace);
         return $this;
     }
+
+    public function request(string $name, string $dir, string $namespace): self
+    {
+        if(isset($this->paths[BuildType::REQUEST])) {
+            return $this;
+        }
+        $this->paths[BuildType::REQUEST] = new RequestPath($name, $dir, $namespace);
+        return $this;
+    }
 }

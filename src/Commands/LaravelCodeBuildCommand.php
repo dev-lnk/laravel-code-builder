@@ -83,6 +83,9 @@ class LaravelCodeBuildCommand extends Command
 
         $buildFactory->call(BuildType::EDIT_ACTION, $this->stubDir.'EditAction');
         $this->info('The EditAction was created successfully!');
+
+        $buildFactory->call(BuildType::REQUEST, $this->stubDir.'Request');
+        $this->info('The FormRequest was created successfully!');
     }
 
     private function prepareGeneration(string $path): void
@@ -96,7 +99,8 @@ class LaravelCodeBuildCommand extends Command
         if($isDir) {
             $generateDirs = [
                 'Models',
-                'Actions'
+                'Actions',
+                'Http/Requests'
             ];
 
             if(! $fileSystem->isDirectory($genPath)) {
@@ -106,12 +110,13 @@ class LaravelCodeBuildCommand extends Command
 
             foreach ($generateDirs as $dir) {
                 if(! $fileSystem->isDirectory($genPath . '/' . $dir)) {
-                    $fileSystem->makeDirectory($genPath . '/' . $dir);
+                    $fileSystem->makeDirectory($genPath . '/' . $dir, recursive: true);
                 }
             }
         } else {
             $generateProjectDirs = [
-                'Actions'
+                'Actions',
+                'Http/Requests'
             ];
 
             foreach ($generateProjectDirs as $dir) {
@@ -135,6 +140,10 @@ class LaravelCodeBuildCommand extends Command
                 'Edit' .$this->codeStructure->entity()->ucFirstSingular() . 'Action.php',
                 $isDir ? $genPath . "/Actions" : app_path('Actions'),
                 $isDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Actions' : 'App\\Actions'
+            )->request(
+                $this->codeStructure->entity()->ucFirstSingular() . 'Request.php',
+                $isDir ? $genPath . "/Http/Requests" : app_path('Http/Requests'),
+                $isDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Http\\Requests' : 'App\\Http\\Requests'
             )
         ;
     }

@@ -33,7 +33,8 @@
         "laravel/laravel": "<10.0"
     },
     "scripts": {
-        "test": "vendor/bin/phpunit"
+        "test": "vendor/bin/phpunit",
+        "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon"
     },
     "extra": {
         "laravel": {

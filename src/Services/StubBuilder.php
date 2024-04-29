@@ -8,7 +8,6 @@ namespace DevLnk\LaravelCodeBuilder\Services;
 use Closure;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
-use Throwable;
 
 final class StubBuilder
 {
@@ -46,7 +45,6 @@ final class StubBuilder
      * @param array<string, string> $replace
      *
      * @return void
-     * @throws Throwable
      */
     public function makeFromStub(string $destination, array $replace = []): void
     {

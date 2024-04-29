@@ -85,6 +85,18 @@ class CodeStructure
         return $this->isDeletedAt;
     }
 
+    /**
+     * @return array<int, string>
+     */
+    public function dateColumns(): array
+    {
+        return [
+            'created_at',
+            'updated_at',
+            'deleted_at',
+        ];
+    }
+
     public function columnsToModel(): string
     {
         $result = "";
@@ -99,6 +111,26 @@ class CodeStructure
 
             $result .= str("'{$column->column()}'")
                 ->prepend("\t\t")
+                ->prepend(PHP_EOL)
+                ->append(',')
+                ->value()
+            ;
+        }
+
+        return $result;
+    }
+
+    public function columnsToRules(): string
+    {
+        $result = "";
+
+        foreach ($this->columns as $column) {
+            if(in_array($column->column(), $this->dateColumns())) {
+                continue;
+            }
+
+            $result .= str("'{$column->column()}' => ['{$column->rulesType()}', 'nullable']")
+                ->prepend("\t\t\t")
                 ->prepend(PHP_EOL)
                 ->append(',')
                 ->value()

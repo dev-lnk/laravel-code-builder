@@ -13,8 +13,8 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 class ModelBuilder extends AbstractBuilder
 {
     /**
-     * @throws FileNotFoundException
      * @throws NotFoundCodePathException
+     * @throws FileNotFoundException
      */
     public function build(): void
     {

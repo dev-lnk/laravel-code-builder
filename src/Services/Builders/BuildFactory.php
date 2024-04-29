@@ -46,6 +46,12 @@ final readonly class BuildFactory
                 $this->onlyFlag,
                 $stub,
             )->build(),
+            BuildType::REQUEST => RequestBuilder::make(
+                $this->codeStructure,
+                $this->codePath,
+                $this->onlyFlag,
+                $stub,
+            )->build(),
             default => throw new NotFoundBuilderException()
         };
     }
