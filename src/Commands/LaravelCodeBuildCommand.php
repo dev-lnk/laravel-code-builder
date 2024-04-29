@@ -20,8 +20,6 @@ class LaravelCodeBuildCommand extends Command
 {
     protected $signature = 'code:build {entity} {table?} {--only=}';
 
-    private string $stubDir = __DIR__ . '/../../stubs/';
-
     private CodePath $codePath;
 
     private CodeStructure $codeStructure;
@@ -31,6 +29,8 @@ class LaravelCodeBuildCommand extends Command
      */
     public function handle(): void
     {
+        $stubDir = config('code_builder.stub_dir', __DIR__ . '/../../code_stubs') . '/';
+
         $this->codePath = new CodePath();
 
         $tableStr = $this->argument('table') ?? '';
@@ -53,7 +53,7 @@ class LaravelCodeBuildCommand extends Command
 
         $this->codeStructure = CodeStructureFactory::makeFromTable((string) $table, (string) $entity);
 
-        $this->codeStructure->setStubDir($this->stubDir);
+        $this->codeStructure->setStubDir($stubDir);
 
         $path = config('code_builder.generation_path') ?? select(
             label: 'Where to generate the result?',
@@ -77,37 +77,37 @@ class LaravelCodeBuildCommand extends Command
         );
 
         if(! $onlyFlag || $onlyFlag === BuildType::MODEL) {
-            $buildFactory->call(BuildType::MODEL, $this->stubDir.'Model');
+            $buildFactory->call(BuildType::MODEL, $stubDir .'Model');
             $this->info('Model was created successfully!');
         }
 
         if(! $onlyFlag || $onlyFlag === BuildType::ADD_ACTION) {
-            $buildFactory->call(BuildType::ADD_ACTION, $this->stubDir.'AddAction');
+            $buildFactory->call(BuildType::ADD_ACTION, $stubDir .'AddAction');
             $this->info('AddAction was created successfully!');
         }
 
         if(! $onlyFlag || $onlyFlag === BuildType::EDIT_ACTION) {
-            $buildFactory->call(BuildType::EDIT_ACTION, $this->stubDir.'EditAction');
+            $buildFactory->call(BuildType::EDIT_ACTION, $stubDir .'EditAction');
             $this->info('EditAction was created successfully!');
         }
 
         if(! $onlyFlag || $onlyFlag === BuildType::REQUEST) {
-            $buildFactory->call(BuildType::REQUEST, $this->stubDir.'Request');
+            $buildFactory->call(BuildType::REQUEST, $stubDir .'Request');
             $this->info('FormRequest was created successfully!');
         }
 
         if(! $onlyFlag || $onlyFlag === BuildType::CONTROLLER) {
-            $buildFactory->call(BuildType::CONTROLLER, $this->stubDir.'Controller');
+            $buildFactory->call(BuildType::CONTROLLER, $stubDir .'Controller');
             $this->info('Controller was created successfully!');
         }
 
         if(! $onlyFlag || $onlyFlag === BuildType::ROUTE) {
-            $buildFactory->call(BuildType::ROUTE, $this->stubDir.'Route');
+            $buildFactory->call(BuildType::ROUTE, $stubDir .'Route');
             $this->info('Route was created successfully!');
         }
 
         if(! $onlyFlag || $onlyFlag === BuildType::FORM) {
-            $buildFactory->call(BuildType::FORM, $this->stubDir.'Form');
+            $buildFactory->call(BuildType::FORM, $stubDir .'Form');
             $this->info('Form was created successfully!');
         }
     }

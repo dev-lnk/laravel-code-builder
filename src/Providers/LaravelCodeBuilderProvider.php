@@ -21,9 +21,12 @@ class LaravelCodeBuilderProvider extends ServiceProvider
         }
 
         $this->publishes([
-            __DIR__.'/../../config/code_builder.php' =>
-                config_path('code_builder.php'),
+            __DIR__.'/../../config/code_builder.php' => config_path('code_builder.php'),
         ], 'laravel-code-builder');
+
+        $this->publishes([
+            __DIR__.'/../../code_stubs' => base_path('code_stubs'),
+        ], 'laravel-code-builder-stubs');
 
         $this->mergeConfigFrom(
             __DIR__.'/../../config/code_builder.php',

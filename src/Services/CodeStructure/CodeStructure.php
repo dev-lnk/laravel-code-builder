@@ -35,7 +35,7 @@ class CodeStructure
 
     public function setStubDir(string $stubDir): void
     {
-        $this->stubDir = $stubDir;
+        $this->stubDir = str_replace('//', '/', $stubDir);
     }
 
     public function stubDir(): string
