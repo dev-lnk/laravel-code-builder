@@ -7,6 +7,9 @@ use Illuminate\Support\ServiceProvider;
 
 class LaravelCodeBuilderProvider extends ServiceProvider
 {
+    /**
+     * @var array<int, string>
+     */
     protected array $commands = [
         LaravelCodeBuildCommand::class,
     ];

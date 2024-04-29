@@ -67,18 +67,12 @@ class CodeStructure
         }
     }
 
+    /**
+     * @return array<int, ColumnStructure>
+     */
     public function columns(): array
     {
         return $this->columns();
-    }
-
-    public function dateColumns(): array
-    {
-        return [
-            'created_at',
-            'updated_at',
-            'deleted_at',
-        ];
     }
 
     public function isTimestamps(): bool

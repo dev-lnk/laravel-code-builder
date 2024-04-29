@@ -8,7 +8,7 @@ use DevLnk\LaravelCodeBuilder\Enums\SqlTypeMap;
 
 final class ColumnStructure
 {
-    private ?string $type = null;
+    private string $type;
 
     private ?string $inputType = null;
 
@@ -21,12 +21,12 @@ final class ColumnStructure
         }
     }
 
-    public function type(): ?string
+    public function type(): string
     {
         return $this->type;
     }
 
-    public function column(): ?string
+    public function column(): string
     {
         return $this->column;
     }

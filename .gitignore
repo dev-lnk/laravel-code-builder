@@ -4,3 +4,4 @@ composer.lock
 .phpunit.cache
 phpunit.xml.dist
 app
+phpstan.neon

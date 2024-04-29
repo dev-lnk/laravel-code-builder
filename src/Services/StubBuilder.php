@@ -8,13 +8,20 @@ namespace DevLnk\LaravelCodeBuilder\Services;
 use Closure;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
+use Throwable;
 
 final class StubBuilder
 {
     private string $stub;
 
+    /**
+     * @var array<string, string>
+     */
     private array $replacers = [];
 
+    /**
+     * @var array<int, string>
+     */
     private array $removers = [];
 
     /**
@@ -34,6 +41,13 @@ final class StubBuilder
         $this->stub = (new Filesystem())->get($stubPath . '.stub');
     }
 
+    /**
+     * @param string $destination
+     * @param array<string, string> $replace
+     *
+     * @return void
+     * @throws Throwable
+     */
     public function makeFromStub(string $destination, array $replace = []): void
     {
         $this->removeKeys()->replaceKeys($this->replacers);
@@ -73,7 +87,9 @@ final class StubBuilder
     }
 
     /**
-     * @throws Throwable
+     * @param array<string, string> $replace
+     *
+     * @return string
      */
     private function replaceKeys(array $replace): string
     {

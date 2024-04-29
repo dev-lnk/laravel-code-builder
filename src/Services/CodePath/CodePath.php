@@ -10,7 +10,7 @@ use DevLnk\LaravelCodeBuilder\Types\BuildType;
 final class CodePath
 {
     /**
-     * @var array<int, CodePathContract>
+     * @var array<string, CodePathContract>
      */
     private array $paths = [];
 

@@ -7,6 +7,7 @@ use DevLnk\LaravelCodeBuilder\Services\CodePath\CodePath;
 use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructure;
 use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructureFactory;
 use DevLnk\LaravelCodeBuilder\Types\BuildType;
+use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
@@ -33,16 +34,24 @@ class LaravelCodeBuildCommand extends Command
         $this->codePath = new CodePath();
 
         $tableStr = $this->argument('table') ?? '';
+        if(is_array($tableStr)) {
+            throw new Exception('table must be a string');
+        }
 
         $table = select(
             'Table',
             collect(Schema::getTables())
-                ->filter(fn ($v) => str_contains($v['name'], $tableStr))
+                ->filter(fn ($v) => str_contains((string) $v['name'], (string) $tableStr))
                 ->mapWithKeys(fn ($v) => [$v['name'] => $v['name']]),
             default: 'jobs'
         );
 
-        $this->codeStructure = CodeStructureFactory::makeFromTable($table, $this->argument('entity'));
+        $entity = $this->argument('entity');
+        if(is_array($entity)) {
+            throw new Exception('entity must be a string');
+        }
+
+        $this->codeStructure = CodeStructureFactory::makeFromTable((string) $table, (string) $entity);
 
         $path = config('code_builder.generation_path') ?? select(
             label: 'Where to generate the result?',
@@ -56,11 +65,14 @@ class LaravelCodeBuildCommand extends Command
         $this->prepareGeneration($path);
 
         $onlyFlag = $this->option('only');
+        if(is_array($onlyFlag)) {
+            throw new Exception('only flag must be a string');
+        }
 
         $buildFactory = new BuildFactory(
             $this->codeStructure,
             $this->codePath,
-            $onlyFlag
+            (string) $onlyFlag
         );
 
         $buildFactory->call(BuildType::MODEL, $this->stubDir.'Model');

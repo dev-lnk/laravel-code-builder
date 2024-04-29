@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DevLnk\LaravelCodeBuilder\Services\Builders;
 
+use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundBuilderException;
 use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
 use DevLnk\LaravelCodeBuilder\Services\CodePath\CodePath;
 use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructure;
@@ -22,6 +23,7 @@ final readonly class BuildFactory
     /**
      * @throws FileNotFoundException
      * @throws NotFoundCodePathException
+     * @throws NotFoundBuilderException
      */
     public function call(string $buildType, string $stub): void
     {
@@ -43,7 +45,8 @@ final readonly class BuildFactory
                 $this->codePath,
                 $this->onlyFlag,
                 $stub,
-            )->build()
+            )->build(),
+            default => throw new NotFoundBuilderException()
         };
     }
 }
