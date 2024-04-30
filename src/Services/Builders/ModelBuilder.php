@@ -28,15 +28,15 @@ class ModelBuilder extends AbstractBuilder
             )
             ->setKey(
                 StubValue::SOFT_DELETES->key(),
-                StubValue::SOFT_DELETES->value(),
+                StubValue::SOFT_DELETES->value().PHP_EOL,
                 $this->codeStructure->isSoftDeletes()
             )->setKey(
                 StubValue::TIMESTAMPS->key(),
-                StubValue::TIMESTAMPS->value(),
+                StubValue::TIMESTAMPS->value().PHP_EOL,
                 ! $this->codeStructure->isTimestamps()
             )->setKey(
                 StubValue::TABLE->key(),
-                StubValue::TABLE->value() . " '{$this->codeStructure->table()}';",
+                StubValue::TABLE->value() . " '{$this->codeStructure->table()}';\n",
                 $this->codeStructure->table() !== $this->codeStructure->entity()->str()->plural()->snake()->value()
             )->makeFromStub($modelPath->file(), [
                 '{namespace}' => $modelPath->namespace(),
