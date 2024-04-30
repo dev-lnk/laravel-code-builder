@@ -116,13 +116,13 @@ class LaravelCodeBuildCommand extends Command
      */
     private function prepareGeneration(string $path): void
     {
-        $isDir = $path !== '_default';
+        $isGenerationDir = $path !== '_default';
 
         $fileSystem = new Filesystem();
 
         $genPath = app_path($path);
 
-        if($isDir) {
+        if($isGenerationDir) {
             $generateDirs = [
                 'Models',
                 'Actions',
@@ -159,37 +159,37 @@ class LaravelCodeBuildCommand extends Command
         $this->codePath
             ->model(
                 $this->codeStructure->entity()->ucFirstSingular() . '.php',
-                $isDir ? $genPath . "/Models" : app_path('Models'),
-                $isDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Models' : 'App\\Models'
+                $isGenerationDir ? $genPath . "/Models" : app_path('Models'),
+                $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Models' : 'App\\Models'
             )
             ->addAction(
                 'Add' .$this->codeStructure->entity()->ucFirstSingular() . 'Action.php',
-                $isDir ? $genPath . "/Actions" : app_path('Actions'),
-                $isDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Actions' : 'App\\Actions'
+                $isGenerationDir ? $genPath . "/Actions" : app_path('Actions'),
+                $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Actions' : 'App\\Actions'
             )->editAction(
                 'Edit' .$this->codeStructure->entity()->ucFirstSingular() . 'Action.php',
-                $isDir ? $genPath . "/Actions" : app_path('Actions'),
-                $isDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Actions' : 'App\\Actions'
+                $isGenerationDir ? $genPath . "/Actions" : app_path('Actions'),
+                $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Actions' : 'App\\Actions'
             )->request(
                 $this->codeStructure->entity()->ucFirstSingular() . 'Request.php',
-                $isDir ? $genPath . "/Http/Requests" : app_path('Http/Requests'),
-                $isDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Http\\Requests' : 'App\\Http\\Requests'
+                $isGenerationDir ? $genPath . "/Http/Requests" : app_path('Http/Requests'),
+                $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Http\\Requests' : 'App\\Http\\Requests'
             )->controller(
                 $this->codeStructure->entity()->ucFirstSingular() . 'Controller.php',
-                $isDir ? $genPath . "/Http/Controllers" : app_path('Http/Controllers'),
-                $isDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Http\\Controllers' : 'App\\Http\\Controllers'
+                $isGenerationDir ? $genPath . "/Http/Controllers" : app_path('Http/Controllers'),
+                $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Http\\Controllers' : 'App\\Http\\Controllers'
             )->route(
                 $this->codeStructure->entity()->lower(). '.php',
-                $isDir ? $genPath . "/routes" : base_path('routes'),
+                $isGenerationDir ? $genPath . "/routes" : base_path('routes'),
                 ''
             )->form(
                 $this->codeStructure->entity()->lower(). '.blade.php',
-                $isDir ? $genPath . "/resources/views" : base_path('resources/views'),
+                $isGenerationDir ? $genPath . "/resources/views" : base_path('resources/views'),
                 ''
             )
         ;
 
-        if(! $isDir) {
+        if(! $isGenerationDir) {
             foreach ($this->builders as $buildType) {
                 if($fileSystem->isFile($this->codePath->path($buildType->value)->file())) {
                     $this->replaceCautions[$buildType->value] = $buildType->stub() . " already exists, are you sure you want to replace it?";

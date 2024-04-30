@@ -1,4 +1,4 @@
 	<div>
 		<label for="{column}">{label}</label>
-		<input id="{column}" name="{column}"{type}/>
+		<input id="{column}" name="{column}" value="{{ old('{column}') }}"{type}/>
 	</div>

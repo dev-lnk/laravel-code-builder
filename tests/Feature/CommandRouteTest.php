@@ -35,7 +35,7 @@ final class CommandRouteTest extends TestCase
         $this->assertStringContainsString('use App\Http\Controllers\ProductController;', $file);
         $this->assertStringContainsString("Route::prefix('product')->controller(ProductController::class)->group(function (): void {", $file);
         $this->assertStringContainsString("Route::post('/', 'store')->name('product.store');", $file);
-        $this->assertStringContainsString("Route::post('/product/{\$id}', 'edit')->name('product.edit');", $file);
+        $this->assertStringContainsString("Route::post('/{id}', 'edit')->name('product.edit');", $file);
     }
 
     #[Test]
@@ -50,7 +50,7 @@ final class CommandRouteTest extends TestCase
         $this->assertStringContainsString('use App\Http\Controllers\FooController;', $file);
         $this->assertStringContainsString("Route::prefix('foo')->controller(FooController::class)->group(function (): void {", $file);
         $this->assertStringContainsString("Route::post('/', 'store')->name('foo.store');", $file);
-        $this->assertStringContainsString("Route::post('/foo/{\$id}', 'edit')->name('foo.edit');", $file);
+        $this->assertStringContainsString("Route::post('/{id}', 'edit')->name('foo.edit');", $file);
     }
 
     public function tearDown(): void

@@ -5,5 +5,5 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('{name}')->controller({controller_name}::class)->group(function (): void {
     Route::post('/', 'store')->name('{name}.store');
-    Route::post('/{name}/{$id}', 'edit')->name('{name}.edit');
+    Route::post('/{id}', 'edit')->name('{name}.edit');
 });

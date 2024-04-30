@@ -34,8 +34,8 @@ final class CommandFormTest extends TestCase
 
         $file = $this->filesystem->get($this->path . 'product.blade.php');
         $this->assertStringContainsString("<form action=\"{{ route('product.store') }}\" method=\"POST\">", $file);
-        $this->assertStringContainsString('<input id="content" name="content"/>', $file);
-        $this->assertStringContainsString('<input id="sort_number" name="sort_number" type="number"/>', $file);
+        $this->assertStringContainsString('<input id="content" name="content" value="{{ old(\'content\') }}"/>', $file);
+        $this->assertStringContainsString('<input id="sort_number" name="sort_number" value="{{ old(\'sort_number\') }}" type="number"/>', $file);
     }
 
     #[Test]
@@ -49,8 +49,8 @@ final class CommandFormTest extends TestCase
 
         $file = $this->filesystem->get($this->path . 'user.blade.php');
         $this->assertStringContainsString("<form action=\"{{ route('user.store') }}\" method=\"POST\">", $file);
-        $this->assertStringContainsString('<input id="email" name="email" type="email"/>', $file);
-        $this->assertStringContainsString('<input id="password" name="password" type="password"/>', $file);
+        $this->assertStringContainsString('<input id="email" name="email" value="{{ old(\'email\') }}" type="email"/>', $file);
+        $this->assertStringContainsString('<input id="password" name="password" value="{{ old(\'password\') }}" type="password"/>', $file);
     }
 
     #[Test]
