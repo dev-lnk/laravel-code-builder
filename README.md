@@ -183,7 +183,7 @@ return [
 //        BuildType::ROUTE,
         BuildType::FORM,
     ],
-    ...
+    //...
 ];
 ```
 If you want to change the code generation option, you can publish the stubs and change them yourself:
