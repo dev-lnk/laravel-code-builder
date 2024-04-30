@@ -105,7 +105,11 @@ class LaravelCodeBuildCommand extends Command
 
                 if($confirmed) {
                     $buildFactory->call($builder->value, $stubDir . $builder->stub());
-                    $this->info($builder->stub() . ' was created successfully!');
+
+                    $codePath = $this->codePath->path($builder->value);
+                    $filePath = substr($codePath->file(), strpos($codePath->file(), '/app') + 1 );
+
+                    $this->info($filePath . ' was created successfully!');
                 }
             }
         }
