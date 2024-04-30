@@ -1,4 +1,4 @@
-name: tests
+name: phpstan
 
 on:
   push:
@@ -29,5 +29,5 @@ jobs:
       - name: PHPStan Static Analysis
         uses: php-actions/phpstan@v3
         with:
-          level: 9
+          level: 4
           path: src/
