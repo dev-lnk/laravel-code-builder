@@ -169,6 +169,23 @@ Available options for the only flag:
 - route
 - form
 
+In the `builders` configuration you can comment out those builders that you do not want to be executed
+```php
+use DevLnk\LaravelCodeBuilder\Enums\BuildType;
+
+return [
+    'builders' => [
+        BuildType::MODEL,
+//        BuildType::ADD_ACTION,
+//        BuildType::EDIT_ACTION,
+//        BuildType::REQUEST,
+//        BuildType::CONTROLLER,
+//        BuildType::ROUTE,
+        BuildType::FORM,
+    ],
+    ...
+];
+```
 If you want to change the code generation option, you can publish the stubs and change them yourself:
 ```shell
 php artisan vendor:publish --tag=laravel-code-builder-stubs

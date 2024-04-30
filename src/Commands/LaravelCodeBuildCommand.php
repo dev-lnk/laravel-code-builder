@@ -34,15 +34,7 @@ class LaravelCodeBuildCommand extends Command
     /**
      * @var array<int, BuildType> $builders
      */
-    private array $builders = [
-        BuildType::MODEL,
-        BuildType::ADD_ACTION,
-        BuildType::EDIT_ACTION,
-        BuildType::REQUEST,
-        BuildType::CONTROLLER,
-        BuildType::ROUTE,
-        BuildType::FORM,
-    ];
+    private array $builders = [];
 
     /**
      * @throws FileNotFoundException|Throwable
@@ -50,6 +42,8 @@ class LaravelCodeBuildCommand extends Command
     public function handle(): void
     {
         $stubDir = config('code_builder.stub_dir', __DIR__ . '/../../code_stubs') . '/';
+
+        $this->builders = config('code_builder.builders');
 
         $this->codePath = new CodePath();
 
@@ -96,6 +90,13 @@ class LaravelCodeBuildCommand extends Command
             $this->codePath,
         );
 
+        if($onlyFlag) {
+            $onlyBuilder = BuildType::tryFrom((string) $onlyFlag);
+            if(! is_null($onlyBuilder) && ! in_array($onlyBuilder, $this->builders)) {
+                $this->builders[] = $onlyBuilder;
+            }
+        }
+
         foreach ($this->builders as $builder) {
             if(! $onlyFlag || $onlyFlag === $builder->value) {
                 $confirmed = true;
@@ -108,7 +109,6 @@ class LaravelCodeBuildCommand extends Command
 
                     $codePath = $this->codePath->path($builder->value);
                     $filePath = substr($codePath->file(), strpos($codePath->file(), '/app') + 1 );
-
                     $this->info($filePath . ' was created successfully!');
                 }
             }
