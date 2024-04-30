@@ -175,8 +175,8 @@ php artisan vendor:publish --tag=laravel-code-builder-stubs
 ```
 Stubs will be copied to the directory `<your-base-bath>/code_stubs`.Don't forget to specify your directory in the `stub_dir` setting.
 
-### Beta
-This is a beta version of the package! It is planned to add to the release version:
+ ### Beta
+This is a beta version of the package! Stubs and commands may change during development. Work tested on sqlite and MySQL. It is planned to add to the release version:
 - Generate belongsTo relation
 - Generating the Livewire component
 - Inertia support
