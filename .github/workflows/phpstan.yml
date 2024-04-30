@@ -25,14 +25,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          php-version: ${{ matrix.php }}
-          tools: composer:v2
-          coverage: none
       - uses: php-actions/composer@v6
-
       - name: PHPStan Static Analysis
         uses: php-actions/phpstan@v3
         with:
-          level: 4
+          level: 9
           path: src/
