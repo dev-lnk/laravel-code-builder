@@ -198,3 +198,4 @@ This is a beta version of the package! Stubs and commands may change during deve
 - Generating the Livewire component
 - Inertia support
 - And other
+#### [More information for contributors here](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/for_contributors.md)
