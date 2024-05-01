@@ -1,13 +1,19 @@
 ## For contributors
 
 ### Release plans:
-- [ ] BelongsTo
+- [x] BelongsTo
+- [x] Select (if BelongsTo)
+- [ ] HasMany
+- [ ] HasOne
 - [ ] DTOs
+- [ ] TS interface support
+
+### Roadmap after release:
 - [ ] SpatieLaravelData support
 - [ ] Livewire support
 - [ ] Inertia support
-- [ ] Select (if BelongsTo) and checkboxes in inputs stub
-- [ ] TS interface support
+- [ ] MoonShine support
+
 
 ### How to add support for new code generation
 1. Add a new type to Enums/BuildType.php, `job` for example.
