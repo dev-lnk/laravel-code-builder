@@ -38,6 +38,9 @@ class CommandModelTest extends TestCase
         $this->assertStringContainsString('protected $fillable = [', $file);
         $this->assertStringContainsString('class Product extends Model', $file);
         $this->assertStringContainsString('use SoftDeletes;', $file);
+        $this->assertStringContainsString('use Illuminate\Database\Eloquent\Relations\BelongsTo;', $file);
+        $this->assertStringContainsString("return \$this->belongsTo(User::class, 'user_id');", $file);
+        $this->assertStringContainsString("return \$this->belongsTo(Category::class, 'category_id');", $file);
         $this->assertStringNotContainsString('public $timestamps = false;', $file);
 
         $this->assertStringContainsString('title', $file);

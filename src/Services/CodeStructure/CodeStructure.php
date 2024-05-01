@@ -26,6 +26,8 @@ class CodeStructure
 
     private bool $isDeletedAt = false;
 
+    private bool $hasBelongsTo = false;
+
     public function __construct(
         private readonly string $table,
         string $entity
@@ -53,6 +55,11 @@ class CodeStructure
         return $this->entity;
     }
 
+    public function hasBelongsTo(): bool
+    {
+        return $this->hasBelongsTo;
+    }
+
     public function addColumn(ColumnStructure $column): void
     {
         if(in_array($column, $this->columns)) {
@@ -62,6 +69,10 @@ class CodeStructure
         $this->columns[] = $column;
 
         $this->setTimestamps($column);
+
+        if($column->type() == SqlTypeMap::BELONGS_TO->value) {
+            $this->hasBelongsTo = true;
+        }
     }
 
     private function setTimestamps(ColumnStructure $column): void
@@ -134,6 +145,38 @@ class CodeStructure
         return $result;
     }
 
+    /**
+     * @throws FileNotFoundException
+     */
+    public function belongsToInModel(): string
+    {
+        $result = str('');
+
+        foreach ($this->columns as $column) {
+            if(is_null($column->relation())
+                || $column->type() !== SqlTypeMap::BELONGS_TO->value
+            ) {
+                continue;
+            }
+
+            $result = $result->newLine()->newLine()->append(
+                StubBuilder::make($this->stubDir().'BelongsTo')
+                    ->setKey(
+                        '{relation_id}',
+                        ", '{$column->relation()->foreignColumn()}'",
+                        $column->relation()->foreignColumn() !== 'id'
+                    )
+                    ->getFromStub([
+                        '{relation}' => $column->relation()->table()->str()->singular()->camel()->value(),
+                        '{relation_model}' => $column->relation()->table()->ucFirstSingular(),
+                        '{relation_column}' => $column->column()
+                    ])
+            );
+        }
+
+        return $result->value();
+    }
+
     public function columnsToRules(): string
     {
         $result = "";
@@ -171,7 +214,12 @@ class CodeStructure
 
             $type = $column->inputType() !== 'text' ? " type=\"{$column->inputType()}\"" : '';
 
-            $input = StubBuilder::make($this->stubDir().'Input')
+            $inputStub = 'Input';
+            if($column->type() === SqlTypeMap::BELONGS_TO->value) {
+                $inputStub = 'Select';
+            }
+
+            $input = StubBuilder::make($this->stubDir() . $inputStub)
                 ->getFromStub([
                     '{column}' => $column->column(),
                     '{label}' => $column->column(),

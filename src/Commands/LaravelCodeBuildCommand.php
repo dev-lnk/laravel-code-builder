@@ -65,7 +65,16 @@ class LaravelCodeBuildCommand extends Command
             throw new Exception('entity must be a string');
         }
 
-        $this->codeStructure = CodeStructureFactory::makeFromTable((string) $table, (string) $entity);
+        $confirmBelongsTo = config('code_builder.belongs_to');
+        if(is_null($confirmBelongsTo)) {
+            $confirmBelongsTo = confirm("Generate BelongsTo relations from foreign keys?");
+        }
+
+        $this->codeStructure = CodeStructureFactory::makeFromTable(
+            (string) $table,
+            (string) $entity,
+            $confirmBelongsTo
+        );
 
         $this->codeStructure->setStubDir($stubDir);
 

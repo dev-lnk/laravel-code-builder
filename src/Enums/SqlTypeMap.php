@@ -111,7 +111,8 @@ enum SqlTypeMap: string
             self::UNSIGNED_TINY_INTEGER,
             self::DECIMAL,
             self::DOUBLE,
-            self::FLOAT
+            self::FLOAT,
+            self::BELONGS_TO
             => 'number',
 
             /*Switcher*/
@@ -144,7 +145,6 @@ enum SqlTypeMap: string
             /*Relations*/
             self::HAS_ONE => 'HasOne',
             self::HAS_MANY => 'HasMany',
-            self::BELONGS_TO => 'BelongsTo',
         };
     }
 

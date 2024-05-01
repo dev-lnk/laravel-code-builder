@@ -20,6 +20,10 @@ class ModelBuilder extends AbstractBuilder
     {
         $modelPath = $this->codePath->path(BuildType::MODEL->value);
 
+
+        $belongsToStr = $this->codeStructure->hasBelongsTo()
+            ? $this->codeStructure->belongsToInModel() : '';
+
         StubBuilder::make($this->stubFile)
             ->setKey(
                 StubValue::USE_SOFT_DELETES->key(),
@@ -30,15 +34,28 @@ class ModelBuilder extends AbstractBuilder
                 StubValue::SOFT_DELETES->key(),
                 StubValue::SOFT_DELETES->value().PHP_EOL,
                 $this->codeStructure->isSoftDeletes()
-            )->setKey(
+            )
+            ->setKey(
+                StubValue::USE_BELONGS_TO->key(),
+                StubValue::USE_BELONGS_TO->value(),
+                $this->codeStructure->hasBelongsTo()
+            )
+            ->setKey(
+                StubValue::BELONGS_TO->key(),
+                $belongsToStr,
+                ! empty($belongsToStr)
+            )
+            ->setKey(
                 StubValue::TIMESTAMPS->key(),
                 StubValue::TIMESTAMPS->value().PHP_EOL,
                 ! $this->codeStructure->isTimestamps()
-            )->setKey(
+            )
+            ->setKey(
                 StubValue::TABLE->key(),
                 StubValue::TABLE->value() . " '{$this->codeStructure->table()}';\n",
                 $this->codeStructure->table() !== $this->codeStructure->entity()->str()->plural()->snake()->value()
-            )->makeFromStub($modelPath->file(), [
+            )
+            ->makeFromStub($modelPath->file(), [
                 '{namespace}' => $modelPath->namespace(),
                 '{class}' => $this->codeStructure->entity()->ucFirstSingular(),
                 '{fillable}' => $this->codeStructure->columnsToModel(),

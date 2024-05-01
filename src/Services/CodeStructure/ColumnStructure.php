@@ -12,6 +12,8 @@ final class ColumnStructure
 
     private ?string $inputType = null;
 
+    private ?RelationStructure $relation = null;
+
     public function __construct(
         private readonly string $column,
         private string $name = ''
@@ -36,11 +38,21 @@ final class ColumnStructure
         return $this->name;
     }
 
+    public function relation(): ?RelationStructure
+    {
+        return $this->relation;
+    }
+
     public function setType(string $type): void
     {
         $this->type = $type;
 
         $this->setInputType();
+    }
+
+    public function setRelation(string $foreignColumn, string $table): void
+    {
+        $this->relation = new RelationStructure($foreignColumn, $table);
     }
 
     public function inputType(): ?string
@@ -75,6 +87,10 @@ final class ColumnStructure
 
     public function rulesType(): ?string
     {
+        if($this->inputType === 'number') {
+            return 'int';
+        }
+
         if($this->inputType === 'number') {
             return 'int';
         }
