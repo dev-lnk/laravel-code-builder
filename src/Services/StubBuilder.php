@@ -90,6 +90,7 @@ final class StubBuilder
             ->replace("\r", "")
             ->replace(array_map(fn($item) => "\n\n$item", $this->removers), "")
             ->replace(array_map(fn($item) => "\n$item", $this->removers), "")
+            ->replace(array_map(fn($item) => "$item", $this->removers), "")
             ->value();
 
         return $this;

@@ -14,6 +14,10 @@ enum StubValue
 
     case TABLE;
 
+    case USE_BELONGS_TO;
+
+    case BELONGS_TO;
+
     function key(): string
     {
         return match ($this) {
@@ -21,6 +25,8 @@ enum StubValue
             self::SOFT_DELETES => '{soft_deletes}',
             self::TIMESTAMPS => '{timestamps}',
             self::TABLE => '{table}',
+            self::USE_BELONGS_TO => '{use_belongs_to}',
+            self::BELONGS_TO => '{belongs_to}',
         };
     }
 
@@ -31,6 +37,8 @@ enum StubValue
             self::SOFT_DELETES => "\tuse SoftDeletes;",
             self::TIMESTAMPS => "\tpublic \$timestamps = false;",
             self::TABLE => "\tprotected \$table = ",
+            self::USE_BELONGS_TO => "use Illuminate\Database\Eloquent\Relations\BelongsTo;",
+            default => '',
         };
     }
 }

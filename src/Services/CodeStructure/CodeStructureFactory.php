@@ -9,11 +9,20 @@ use Illuminate\Support\Facades\Schema;
 
 final class CodeStructureFactory
 {
-    public static function makeFromTable(string $table, string $entity): CodeStructure
+    public static function makeFromTable(string $table, string $entity, bool $isBelongsTo): CodeStructure
     {
         $columns = Schema::getColumns($table);
 
         $indexes = Schema::getIndexes($table);
+
+        $foreignKeys = $isBelongsTo ? Schema::getForeignKeys($table) : [];
+        $foreigns = [];
+        foreach ($foreignKeys as $value) {
+            $foreigns[$value['columns'][0]] = [
+                'table' => $value['foreign_table'],
+                'foreign_column' => $value['foreign_columns'][0],
+            ];
+        }
 
         $codeStructure = new CodeStructure($table, $entity);
 
@@ -32,7 +41,15 @@ final class CodeStructureFactory
                 ? 'primary'
                 : preg_replace("/[0-9]+|\(|\)|,/", '', $column['type']);
 
-            $columnStructure->setType(SqlTypeMap::fromSqlType($type)->value);
+            if($isBelongsTo && isset($foreigns[$column['name']])) {
+                $columnStructure->setRelation(
+                    $foreigns[$column['name']]['foreign_column'],
+                    $foreigns[$column['name']]['table']
+                );
+                $columnStructure->setType(SqlTypeMap::BELONGS_TO->value);
+            } else {
+                $columnStructure->setType(SqlTypeMap::fromSqlType($type)->value);
+            }
 
             $codeStructure->addColumn($columnStructure);
         }

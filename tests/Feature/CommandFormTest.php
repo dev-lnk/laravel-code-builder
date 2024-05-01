@@ -36,6 +36,8 @@ final class CommandFormTest extends TestCase
         $this->assertStringContainsString("<form action=\"{{ route('product.store') }}\" method=\"POST\">", $file);
         $this->assertStringContainsString('<input id="content" name="content" value="{{ old(\'content\') }}"/>', $file);
         $this->assertStringContainsString('<input id="sort_number" name="sort_number" value="{{ old(\'sort_number\') }}" type="number"/>', $file);
+        $this->assertStringContainsString('<select id="user_id" name="user_id">', $file);
+        $this->assertStringContainsString('<select id="category_id" name="category_id">', $file);
     }
 
     #[Test]

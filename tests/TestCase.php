@@ -7,6 +7,7 @@ namespace DevLnk\LaravelCodeBuilder\Tests;
 use DevLnk\LaravelCodeBuilder\Providers\LaravelCodeBuilderProvider;
 use DevLnk\LaravelCodeBuilder\Tests\Fixtures\TestServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Config;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
@@ -23,6 +24,8 @@ class TestCase extends Orchestra
     protected function performApplication(): void
     {
         $this->artisan('vendor:publish --tag=laravel-code-builder');
+
+        Config::set('code_builder.belongs_to', true);
     }
 
     protected function getPackageProviders($app): array
