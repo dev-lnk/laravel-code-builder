@@ -11,7 +11,7 @@ This package allows you to generate code from the schema of your SQL table. The 
 - Form
 ### Installation
 ```shell
-composer require dev-lnk/laravel-code-builder
+composer require dev-lnk/laravel-code-builder --dev
 ```
 ### Configuration:
 Publish the package configuration file:
