@@ -8,7 +8,7 @@ use DevLnk\LaravelCodeBuilder\Enums\SqlTypeMap;
 
 final class ColumnStructure
 {
-    private string $type;
+    private SqlTypeMap $type;
 
     private ?string $inputType = null;
 
@@ -23,7 +23,7 @@ final class ColumnStructure
         }
     }
 
-    public function type(): string
+    public function type(): SqlTypeMap
     {
         return $this->type;
     }
@@ -43,7 +43,7 @@ final class ColumnStructure
         return $this->relation;
     }
 
-    public function setType(string $type): void
+    public function setType(SqlTypeMap $type): void
     {
         $this->type = $type;
 
@@ -77,7 +77,7 @@ final class ColumnStructure
 
     public function isId(): bool
     {
-        return  SqlTypeMap::from($this->type())->isIdType();
+        return  $this->type()->isIdType();
     }
 
     public function isLaravelTimestamp(): bool
@@ -113,6 +113,6 @@ final class ColumnStructure
             return;
         }
 
-        $this->inputType = SqlTypeMap::from($this->type())->getInputType();
+        $this->inputType = $this->type()->getInputType();
     }
 }

@@ -21,8 +21,8 @@ class ModelBuilder extends AbstractBuilder
         $modelPath = $this->codePath->path(BuildType::MODEL->value);
 
 
-        $belongsToStr = $this->codeStructure->hasBelongsTo()
-            ? $this->codeStructure->belongsToInModel() : '';
+        $relations = $this->codeStructure->hasBelongsTo()
+            ? $this->codeStructure->relationsToModel() : '';
 
         StubBuilder::make($this->stubFile)
             ->setKey(
@@ -41,9 +41,19 @@ class ModelBuilder extends AbstractBuilder
                 $this->codeStructure->hasBelongsTo()
             )
             ->setKey(
-                StubValue::BELONGS_TO->key(),
-                $belongsToStr,
-                ! empty($belongsToStr)
+                StubValue::USE_HAS_MANY->key(),
+                StubValue::USE_HAS_MANY->value(),
+                $this->codeStructure->hasBelongsTo()
+            )
+            ->setKey(
+                StubValue::USE_HAS_ONE->key(),
+                StubValue::USE_HAS_ONE->value(),
+                $this->codeStructure->hasBelongsTo()
+            )
+            ->setKey(
+                StubValue::RELATIONS->key(),
+                $relations,
+                ! empty($relations)
             )
             ->setKey(
                 StubValue::TIMESTAMPS->key(),
