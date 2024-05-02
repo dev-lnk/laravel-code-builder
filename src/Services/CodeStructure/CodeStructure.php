@@ -269,7 +269,11 @@ class CodeStructure
                 continue;
             }
 
-            $result .= str("'{$column->column()}' => ['{$column->rulesType()}', 'nullable']")
+            $result .= str("'{$column->column()}' => ['{$column->rulesType()}'")
+                ->when($column->type() !== SqlTypeMap::BOOLEAN,
+                    fn($str) => $str->append(", 'nullable'")
+                )
+                ->append(']')
                 ->prepend("\t\t\t")
                 ->prepend(PHP_EOL)
                 ->append(',')
@@ -301,6 +305,7 @@ class CodeStructure
             $inputStub = match ($column->type()) {
                 SqlTypeMap::BELONGS_TO => 'InputSelect',
                 SqlTypeMap::BELONGS_TO_MANY => 'InputMultiple',
+                SqlTypeMap::BOOLEAN => 'InputBoolean',
                 default => 'Input'
             };
 
@@ -370,7 +375,12 @@ class CodeStructure
             }
             $result .= str(str($column->column())->camel()->value() . ': ')
                 ->when($column->phpType() === 'int', fn($str) => $str->append('(int) '))
-                ->append("\$request->input('{$column->column()}'),")
+                ->append("\$request->")
+                ->when($column->type() === SqlTypeMap::BOOLEAN,
+                    fn($str) => $str->append('has'),
+                    fn($str) => $str->append('input'),
+                )
+                ->append("('{$column->column()}'),")
                 ->prepend("\n\t\t\t")
             ;
         }
@@ -384,8 +394,9 @@ class CodeStructure
         foreach ($this->sortColumnsFromDefaultValue() as $column) {
             $result .= str(str($column->column())->camel()->value() . ': ')
                 ->when($column->phpType() === 'int', fn($str) => $str->append('(int) '))
+                ->when($column->phpType() === 'bool', fn($str) => $str->append('(bool) '))
                 ->when($column->type() === SqlTypeMap::HAS_ONE,
-                    fn($str) => $str->append("\$model->{$column->column()} ? ". $column->relation()->table()->ucFirstSingular() . 'DTO::fromModel(')
+                    fn($str) => $str->append("\$model->{$column->column()} ? ". $column->relation()?->table()->ucFirstSingular() . 'DTO::fromModel(')
                 )
                 ->append("\$model->{$column->column()}")
                 ->when($column->type() === SqlTypeMap::HAS_ONE,
@@ -433,6 +444,9 @@ class CodeStructure
         return $result;
     }
 
+    /**
+     * @return array<int, ColumnStructure>
+     */
     private function sortColumnsFromDefaultValue(): array
     {
         $columns = $this->columns;

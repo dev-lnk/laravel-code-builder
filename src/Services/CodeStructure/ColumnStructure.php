@@ -17,8 +17,8 @@ final class ColumnStructure
     public function __construct(
         private readonly string $column,
         private string $name,
-        private ?string $default,
-        private bool $nullable
+        private readonly ?string $default,
+        private readonly bool $nullable
     ) {
         if(empty($this->name)) {
             $this->name = str($this->column)->camel()->ucfirst()->value();
@@ -107,6 +107,10 @@ final class ColumnStructure
             return 'string';
         }
 
+        if($this->inputType === 'checkbox') {
+            return 'accepted';
+        }
+
         return $this->inputType;
     }
 
@@ -120,7 +124,7 @@ final class ColumnStructure
         }
 
         if($this->type() === SqlTypeMap::HAS_ONE) {
-            return $this->relation()->table()->ucFirstSingular() . 'DTO';
+            return $this->relation()?->table()->ucFirstSingular() . 'DTO';
         }
 
         if($this->inputType === 'number') {
@@ -133,6 +137,10 @@ final class ColumnStructure
             || $this->inputType === 'password'
         ) {
             return 'string';
+        }
+
+        if($this->inputType === 'checkbox') {
+            return 'bool';
         }
 
         return $this->inputType;

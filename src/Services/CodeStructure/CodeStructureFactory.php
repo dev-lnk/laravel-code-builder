@@ -52,6 +52,14 @@ final class CodeStructureFactory
         }
 
         foreach ($columns as $column) {
+            $type = $column['name'] === $primaryKey
+                ? 'primary'
+                : preg_replace("/[0-9]+|\(|\)|,/", '', $column['type']);
+
+            $type = $column['type'] === 'tinyint(1)' ? 'boolean' : $type;
+            if($type === 'boolean') {
+                $column['default'] = $column['default'] ? 'true' : 'false';
+            }
 
             $columnStructure = new ColumnStructure(
                 $column['name'],
@@ -59,10 +67,6 @@ final class CodeStructureFactory
                 $column['default'],
                 $column['nullable']
             );
-
-            $type = $column['name'] === $primaryKey
-                ? 'primary'
-                : preg_replace("/[0-9]+|\(|\)|,/", '', $column['type']);
 
             if($isBelongsTo && isset($foreigns[$column['name']])) {
                 $columnStructure->setRelation(

@@ -203,6 +203,9 @@ enum SqlTypeMap: string
             /*Enum*/
             'enum' => self::ENUM,
 
+            /*Boolean*/
+            'boolean' => self::BOOLEAN,
+
             default => self::TEXT
         };
     }

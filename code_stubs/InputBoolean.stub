@@ -1,0 +1,4 @@
+	<div>
+		<label for="{column}">{label}</label>
+		<input type="checkbox" id="{column}" name="{column}" value="{{ old('{column}', 1) }}"/>
+	</div>
