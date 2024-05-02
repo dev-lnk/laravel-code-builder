@@ -157,6 +157,7 @@ class LaravelCodeBuildCommand extends Command
             $generateDirs = [
                 'Models',
                 'Actions',
+                'DTOs',
                 'Http/Requests',
                 'Http/Controllers',
                 'routes',
@@ -176,6 +177,7 @@ class LaravelCodeBuildCommand extends Command
         } else {
             $generateProjectDirs = [
                 'Actions',
+                'DTOs',
                 'Http/Requests',
                 'Http/Controllers',
             ];
@@ -197,26 +199,36 @@ class LaravelCodeBuildCommand extends Command
                 'Add' .$this->codeStructure->entity()->ucFirstSingular() . 'Action.php',
                 $isGenerationDir ? $genPath . "/Actions" : app_path('Actions'),
                 $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Actions' : 'App\\Actions'
-            )->editAction(
+            )
+            ->editAction(
                 'Edit' .$this->codeStructure->entity()->ucFirstSingular() . 'Action.php',
                 $isGenerationDir ? $genPath . "/Actions" : app_path('Actions'),
                 $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Actions' : 'App\\Actions'
-            )->request(
+            )
+            ->request(
                 $this->codeStructure->entity()->ucFirstSingular() . 'Request.php',
                 $isGenerationDir ? $genPath . "/Http/Requests" : app_path('Http/Requests'),
                 $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Http\\Requests' : 'App\\Http\\Requests'
-            )->controller(
+            )
+            ->controller(
                 $this->codeStructure->entity()->ucFirstSingular() . 'Controller.php',
                 $isGenerationDir ? $genPath . "/Http/Controllers" : app_path('Http/Controllers'),
                 $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Http\\Controllers' : 'App\\Http\\Controllers'
-            )->route(
+            )
+            ->route(
                 $this->codeStructure->entity()->lower(). '.php',
                 $isGenerationDir ? $genPath . "/routes" : base_path('routes'),
                 ''
-            )->form(
+            )
+            ->form(
                 $this->codeStructure->entity()->lower(). '.blade.php',
                 $isGenerationDir ? $genPath . "/resources/views" : base_path('resources/views'),
                 ''
+            )
+            ->dto(
+                $this->codeStructure->entity()->ucFirstSingular() . 'DTO.php',
+                $isGenerationDir ? $genPath . "/DTOs" : app_path('DTOs'),
+                $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\DTOs' : 'App\\DTOs'
             )
         ;
 

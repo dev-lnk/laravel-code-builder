@@ -12,6 +12,7 @@ return [
         BuildType::CONTROLLER,
         BuildType::ROUTE,
         BuildType::FORM,
+        BuildType::DTO,
         // Additionally
     ],
 

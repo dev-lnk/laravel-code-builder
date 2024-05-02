@@ -84,4 +84,13 @@ final class CodePath
         $this->paths[BuildType::FORM->value] = new FormPath($name, $dir, $namespace);
         return $this;
     }
+
+    public function dto(string $name, string $dir, string $namespace): self
+    {
+        if(isset($this->paths[BuildType::DTO->value])) {
+            return $this;
+        }
+        $this->paths[BuildType::DTO->value] = new DTOPath($name, $dir, $namespace);
+        return $this;
+    }
 }

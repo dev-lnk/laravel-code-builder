@@ -52,7 +52,13 @@ final class CodeStructureFactory
         }
 
         foreach ($columns as $column) {
-            $columnStructure = new ColumnStructure($column['name'], $column['comment'] ?? '');
+
+            $columnStructure = new ColumnStructure(
+                $column['name'],
+                $column['comment'] ?? '',
+                $column['default'],
+                $column['nullable']
+            );
 
             $type = $column['name'] === $primaryKey
                 ? 'primary'
@@ -72,7 +78,7 @@ final class CodeStructureFactory
         }
 
         foreach ($hasMany as $column) {
-            $columnStructure = new ColumnStructure($column);
+            $columnStructure = new ColumnStructure($column, '', '[]', false);
             $columnStructure->setRelation(
                 str($table)->singular()->snake()->value() . '_id',
                 $column
@@ -82,7 +88,7 @@ final class CodeStructureFactory
         }
 
         foreach ($hasOne as $column) {
-            $columnStructure = new ColumnStructure(str($column)->singular()->snake()->value());
+            $columnStructure = new ColumnStructure(str($column)->singular()->snake()->value(), '', null, true);
             $columnStructure->setRelation(
                 str($table)->singular()->snake()->value() . '_id',
                 $column
@@ -92,7 +98,7 @@ final class CodeStructureFactory
         }
 
         foreach ($belongsToMany as $column) {
-            $columnStructure = new ColumnStructure($column);
+            $columnStructure = new ColumnStructure($column, '', '[]', false);
             $columnStructure->setRelation(
                 str($table)->singular()->snake()->value() . '_id',
                 $column
