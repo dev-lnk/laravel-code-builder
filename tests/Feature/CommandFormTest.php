@@ -41,6 +41,20 @@ final class CommandFormTest extends TestCase
     }
 
     #[Test]
+    public function testProductBelongsToMany()
+    {
+        $this->artisan('code:build product --only=form --belongs-to-many=properties')
+            ->expectsQuestion('Table', 'products')
+            ->expectsQuestion('Where to generate the result?', '_default')
+        ;
+
+        $this->assertFileExists($this->path . 'product.blade.php');
+
+        $file = $this->filesystem->get($this->path . 'product.blade.php');
+        $this->assertStringContainsString('<select id="properties" name="properties" multiple>', $file);
+    }
+
+    #[Test]
     public function testUser()
     {
         $this->artisan('code:build user --only=form')

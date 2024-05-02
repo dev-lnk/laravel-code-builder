@@ -43,6 +43,20 @@ class CommandRequestTest extends TestCase
     }
 
     #[Test]
+    public function testProductBelongsToMany()
+    {
+        $this->artisan('code:build product --only=request --belongs-to-many=properties')
+            ->expectsQuestion('Table', 'products')
+            ->expectsQuestion('Where to generate the result?', '_default')
+        ;
+
+        $this->assertFileExists($this->path . 'ProductRequest.php');
+
+        $file = $this->filesystem->get($this->path . 'ProductRequest.php');
+        $this->assertStringContainsString("'properties' => ['array', 'nullable'],", $file);
+    }
+
+    #[Test]
     public function testUser()
     {
         $this->artisan('code:build user --only=request')

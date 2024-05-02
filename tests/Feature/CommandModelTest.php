@@ -82,6 +82,7 @@ class CommandModelTest extends TestCase
         $this->assertFileExists($this->path . 'Product.php');
 
         $file = $this->filesystem->get($this->path . 'Product.php');
+        $this->assertStringContainsString('use Illuminate\\Database\\Eloquent\\Relations\\HasMany;', $file);
         $this->assertStringContainsString('return $this->hasMany(Comment::class, \'product_id\');', $file);
         $this->assertStringNotContainsString("\t\t'comments',", $file);
     }
@@ -97,8 +98,26 @@ class CommandModelTest extends TestCase
         $this->assertFileExists($this->path . 'Product.php');
 
         $file = $this->filesystem->get($this->path . 'Product.php');
+        $this->assertStringContainsString('use Illuminate\\Database\\Eloquent\\Relations\\HasOne;', $file);
         $this->assertStringContainsString('return $this->hasOne(Comment::class, \'product_id\');', $file);
         $this->assertStringNotContainsString("\t\t'comment',", $file);
+    }
+
+    #[Test]
+    public function testProductBelongsToMany()
+    {
+        $this->artisan('code:build product --only=model --belongs-to-many=properties')
+            ->expectsQuestion('Table', 'products')
+            ->expectsQuestion('Where to generate the result?', '_default')
+        ;
+
+        $this->assertFileExists($this->path . 'Product.php');
+
+        $file = $this->filesystem->get($this->path . 'Product.php');
+        $this->assertStringContainsString('use Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany;', $file);
+        $this->assertStringContainsString('return $this->belongsToMany(Property::class);', $file);
+        $this->assertStringNotContainsString("\t\t'properties',", $file);
+        $this->assertStringNotContainsString("\t\t'property',", $file);
     }
 
     #[Test]
