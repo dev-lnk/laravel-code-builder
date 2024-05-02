@@ -147,7 +147,7 @@ class CodeStructure
     /**
      * @return array<int, SqlTypeMap>
      */
-    public function noInputColumns(): array
+    public function noInputType(): array
     {
         return [
             SqlTypeMap::HAS_MANY,
@@ -162,6 +162,7 @@ class CodeStructure
         foreach ($this->columns as $column) {
             if(
                 $column->type()->isIdType()
+                || in_array($column->type(), $this->noInputType())
                 || $column->isLaravelTimestamp()
             ) {
                 continue;
@@ -216,11 +217,15 @@ class CodeStructure
                 ? $relation->plural()->camel()->value()
                 : $relation->singular()->camel()->value();
 
+            $relationColumn = ($column->type() === SqlTypeMap::HAS_MANY || $column->type() === SqlTypeMap::HAS_ONE)
+                ? $column->relation()->foreignColumn()
+                : $column->column();
+
             $result = $result->newLine()->newLine()->append(
                 $stubBuilder->getFromStub([
                     '{relation}' => $relation,
                     '{relation_model}' => $column->relation()->table()->ucFirstSingular(),
-                    '{relation_column}' => $column->column()
+                    '{relation_column}' => $relationColumn
                 ])
             );
         }
@@ -235,7 +240,7 @@ class CodeStructure
         foreach ($this->columns as $column) {
             if(
                 in_array($column->column(), $this->dateColumns())
-                || in_array($column->type(), $this->noInputColumns())
+                || in_array($column->type(), $this->noInputType())
             ) {
                 continue;
             }
@@ -261,7 +266,7 @@ class CodeStructure
         foreach ($this->columns as $column) {
             if(
                 in_array($column->column(), $this->dateColumns())
-                || in_array($column->type(), $this->noInputColumns())
+                || in_array($column->type(), $this->noInputType())
                 || $column->isId()
             ) {
                 continue;

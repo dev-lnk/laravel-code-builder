@@ -4,6 +4,7 @@ namespace DevLnk\LaravelCodeBuilder\Tests\Feature;
 
 use DevLnk\LaravelCodeBuilder\Tests\TestCase;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\Attributes\Test;
 
 class CommandModelTest extends TestCase
@@ -32,7 +33,6 @@ class CommandModelTest extends TestCase
         $this->assertFileExists($this->path . 'Product.php');
 
         $file = $this->filesystem->get($this->path . 'Product.php');
-
         $this->assertStringContainsString('namespace App\Models;', $file);
         $this->assertStringContainsString('use Illuminate\Database\Eloquent\Model;', $file);
         $this->assertStringContainsString('protected $fillable = [', $file);
@@ -50,6 +50,55 @@ class CommandModelTest extends TestCase
         $this->assertStringContainsString('category_id', $file);
         $this->assertStringContainsString('is_active', $file);
         $this->assertStringContainsString('sort_number', $file);
+    }
+
+    #[Test]
+    public function testProductWithoutBelongsTo()
+    {
+        Config::set('code_builder.belongs_to');
+
+        $this->artisan('code:build product --only=model')
+            ->expectsQuestion('Table', 'products')
+            ->expectsQuestion('Generate BelongsTo relations from foreign keys?', false)
+            ->expectsQuestion('Where to generate the result?', '_default')
+        ;
+
+        $this->assertFileExists($this->path . 'Product.php');
+
+        $file = $this->filesystem->get($this->path . 'Product.php');
+        $this->assertStringNotContainsString('use Illuminate\Database\Eloquent\Relations\BelongsTo;', $file);
+        $this->assertStringNotContainsString("return \$this->belongsTo(User::class, 'user_id');", $file);
+        $this->assertStringNotContainsString("return \$this->belongsTo(Category::class, 'category_id');", $file);
+    }
+
+    #[Test]
+    public function testProductHasMany()
+    {
+        $this->artisan('code:build product --only=model --has-many=comments')
+            ->expectsQuestion('Table', 'products')
+            ->expectsQuestion('Where to generate the result?', '_default')
+        ;
+
+        $this->assertFileExists($this->path . 'Product.php');
+
+        $file = $this->filesystem->get($this->path . 'Product.php');
+        $this->assertStringContainsString('return $this->hasMany(Comment::class, \'product_id\');', $file);
+        $this->assertStringNotContainsString("\t\t'comments',", $file);
+    }
+
+    #[Test]
+    public function testProductHasOne()
+    {
+        $this->artisan('code:build product --only=model --has-one=comments')
+            ->expectsQuestion('Table', 'products')
+            ->expectsQuestion('Where to generate the result?', '_default')
+        ;
+
+        $this->assertFileExists($this->path . 'Product.php');
+
+        $file = $this->filesystem->get($this->path . 'Product.php');
+        $this->assertStringContainsString('return $this->hasOne(Comment::class, \'product_id\');', $file);
+        $this->assertStringNotContainsString("\t\t'comment',", $file);
     }
 
     #[Test]
