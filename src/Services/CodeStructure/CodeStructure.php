@@ -28,6 +28,10 @@ class CodeStructure
 
     private bool $hasBelongsTo = false;
 
+    private bool $hasHasMany = false;
+
+    private bool $hasHasOne = false;
+
     public function __construct(
         private readonly string $table,
         string $entity
@@ -60,6 +64,16 @@ class CodeStructure
         return $this->hasBelongsTo;
     }
 
+    public function hasHasMany(): bool
+    {
+        return $this->hasHasMany;
+    }
+
+    public function hasHasOne(): bool
+    {
+        return $this->hasHasOne;
+    }
+
     public function addColumn(ColumnStructure $column): void
     {
         if(in_array($column, $this->columns)) {
@@ -70,8 +84,16 @@ class CodeStructure
 
         $this->setTimestamps($column);
 
-        if($column->type() == SqlTypeMap::BELONGS_TO->value) {
+        if($column->type() === SqlTypeMap::BELONGS_TO) {
             $this->hasBelongsTo = true;
+        }
+
+        if($column->type() === SqlTypeMap::HAS_MANY) {
+            $this->hasHasMany = true;
+        }
+
+        if($column->type() === SqlTypeMap::HAS_ONE) {
+            $this->hasHasOne = true;
         }
     }
 
@@ -122,13 +144,24 @@ class CodeStructure
         ];
     }
 
+    /**
+     * @return array<int, SqlTypeMap>
+     */
+    public function noInputColumns(): array
+    {
+        return [
+            SqlTypeMap::HAS_MANY,
+            SqlTypeMap::HAS_ONE,
+        ];
+    }
+
     public function columnsToModel(): string
     {
         $result = "";
 
         foreach ($this->columns as $column) {
             if(
-                SqlTypeMap::from($column->type())->isIdType()
+                $column->type()->isIdType()
                 || $column->isLaravelTimestamp()
             ) {
                 continue;
@@ -148,29 +181,47 @@ class CodeStructure
     /**
      * @throws FileNotFoundException
      */
-    public function belongsToInModel(): string
+    public function relationsToModel(): string
     {
         $result = str('');
 
         foreach ($this->columns as $column) {
-            if(is_null($column->relation())
-                || $column->type() !== SqlTypeMap::BELONGS_TO->value
-            ) {
+            if(is_null($column->relation())) {
                 continue;
             }
 
+            $stubName = match ($column->type()) {
+                SqlTypeMap::BELONGS_TO => 'BelongsTo',
+                SqlTypeMap::HAS_MANY => 'HasMany',
+                SqlTypeMap::HAS_ONE => 'HasOne',
+                default => ''
+            };
+
+            if(empty($stubName)) {
+                continue;
+            }
+
+            $stubBuilder = StubBuilder::make($this->stubDir() . $stubName);
+            if($column->type() === SqlTypeMap::BELONGS_TO) {
+                $stubBuilder->setKey(
+                    '{relation_id}',
+                    ", '{$column->relation()->foreignColumn()}'",
+                    $column->relation()->foreignColumn() !== 'id'
+                );
+            }
+
+            $relation = $column->relation()->table()->str();
+
+            $relation = $column->type() === SqlTypeMap::HAS_MANY
+                ? $relation->plural()->camel()->value()
+                : $relation->singular()->camel()->value();
+
             $result = $result->newLine()->newLine()->append(
-                StubBuilder::make($this->stubDir().'BelongsTo')
-                    ->setKey(
-                        '{relation_id}',
-                        ", '{$column->relation()->foreignColumn()}'",
-                        $column->relation()->foreignColumn() !== 'id'
-                    )
-                    ->getFromStub([
-                        '{relation}' => $column->relation()->table()->str()->singular()->camel()->value(),
-                        '{relation_model}' => $column->relation()->table()->ucFirstSingular(),
-                        '{relation_column}' => $column->column()
-                    ])
+                $stubBuilder->getFromStub([
+                    '{relation}' => $relation,
+                    '{relation_model}' => $column->relation()->table()->ucFirstSingular(),
+                    '{relation_column}' => $column->column()
+                ])
             );
         }
 
@@ -182,7 +233,10 @@ class CodeStructure
         $result = "";
 
         foreach ($this->columns as $column) {
-            if(in_array($column->column(), $this->dateColumns())) {
+            if(
+                in_array($column->column(), $this->dateColumns())
+                || in_array($column->type(), $this->noInputColumns())
+            ) {
                 continue;
             }
 
@@ -207,6 +261,7 @@ class CodeStructure
         foreach ($this->columns as $column) {
             if(
                 in_array($column->column(), $this->dateColumns())
+                || in_array($column->type(), $this->noInputColumns())
                 || $column->isId()
             ) {
                 continue;
@@ -215,7 +270,7 @@ class CodeStructure
             $type = $column->inputType() !== 'text' ? " type=\"{$column->inputType()}\"" : '';
 
             $inputStub = 'Input';
-            if($column->type() === SqlTypeMap::BELONGS_TO->value) {
+            if($column->type() === SqlTypeMap::BELONGS_TO) {
                 $inputStub = 'Select';
             }
 

@@ -5,12 +5,27 @@ declare(strict_types=1);
 namespace DevLnk\LaravelCodeBuilder\Services\CodeStructure;
 
 use DevLnk\LaravelCodeBuilder\Enums\SqlTypeMap;
+use DevLnk\LaravelCodeBuilder\Support\NameStr;
 use Illuminate\Support\Facades\Schema;
 
 final class CodeStructureFactory
 {
-    public static function makeFromTable(string $table, string $entity, bool $isBelongsTo): CodeStructure
-    {
+    /**
+     * @param string $table
+     * @param string $entity
+     * @param bool   $isBelongsTo
+     * @param array<int, string>  $hasMany
+     * @param array<int, string>  $hasOne
+     *
+     * @return CodeStructure
+     */
+    public static function makeFromTable(
+        string $table,
+        string $entity,
+        bool $isBelongsTo,
+        array $hasMany,
+        array $hasOne
+    ): CodeStructure {
         $columns = Schema::getColumns($table);
 
         $indexes = Schema::getIndexes($table);
@@ -46,11 +61,31 @@ final class CodeStructureFactory
                     $foreigns[$column['name']]['foreign_column'],
                     $foreigns[$column['name']]['table']
                 );
-                $columnStructure->setType(SqlTypeMap::BELONGS_TO->value);
+                $columnStructure->setType(SqlTypeMap::BELONGS_TO);
             } else {
-                $columnStructure->setType(SqlTypeMap::fromSqlType($type)->value);
+                $columnStructure->setType(SqlTypeMap::fromSqlType($type));
             }
 
+            $codeStructure->addColumn($columnStructure);
+        }
+
+        foreach ($hasMany as $column) {
+            $columnStructure = new ColumnStructure($column);
+            $columnStructure->setRelation(
+                str($table)->singular()->snake()->value() . '_id',
+                $column
+            );
+            $columnStructure->setType(SqlTypeMap::HAS_MANY);
+            $codeStructure->addColumn($columnStructure);
+        }
+
+        foreach ($hasOne as $column) {
+            $columnStructure = new ColumnStructure(str($column)->singular()->snake()->value());
+            $columnStructure->setRelation(
+                str($table)->singular()->snake()->value() . '_id',
+                $column
+            );
+            $columnStructure->setType(SqlTypeMap::HAS_ONE);
             $codeStructure->addColumn($columnStructure);
         }
 

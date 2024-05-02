@@ -16,17 +16,23 @@ enum StubValue
 
     case USE_BELONGS_TO;
 
-    case BELONGS_TO;
+    case USE_HAS_MANY;
+
+    case USE_HAS_ONE;
+
+    case RELATIONS;
 
     function key(): string
     {
         return match ($this) {
             self::USE_SOFT_DELETES => '{use_soft_deletes}',
+            self::USE_BELONGS_TO => '{use_belongs_to}',
+            self::USE_HAS_MANY => '{use_has_many}',
+            self::USE_HAS_ONE => '{use_has_one}',
             self::SOFT_DELETES => '{soft_deletes}',
             self::TIMESTAMPS => '{timestamps}',
             self::TABLE => '{table}',
-            self::USE_BELONGS_TO => '{use_belongs_to}',
-            self::BELONGS_TO => '{belongs_to}',
+            self::RELATIONS => '{relations}',
         };
     }
 
@@ -38,6 +44,8 @@ enum StubValue
             self::TIMESTAMPS => "\tpublic \$timestamps = false;",
             self::TABLE => "\tprotected \$table = ",
             self::USE_BELONGS_TO => "use Illuminate\Database\Eloquent\Relations\BelongsTo;",
+            self::USE_HAS_MANY => "use Illuminate\Database\Eloquent\Relations\HasMany;",
+            self::USE_HAS_ONE => "use Illuminate\Database\Eloquent\Relations\HasOne;",
             default => '',
         };
     }

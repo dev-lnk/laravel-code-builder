@@ -20,7 +20,7 @@ use function Laravel\Prompts\select;
 
 class LaravelCodeBuildCommand extends Command
 {
-    protected $signature = 'code:build {entity} {table?} {--only=}';
+    protected $signature = 'code:build {entity} {table?} {--only=} {--has-many=*} {--has-one=*}';
 
     private CodePath $codePath;
 
@@ -70,10 +70,22 @@ class LaravelCodeBuildCommand extends Command
             $confirmBelongsTo = confirm("Generate BelongsTo relations from foreign keys?");
         }
 
+        $hasMany = $this->option('has-many');
+        if(! is_array($hasMany)) {
+            throw new Exception('has-many flag must be an array');
+        }
+
+        $hasOne = $this->option('has-one');
+        if(! is_array($hasOne)) {
+            throw new Exception('has-one flag must be an array');
+        }
+
         $this->codeStructure = CodeStructureFactory::makeFromTable(
             (string) $table,
             (string) $entity,
-            $confirmBelongsTo
+            $confirmBelongsTo,
+            $hasMany,
+            $hasOne
         );
 
         $this->codeStructure->setStubDir($stubDir);

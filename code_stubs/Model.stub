@@ -7,6 +7,8 @@ namespace {namespace};
 {use_soft_deletes}
 use Illuminate\Database\Eloquent\Model;
 {use_belongs_to}
+{use_has_many}
+{use_has_one}
 
 class {class} extends Model
 {
@@ -14,5 +16,5 @@ class {class} extends Model
 {timestamps}
 {table}
     protected $fillable = [{fillable}
-    ];{belongs_to}
+    ];{relations}
 }
