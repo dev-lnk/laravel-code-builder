@@ -339,6 +339,24 @@ class CodeStructure
         return $result;
     }
 
+    public function columnsToArrayDTO(): string
+    {
+        $result = "";
+
+        foreach ($this->sortColumnsFromDefaultValue() as $column) {
+            $result .= str(str($column->column())->camel()->value() . ': ')
+                ->append("\$data['{$column->column()}']")
+                ->when(! is_null($column->default()) && ! $column->nullable(),
+                    fn($str) => $str->append(" ?? {$column->default()}")
+                )
+                ->when($column->nullable(), fn($str) => $str->append(" ?? null"))
+                ->append(',')
+                ->prepend("\n\t\t\t")
+            ;
+        }
+        return $result;
+    }
+
     public function columnsToRequestDTO(): string
     {
         $result = "";
@@ -403,7 +421,7 @@ class CodeStructure
         return $result;
     }
 
-    public function columnsToArrayDTO(): string
+    public function columnsFromArrayDTO(): string
     {
         $result = "";
         foreach ($this->columns as $column) {

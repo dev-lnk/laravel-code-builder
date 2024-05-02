@@ -27,12 +27,13 @@ class DTOBuilder extends AbstractBuilder
                 '{use_request}' => $requestPath->namespace() . '\\' . $requestPath->rawName(),
                 '{name}' => $dtoPath->rawName(),
                 '{properties}' => $this->codeStructure->columnsToDTO(),
+                '{array_inputs}' => $this->codeStructure->columnsToArrayDTO(),
                 '{request_name}' => $requestPath->rawName(),
                 '{request_inputs}' => $this->codeStructure->columnsToRequestDTO(),
                 '{model_name}' => $modelPath->rawName(),
                 '{model_inputs}' => $this->codeStructure->columnsToModelDTO(),
                 '{getters}' => $this->codeStructure->columnsToGettersDTO(),
-                '{to_array}' => $this->codeStructure->columnsToArrayDTO(),
+                '{to_array}' => $this->codeStructure->columnsFromArrayDTO(),
             ]);
     }
 }

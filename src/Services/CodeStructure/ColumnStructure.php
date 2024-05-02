@@ -127,7 +127,11 @@ final class ColumnStructure
             return 'int';
         }
 
-        if($this->inputType === 'text') {
+        if(
+            $this->inputType === 'text'
+            || $this->inputType === 'email'
+            || $this->inputType === 'password'
+        ) {
             return 'string';
         }
 

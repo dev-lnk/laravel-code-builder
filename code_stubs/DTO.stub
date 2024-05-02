@@ -13,6 +13,12 @@ readonly class {name}
     ) {
     }
 
+    public static function fromArray(array $data): self
+    {
+       return new self({array_inputs}
+       );
+    }
+
     public static function fromRequest({request_name} $request): self
     {
         return new self({request_inputs}
