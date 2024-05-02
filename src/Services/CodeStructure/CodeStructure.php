@@ -420,7 +420,7 @@ class CodeStructure
     {
         $result = "";
 
-        foreach ($this->columns as $column) {
+        foreach ($this->sortColumnsFromDefaultValue() as $column) {
             $columnCamel = str($column->column())->camel()->value();
 
             $result .= str("public function $columnCamel(): ")
@@ -439,7 +439,7 @@ class CodeStructure
     public function columnsFromArrayDTO(): string
     {
         $result = "";
-        foreach ($this->columns as $column) {
+        foreach ($this->sortColumnsFromDefaultValue() as $column) {
             $columnCamel = str($column->column())->camel()->value();
             $result .= str("'{$column->column()}' => \$this->$columnCamel,")
                 ->prepend("\n\t\t\t")
@@ -453,8 +453,28 @@ class CodeStructure
      */
     private function sortColumnsFromDefaultValue(): array
     {
-        $columns = $this->columns;
-        usort($columns, fn($column) => (! is_null($column->default())) ? 1 : -1);
+        $columns = [];
+        foreach ($this->columns as $column) {
+            if(is_null($column->default())
+                && ! $column->nullable()
+                && ! in_array($column->column(), $this->dateColumns())
+            ) {
+                $columns[] = $column;
+            }
+        }
+        foreach ($this->columns as $column) {
+            if(
+                (! is_null($column->default()) || $column->nullable())
+                && ! in_array($column->column(), $this->dateColumns())
+            ) {
+                $columns[] = $column;
+            }
+        }
+        foreach ($this->columns as $column) {
+            if(in_array($column->column(), $this->dateColumns())) {
+                $columns[] = $column;
+            }
+        }
         return $columns;
     }
 }

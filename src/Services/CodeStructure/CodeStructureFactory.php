@@ -92,7 +92,7 @@ final class CodeStructureFactory
         }
 
         foreach ($hasOne as $column) {
-            $columnStructure = new ColumnStructure(str($column)->singular()->snake()->value(), '', null, true);
+            $columnStructure = new ColumnStructure(str($column)->singular()->snake()->value(), '', NULL, true);
             $columnStructure->setRelation(
                 str($table)->singular()->snake()->value() . '_id',
                 $column
