@@ -2,16 +2,16 @@
 
 ### Release plans:
 - [x] BelongsTo
-- [x] Select (if BelongsTo)
-- [ ] HasMany
-- [ ] HasOne
+- [x] HasMany
+- [x] HasOne
+- [x] BelongsToMany
 - [ ] DTOs
 - [ ] TS interface support
 
 ### Roadmap after release:
-- [ ] SpatieLaravelData support
 - [ ] Livewire support
 - [ ] Inertia support
+- [ ] SpatieLaravelData support
 - [ ] MoonShine support
 
 

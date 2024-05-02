@@ -192,5 +192,8 @@ php artisan vendor:publish --tag=laravel-code-builder-stubs
 ```
 Stubs will be copied to the directory `<your-base-bath>/code_stubs`.Don't forget to specify your directory in the `stub_dir` setting.
 
+### Relationship
+Relationship **[documentation](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/relationship.md)**.
+
  ### Beta
 This is a beta version of the package! Stubs and commands may change during development. Work tested on sqlite and MySQL. Plans for adding new functionality and information for contributors **[here](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/for_contributors.md)**.
