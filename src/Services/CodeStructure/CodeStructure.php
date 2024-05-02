@@ -32,6 +32,8 @@ class CodeStructure
 
     private bool $hasHasOne = false;
 
+    private bool $hasBelongsToMany = false;
+
     public function __construct(
         private readonly string $table,
         string $entity
@@ -74,6 +76,11 @@ class CodeStructure
         return $this->hasHasOne;
     }
 
+    public function hasBelongsToMany(): bool
+    {
+        return $this->hasBelongsToMany;
+    }
+
     public function addColumn(ColumnStructure $column): void
     {
         if(in_array($column, $this->columns)) {
@@ -94,6 +101,10 @@ class CodeStructure
 
         if($column->type() === SqlTypeMap::HAS_ONE) {
             $this->hasHasOne = true;
+        }
+
+        if($column->type() === SqlTypeMap::BELONGS_TO_MANY) {
+            $this->hasBelongsToMany = true;
         }
     }
 
@@ -155,6 +166,18 @@ class CodeStructure
         ];
     }
 
+    /**
+     * @return array<int, SqlTypeMap>
+     */
+    public function noFillableType(): array
+    {
+        return [
+            SqlTypeMap::HAS_MANY,
+            SqlTypeMap::HAS_ONE,
+            SqlTypeMap::BELONGS_TO_MANY,
+        ];
+    }
+
     public function columnsToModel(): string
     {
         $result = "";
@@ -162,7 +185,7 @@ class CodeStructure
         foreach ($this->columns as $column) {
             if(
                 $column->type()->isIdType()
-                || in_array($column->type(), $this->noInputType())
+                || in_array($column->type(), $this->noFillableType())
                 || $column->isLaravelTimestamp()
             ) {
                 continue;
@@ -195,6 +218,7 @@ class CodeStructure
                 SqlTypeMap::BELONGS_TO => 'BelongsTo',
                 SqlTypeMap::HAS_MANY => 'HasMany',
                 SqlTypeMap::HAS_ONE => 'HasOne',
+                SqlTypeMap::BELONGS_TO_MANY => 'BelongsToMany',
                 default => ''
             };
 
@@ -213,7 +237,7 @@ class CodeStructure
 
             $relation = $column->relation()->table()->str();
 
-            $relation = $column->type() === SqlTypeMap::HAS_MANY
+            $relation = ($column->type() === SqlTypeMap::HAS_MANY || $column->type() === SqlTypeMap::BELONGS_TO_MANY)
                 ? $relation->plural()->camel()->value()
                 : $relation->singular()->camel()->value();
 
@@ -274,10 +298,11 @@ class CodeStructure
 
             $type = $column->inputType() !== 'text' ? " type=\"{$column->inputType()}\"" : '';
 
-            $inputStub = 'Input';
-            if($column->type() === SqlTypeMap::BELONGS_TO) {
-                $inputStub = 'Select';
-            }
+            $inputStub = match ($column->type()) {
+                SqlTypeMap::BELONGS_TO => 'InputSelect',
+                SqlTypeMap::BELONGS_TO_MANY => 'InputMultiple',
+                default => 'Input'
+            };
 
             $input = StubBuilder::make($this->stubDir() . $inputStub)
                 ->getFromStub([

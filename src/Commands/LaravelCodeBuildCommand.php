@@ -20,7 +20,7 @@ use function Laravel\Prompts\select;
 
 class LaravelCodeBuildCommand extends Command
 {
-    protected $signature = 'code:build {entity} {table?} {--only=} {--has-many=*} {--has-one=*}';
+    protected $signature = 'code:build {entity} {table?} {--only=} {--has-many=*} {--has-one=*} {--belongs-to-many=*}';
 
     private CodePath $codePath;
 
@@ -80,12 +80,18 @@ class LaravelCodeBuildCommand extends Command
             throw new Exception('has-one flag must be an array');
         }
 
+        $belongsToMany = $this->option('belongs-to-many');
+        if(! is_array($belongsToMany)) {
+            throw new Exception('belongs-to-many flag must be an array');
+        }
+
         $this->codeStructure = CodeStructureFactory::makeFromTable(
             (string) $table,
             (string) $entity,
             $confirmBelongsTo,
             $hasMany,
-            $hasOne
+            $hasOne,
+            $belongsToMany
         );
 
         $this->codeStructure->setStubDir($stubDir);

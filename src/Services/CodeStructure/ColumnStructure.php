@@ -91,10 +91,6 @@ final class ColumnStructure
             return 'int';
         }
 
-        if($this->inputType === 'number') {
-            return 'int';
-        }
-
         if($this->inputType === 'text') {
             return 'string';
         }

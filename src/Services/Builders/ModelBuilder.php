@@ -20,9 +20,7 @@ class ModelBuilder extends AbstractBuilder
     {
         $modelPath = $this->codePath->path(BuildType::MODEL->value);
 
-
-        $relations = $this->codeStructure->hasBelongsTo()
-            ? $this->codeStructure->relationsToModel() : '';
+        $relations = $this->codeStructure->relationsToModel();
 
         StubBuilder::make($this->stubFile)
             ->setKey(
@@ -43,12 +41,17 @@ class ModelBuilder extends AbstractBuilder
             ->setKey(
                 StubValue::USE_HAS_MANY->key(),
                 StubValue::USE_HAS_MANY->value(),
-                $this->codeStructure->hasBelongsTo()
+                $this->codeStructure->hasHasMany()
             )
             ->setKey(
                 StubValue::USE_HAS_ONE->key(),
                 StubValue::USE_HAS_ONE->value(),
-                $this->codeStructure->hasBelongsTo()
+                $this->codeStructure->hasHasOne()
+            )
+            ->setKey(
+                StubValue::USE_BELONGS_TO_MANY->key(),
+                StubValue::USE_BELONGS_TO_MANY->value(),
+                $this->codeStructure->hasBelongsToMany()
             )
             ->setKey(
                 StubValue::RELATIONS->key(),

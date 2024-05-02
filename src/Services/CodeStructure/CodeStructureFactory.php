@@ -16,6 +16,7 @@ final class CodeStructureFactory
      * @param bool   $isBelongsTo
      * @param array<int, string>  $hasMany
      * @param array<int, string>  $hasOne
+     * @param array<int, string>  $belongsToMany
      *
      * @return CodeStructure
      */
@@ -24,7 +25,8 @@ final class CodeStructureFactory
         string $entity,
         bool $isBelongsTo,
         array $hasMany,
-        array $hasOne
+        array $hasOne,
+        array $belongsToMany
     ): CodeStructure {
         $columns = Schema::getColumns($table);
 
@@ -86,6 +88,16 @@ final class CodeStructureFactory
                 $column
             );
             $columnStructure->setType(SqlTypeMap::HAS_ONE);
+            $codeStructure->addColumn($columnStructure);
+        }
+
+        foreach ($belongsToMany as $column) {
+            $columnStructure = new ColumnStructure($column);
+            $columnStructure->setRelation(
+                str($table)->singular()->snake()->value() . '_id',
+                $column
+            );
+            $columnStructure->setType(SqlTypeMap::BELONGS_TO_MANY);
             $codeStructure->addColumn($columnStructure);
         }
 
