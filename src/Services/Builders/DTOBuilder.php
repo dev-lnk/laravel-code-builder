@@ -23,6 +23,7 @@ class DTOBuilder extends AbstractBuilder
 
         StubBuilder::make($this->stubFile)
             ->makeFromStub($dtoPath->file(), [
+                '{namespace}' => $dtoPath->namespace(),
                 '{use_model}' => $modelPath->namespace() . '\\' . $modelPath->rawName(),
                 '{use_request}' => $requestPath->namespace() . '\\' . $requestPath->rawName(),
                 '{name}' => $dtoPath->rawName(),

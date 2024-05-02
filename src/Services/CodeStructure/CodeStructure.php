@@ -270,7 +270,8 @@ class CodeStructure
             }
 
             $result .= str("'{$column->column()}' => ['{$column->rulesType()}'")
-                ->when($column->type() !== SqlTypeMap::BOOLEAN,
+                ->when($column->type() === SqlTypeMap::BOOLEAN,
+                    fn($str) => $str->append(", 'sometimes'"),
                     fn($str) => $str->append(", 'nullable'")
                 )
                 ->append(']')
@@ -399,6 +400,9 @@ class CodeStructure
                     fn($str) => $str->append("\$model->{$column->column()} ? ". $column->relation()?->table()->ucFirstSingular() . 'DTO::fromModel(')
                 )
                 ->append("\$model->{$column->column()}")
+                ->when(in_array($column->column(), $this->dateColumns()),
+                    fn($str) => $str->append("?->format('Y-m-d H:i:s')")
+                )
                 ->when($column->type() === SqlTypeMap::HAS_ONE,
                     fn($str) => $str->append(') : null')
                 )
