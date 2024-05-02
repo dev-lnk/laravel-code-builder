@@ -20,6 +20,8 @@ enum StubValue
 
     case USE_HAS_ONE;
 
+    case USE_BELONGS_TO_MANY;
+
     case RELATIONS;
 
     function key(): string
@@ -29,6 +31,7 @@ enum StubValue
             self::USE_BELONGS_TO => '{use_belongs_to}',
             self::USE_HAS_MANY => '{use_has_many}',
             self::USE_HAS_ONE => '{use_has_one}',
+            self::USE_BELONGS_TO_MANY => '{use_belongs_to_many}',
             self::SOFT_DELETES => '{soft_deletes}',
             self::TIMESTAMPS => '{timestamps}',
             self::TABLE => '{table}',
@@ -46,6 +49,7 @@ enum StubValue
             self::USE_BELONGS_TO => "use Illuminate\Database\Eloquent\Relations\BelongsTo;",
             self::USE_HAS_MANY => "use Illuminate\Database\Eloquent\Relations\HasMany;",
             self::USE_HAS_ONE => "use Illuminate\Database\Eloquent\Relations\HasOne;",
+            self::USE_BELONGS_TO_MANY => "use Illuminate\Database\Eloquent\Relations\BelongsToMany;",
             default => '',
         };
     }

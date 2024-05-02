@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 {use_belongs_to}
 {use_has_many}
 {use_has_one}
+{use_belongs_to_many}
 
 class {class} extends Model
 {

@@ -89,6 +89,8 @@ enum SqlTypeMap: string
 
     case BELONGS_TO = 'BelongsTo';
 
+    case BELONGS_TO_MANY = 'BelongsToMany';
+
     public function getInputType(): string
     {
         return match ($this) {
@@ -128,23 +130,21 @@ enum SqlTypeMap: string
             self::MEDIUM_TEXT,
             self::TINY_TEXT,
             self::UUID,
-            => 'text',
-
             /*Date*/
             self::TIMESTAMP,
             self::TIME,
             self::DATE_TIME,
             self::DATE,
             self::DATE_TIME_TZ,
-            self::YEAR
-            => 'text',
-
+            self::YEAR,
             /*Enum*/
-            self::ENUM => 'text',
+            self::ENUM,
+            => 'text',
 
             /*Relations*/
             self::HAS_ONE => 'HasOne',
             self::HAS_MANY => 'HasMany',
+            self::BELONGS_TO_MANY => 'array',
         };
     }
 
@@ -171,8 +171,7 @@ enum SqlTypeMap: string
             /*Number*/
             'bigint' => self::BIG_INTEGER,
             'mediumint' => self::MEDIUM_INTEGER,
-            'int' => self::INTEGER,
-            'integer' => self::INTEGER,
+            'int', 'integer' => self::INTEGER,
             'smallint' => self::SMALL_INTEGER,
             'tinyint' => self::TINY_INTEGER,
             'bigint unsigned' => self::UNSIGNED_BIG_INTEGER,

@@ -1,0 +1,6 @@
+	<div>
+		<label for="{column}">{label}</label>
+		<select id="{column}" name="{column}" multiple>
+		    <option value="">Not selected</option>
+		</select>
+	</div>
