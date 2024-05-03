@@ -36,7 +36,7 @@ class CommandDtoTest extends TestCase
         $this->assertStringContainsString('use App\Models\Product;', $file);
         $this->assertStringContainsString('use App\Http\Requests\ProductRequest;', $file);
         $this->assertStringContainsString('private int $id', $file);
-        $this->assertStringContainsString("private string \$title,\n\t\tprivate string \$content = 'Default',", $file);
+        $this->assertStringContainsString("private string \$content,\n\t\tprivate string \$title = 'Default',", $file);
         $this->assertStringContainsString('private int $sortNumber = 0,', $file);
         $this->assertStringContainsString('private int $sortNumber = 0,', $file);
         $this->assertStringContainsString('private array $comments = [],', $file);
@@ -46,7 +46,7 @@ class CommandDtoTest extends TestCase
 
         $this->assertStringContainsString('public static function fromArray(array $data): self', $file);
         $this->assertStringContainsString("id: \$data['id'],", $file);
-        $this->assertStringContainsString("content: \$data['content'] ?? 'Default',", $file);
+        $this->assertStringContainsString("title: \$data['title'] ?? 'Default',", $file);
         $this->assertStringContainsString("sortNumber: \$data['sort_number'] ?? 0,", $file);
         $this->assertStringContainsString("isActive: \$data['is_active'] ?? false,", $file);
         $this->assertStringContainsString("comments: \$data['comments'] ?? [],", $file);
