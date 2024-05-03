@@ -52,7 +52,9 @@ final class ColumnStructure
 
     public function defaultInStub(): ?string
     {
-        dump($this->default);
+        if(! is_null($this->default) && $this->phpType() === 'string') {
+            return "'" . trim($this->default, "'") . "'";
+        }
 
         return $this->default;
     }

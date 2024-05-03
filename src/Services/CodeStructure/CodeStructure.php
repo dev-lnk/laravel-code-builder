@@ -353,7 +353,7 @@ class CodeStructure
             $result .= str(str($column->column())->camel()->value() . ': ')
                 ->append("\$data['{$column->column()}']")
                 ->when(! is_null($column->default()) && ! $column->nullable(),
-                    fn($str) => $str->append(" ?? {$column->default()}")
+                    fn($str) => $str->append(" ?? {$column->defaultInStub()}")
                 )
                 ->when($column->nullable(), fn($str) => $str->append(" ?? null"))
                 ->append(',')
