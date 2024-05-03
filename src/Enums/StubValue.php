@@ -26,7 +26,7 @@ enum StubValue
 
     case RELATIONS;
 
-    function key(): string
+    public function key(): string
     {
         return match ($this) {
             self::USE_CONTROLLER => '{use_controller}',
@@ -42,7 +42,7 @@ enum StubValue
         };
     }
 
-    function value(): string
+    public function value(): string
     {
         return match ($this) {
             self::USE_CONTROLLER => "use App\Http\Controllers\Controller;",

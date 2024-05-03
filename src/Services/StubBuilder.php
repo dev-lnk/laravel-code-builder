@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace DevLnk\LaravelCodeBuilder\Services;
 
-
 use Closure;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
@@ -50,7 +49,7 @@ final class StubBuilder
     {
         $this->removeKeys()->replaceKeys($this->replacers);
 
-        (new Filesystem)->put(
+        (new Filesystem())->put(
             $destination,
             $this->replaceKeys($replace)
         );
@@ -64,6 +63,7 @@ final class StubBuilder
     public function getFromStub(array $replace = []): string
     {
         $this->removeKeys()->replaceKeys($this->replacers);
+
         return $this->replaceKeys($replace);
     }
 
@@ -71,6 +71,7 @@ final class StubBuilder
     {
         $isAdd = is_callable($isAdd) ? $isAdd() : $isAdd;
         $isAdd ? $this->addReplacer($key, $text) : $this->addRemover($key);
+
         return $this;
     }
 
@@ -88,9 +89,9 @@ final class StubBuilder
     {
         $this->stub = str($this->stub)
             ->replace("\r", "")
-            ->replace(array_map(fn($item) => "\n\n$item", $this->removers), "")
-            ->replace(array_map(fn($item) => "\n$item", $this->removers), "")
-            ->replace(array_map(fn($item) => "$item", $this->removers), "")
+            ->replace(array_map(fn ($item) => "\n\n$item", $this->removers), "")
+            ->replace(array_map(fn ($item) => "\n$item", $this->removers), "")
+            ->replace(array_map(fn ($item) => "$item", $this->removers), "")
             ->value();
 
         return $this;

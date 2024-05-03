@@ -156,7 +156,7 @@ enum SqlTypeMap: string
             self::MEDIUM_INCREMENTS,
             self::INCREMENTS,
             self::SMALL_INCREMENTS,
-            self::TINY_INCREMENTS
+            self::TINY_INCREMENTS,
         ];
 
         return in_array($this, $idFields);

@@ -24,7 +24,6 @@ final readonly class BuildFactory
     public function __construct(
         private CodeStructure $codeStructure,
         private CodePath $codePath,
-
     ) {
     }
 

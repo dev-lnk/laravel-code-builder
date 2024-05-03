@@ -127,11 +127,13 @@ class CodeStructure
     {
         if(! $this->isCreatedAt && $column->isCreatedAt()) {
             $this->isCreatedAt = true;
+
             return;
         }
 
         if(! $this->isUpdatedAt && $column->isUpdatedAt()) {
             $this->isUpdatedAt = true;
+
             return;
         }
 

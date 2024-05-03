@@ -163,6 +163,7 @@ final class ColumnStructure
 
         if($this->column === 'email' || $this->column === 'password') {
             $this->inputType = $this->column;
+
             return;
         }
 

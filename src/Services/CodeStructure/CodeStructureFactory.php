@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace DevLnk\LaravelCodeBuilder\Services\CodeStructure;
 
 use DevLnk\LaravelCodeBuilder\Enums\SqlTypeMap;
-use DevLnk\LaravelCodeBuilder\Support\NameStr;
 use Illuminate\Support\Facades\Schema;
 
 final class CodeStructureFactory
@@ -47,6 +46,7 @@ final class CodeStructureFactory
         foreach ($indexes as $index) {
             if($index['name'] === 'primary') {
                 $primaryKey = $index['columns'][0];
+
                 break;
             }
         }
@@ -92,7 +92,7 @@ final class CodeStructureFactory
         }
 
         foreach ($hasOne as $column) {
-            $columnStructure = new ColumnStructure(str($column)->singular()->snake()->value(), '', NULL, true);
+            $columnStructure = new ColumnStructure(str($column)->singular()->snake()->value(), '', null, true);
             $columnStructure->setRelation(
                 str($table)->singular()->snake()->value() . '_id',
                 $column

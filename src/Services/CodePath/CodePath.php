@@ -36,6 +36,7 @@ final class CodePath
             return $this;
         }
         $this->paths[BuildType::MODEL->value] = new ModelPath($name, $dir, $namespace);
+
         return $this;
     }
 
@@ -45,6 +46,7 @@ final class CodePath
             return $this;
         }
         $this->paths[BuildType::ADD_ACTION->value] = new AddActionPath($name, $dir, $namespace);
+
         return $this;
     }
 
@@ -54,6 +56,7 @@ final class CodePath
             return $this;
         }
         $this->paths[BuildType::EDIT_ACTION->value] = new EditActionPath($name, $dir, $namespace);
+
         return $this;
     }
 
@@ -63,6 +66,7 @@ final class CodePath
             return $this;
         }
         $this->paths[BuildType::REQUEST->value] = new RequestPath($name, $dir, $namespace);
+
         return $this;
     }
 
@@ -72,6 +76,7 @@ final class CodePath
             return $this;
         }
         $this->paths[BuildType::CONTROLLER->value] = new ControllerPath($name, $dir, $namespace);
+
         return $this;
     }
 
@@ -81,6 +86,7 @@ final class CodePath
             return $this;
         }
         $this->paths[BuildType::ROUTE->value] = new RoutePath($name, $dir, $namespace);
+
         return $this;
     }
 
@@ -90,6 +96,7 @@ final class CodePath
             return $this;
         }
         $this->paths[BuildType::FORM->value] = new FormPath($name, $dir, $namespace);
+
         return $this;
     }
 
@@ -99,6 +106,7 @@ final class CodePath
             return $this;
         }
         $this->paths[BuildType::DTO->value] = new DTOPath($name, $dir, $namespace);
+
         return $this;
     }
 }

@@ -31,7 +31,7 @@ class ModelBuilder extends AbstractBuilder
             )
             ->setKey(
                 StubValue::SOFT_DELETES->key(),
-                StubValue::SOFT_DELETES->value().PHP_EOL,
+                StubValue::SOFT_DELETES->value() . PHP_EOL,
                 $this->codeStructure->isSoftDeletes()
             )
             ->setKey(
@@ -61,7 +61,7 @@ class ModelBuilder extends AbstractBuilder
             )
             ->setKey(
                 StubValue::TIMESTAMPS->key(),
-                StubValue::TIMESTAMPS->value().PHP_EOL,
+                StubValue::TIMESTAMPS->value() . PHP_EOL,
                 ! $this->codeStructure->isTimestamps()
             )
             ->setKey(

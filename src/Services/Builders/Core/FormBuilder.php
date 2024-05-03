@@ -24,7 +24,7 @@ final class FormBuilder extends AbstractBuilder
         StubBuilder::make($this->stubFile)
             ->makeFromStub($formPath->file(), [
                 '{name}' => $routePath->rawName(),
-                '{inputs}' => $this->codeStructure->columnsToForm()
+                '{inputs}' => $this->codeStructure->columnsToForm(),
             ]);
     }
 }

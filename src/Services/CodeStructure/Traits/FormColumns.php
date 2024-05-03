@@ -37,7 +37,7 @@ trait FormColumns
                 ->getFromStub([
                     '{column}' => $column->column(),
                     '{label}' => $column->column(),
-                    '{type}' => $type
+                    '{type}' => $type,
                 ])
             ;
 

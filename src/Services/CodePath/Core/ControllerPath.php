@@ -8,5 +8,4 @@ use DevLnk\LaravelCodeBuilder\Services\CodePath\AbstractPath;
 
 readonly class ControllerPath extends AbstractPath
 {
-
 }

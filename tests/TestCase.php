@@ -32,7 +32,7 @@ class TestCase extends Orchestra
     {
         return [
             LaravelCodeBuilderProvider::class,
-            TestServiceProvider::class
+            TestServiceProvider::class,
         ];
     }
 }

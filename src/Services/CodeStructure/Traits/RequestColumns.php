@@ -19,9 +19,10 @@ trait RequestColumns
             }
 
             $result .= str("'{$column->column()}' => ['{$column->rulesType()}'")
-                ->when($column->type() === SqlTypeMap::BOOLEAN,
-                    fn($str) => $str->append(", 'sometimes'"),
-                    fn($str) => $str->append(", 'nullable'")
+                ->when(
+                    $column->type() === SqlTypeMap::BOOLEAN,
+                    fn ($str) => $str->append(", 'sometimes'"),
+                    fn ($str) => $str->append(", 'nullable'")
                 )
                 ->append(']')
                 ->prepend("\t\t\t")

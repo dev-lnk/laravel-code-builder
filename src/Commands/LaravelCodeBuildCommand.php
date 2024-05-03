@@ -13,10 +13,12 @@ use Illuminate\Console\Command;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Schema;
-use Throwable;
 
 use function Laravel\Prompts\confirm;
+
 use function Laravel\Prompts\select;
+
+use Throwable;
 
 class LaravelCodeBuildCommand extends Command
 {
@@ -32,7 +34,7 @@ class LaravelCodeBuildCommand extends Command
     private array $replaceCautions = [];
 
     /**
-     * @var array<int, BuildType> $builders
+     * @var array<int, BuildType>
      */
     private array $builders = [];
 
@@ -100,7 +102,7 @@ class LaravelCodeBuildCommand extends Command
             label: 'Where to generate the result?',
             options: [
                 '_default' => 'In the project directories',
-                'Generation' => 'To the generation folder: `app/Generation`'
+                'Generation' => 'To the generation folder: `app/Generation`',
             ],
             default: '_default'
         );
@@ -122,7 +124,7 @@ class LaravelCodeBuildCommand extends Command
                 $buildFactory->call($builder->value, $stubDir . $builder->stub());
 
                 $codePath = $this->codePath->path($builder->value);
-                $filePath = substr($codePath->file(), strpos($codePath->file(), '/app') + 1 );
+                $filePath = substr($codePath->file(), strpos($codePath->file(), '/app') + 1);
                 $this->info($filePath . ' was created successfully!');
             }
         }
@@ -235,12 +237,12 @@ class LaravelCodeBuildCommand extends Command
                 $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Models' : 'App\\Models'
             )
             ->addAction(
-                'Add' .$this->codeStructure->entity()->ucFirstSingular() . 'Action.php',
+                'Add' . $this->codeStructure->entity()->ucFirstSingular() . 'Action.php',
                 $isGenerationDir ? $genPath . "/Actions" : app_path('Actions'),
                 $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Actions' : 'App\\Actions'
             )
             ->editAction(
-                'Edit' .$this->codeStructure->entity()->ucFirstSingular() . 'Action.php',
+                'Edit' . $this->codeStructure->entity()->ucFirstSingular() . 'Action.php',
                 $isGenerationDir ? $genPath . "/Actions" : app_path('Actions'),
                 $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Actions' : 'App\\Actions'
             )
@@ -255,12 +257,12 @@ class LaravelCodeBuildCommand extends Command
                 $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Http\\Controllers' : 'App\\Http\\Controllers'
             )
             ->route(
-                $this->codeStructure->entity()->lower(). '.php',
+                $this->codeStructure->entity()->lower() . '.php',
                 $isGenerationDir ? $genPath . "/routes" : base_path('routes'),
                 ''
             )
             ->form(
-                $this->codeStructure->entity()->lower(). '.blade.php',
+                $this->codeStructure->entity()->lower() . '.blade.php',
                 $isGenerationDir ? $genPath . "/resources/views" : base_path('resources/views'),
                 ''
             )

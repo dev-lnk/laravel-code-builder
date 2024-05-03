@@ -79,7 +79,7 @@ trait ModelColumns
                 $stubBuilder->getFromStub([
                     '{relation}' => $relation,
                     '{relation_model}' => $column->relation()->table()->ucFirstSingular(),
-                    '{relation_column}' => $relationColumn
+                    '{relation_column}' => $relationColumn,
                 ])
             );
         }
