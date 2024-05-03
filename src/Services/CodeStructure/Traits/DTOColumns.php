@@ -61,6 +61,7 @@ trait DTOColumns
             }
             $result .= str(str($column->column())->camel()->value() . ': ')
                 ->when($column->phpType() === 'int', fn ($str) => $str->append('(int) '))
+                ->when($column->phpType() === 'float', fn ($str) => $str->append('(float) '))
                 ->append("\$request->")
                 ->when(
                     $column->type() === SqlTypeMap::BOOLEAN,
@@ -83,6 +84,7 @@ trait DTOColumns
             $result .= str(str($column->column())->camel()->value() . ': ')
                 ->when($column->phpType() === 'int', fn ($str) => $str->append('(int) '))
                 ->when($column->phpType() === 'bool', fn ($str) => $str->append('(bool) '))
+                ->when($column->phpType() === 'float', fn ($str) => $str->append('(float) '))
                 ->when(
                     $column->type() === SqlTypeMap::HAS_ONE,
                     fn ($str) => $str->append("\$model->{$column->column()} ? " . $column->relation()?->table()->ucFirstSingular() . 'DTO::fromModel(')

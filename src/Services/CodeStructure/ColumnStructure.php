@@ -56,6 +56,10 @@ final class ColumnStructure
             return "'" . trim($this->default, "'") . "'";
         }
 
+        if(! is_null($this->default) && $this->phpType() === 'float') {
+            return trim($this->default, "'");
+        }
+
         return $this->default;
     }
 
@@ -136,10 +140,6 @@ final class ColumnStructure
             return $this->relation()?->table()->ucFirstSingular() . 'DTO';
         }
 
-        if($this->inputType === 'number') {
-            return 'int';
-        }
-
         if(
             $this->inputType === 'text'
             || $this->inputType === 'email'
@@ -148,8 +148,20 @@ final class ColumnStructure
             return 'string';
         }
 
-        if($this->inputType === 'checkbox') {
+        if($this->type() === SqlTypeMap::BOOLEAN) {
             return 'bool';
+        }
+
+        if(
+            $this->type() === SqlTypeMap::DECIMAL
+            || $this->type() === SqlTypeMap::DOUBLE
+            || $this->type() === SqlTypeMap::FLOAT
+        ) {
+            return 'float';
+        }
+
+        if($this->inputType === 'number') {
+            return 'int';
         }
 
         return $this->inputType;
