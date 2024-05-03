@@ -36,7 +36,7 @@ class CommandDtoTest extends TestCase
         $this->assertStringContainsString('use App\Models\Product;', $file);
         $this->assertStringContainsString('use App\Http\Requests\ProductRequest;', $file);
         $this->assertStringContainsString('private int $id', $file);
-        $this->assertStringContainsString("private string \$title = 'Default',", $file);
+        $this->assertStringContainsString("private string \$content,\n\t\tprivate string \$title = 'Default',", $file);
         $this->assertStringContainsString('private int $sortNumber = 0,', $file);
         $this->assertStringContainsString('private int $sortNumber = 0,', $file);
         $this->assertStringContainsString('private array $comments = [],', $file);
