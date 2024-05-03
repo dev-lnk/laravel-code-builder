@@ -5,7 +5,7 @@
 - [x] HasMany
 - [x] HasOne
 - [x] BelongsToMany
-- [ ] DTOs
+- [x] DTO
 - [ ] TS interface support
 
 ### Roadmap after release:

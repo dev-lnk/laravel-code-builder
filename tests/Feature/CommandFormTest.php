@@ -38,7 +38,7 @@ final class CommandFormTest extends TestCase
         $this->assertStringContainsString('<input id="sort_number" name="sort_number" value="{{ old(\'sort_number\') }}" type="number"/>', $file);
         $this->assertStringContainsString('<select id="user_id" name="user_id">', $file);
         $this->assertStringContainsString('<select id="category_id" name="category_id">', $file);
-        $this->assertStringContainsString('<input type="checkbox" id="is_active" name="is_active" value="{{ old(\'is_active\', 1) }}"/>', $file);
+        $this->assertStringContainsString('<input type="checkbox" id="is_active" name="is_active" value="1" @if(old(\'is_active\')) checked @endif/>', $file);
     }
 
     #[Test]

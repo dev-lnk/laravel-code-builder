@@ -1,4 +1,4 @@
 	<div>
 		<label for="{column}">{label}</label>
-		<input type="checkbox" id="{column}" name="{column}" value="{{ old('{column}', 1) }}"/>
+		<input type="checkbox" id="{column}" name="{column}" value="1" @if(old('{column}')) checked @endif/>
 	</div>

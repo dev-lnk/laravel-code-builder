@@ -5,6 +5,7 @@ Hello Laravel users!
 This package allows you to generate code from the schema of your SQL table. The following entities are generated:
 - Model
 - FormRequest
+- DTO
 - Controller (with store and edit methods)
 - Actions
 - Route
@@ -19,7 +20,7 @@ Publish the package configuration file:
 php artisan vendor:publish --tag=laravel-code-builder
 ```
 ### Examples
-Model
+Model:
 ```php
 class Product extends Model
 {
@@ -35,30 +36,7 @@ class Product extends Model
     ];
 }
 ```
-Controller
-```php
-class ProductController extends Controller
-{
-    public function store(ProductRequest $request, AddProductAction $action): RedirectResponse
-    {
-        $data = $request->validated();
-        
-        $model = $action->handle($data);
-
-        return back();
-    }
-
-    public function edit(string $id, ProductRequest $request, EditProductAction $action): RedirectResponse
-    {
-        $data = $request->validated();
-
-        $model = $action->handle((int) $id, $data);
-
-        return back();
-    }
-}
-```
-FormRequest
+FormRequest:
 ```php
 class ProductRequest extends FormRequest
 {
@@ -66,12 +44,10 @@ class ProductRequest extends FormRequest
     {
         return [
             'id' => ['int', 'nullable'],
-            'title' => ['string', 'nullable'],
             'content' => ['string', 'nullable'],
+            'title' => ['string', 'nullable'],
             'sort_number' => ['int', 'nullable'],
-            'user_id' => ['int', 'nullable'],
-            'category_id' => ['int', 'nullable'],
-            'is_active' => ['int', 'nullable'],
+            'is_active' => ['accepted', 'sometimes'],
         ];
     }
 
@@ -81,7 +57,65 @@ class ProductRequest extends FormRequest
     }
 }
 ```
-Form
+DTO:
+```php
+readonly class ProductDTO
+{
+    public function __construct(
+        private int $id,
+        private string $content,
+        private string $title = 'Default',
+        private int $sortNumber = 0,
+        private bool $isActive = false,
+        private ?string $createdAt = null,
+        private ?string $updatedAt = null,
+        private ?string $deletedAt = null,
+    ) {
+    }
+
+    public static function fromArray(array $data): self
+    {
+       return new self(
+            id: $data['id'],
+            content: $data['content'],
+            title: $data['title'] ?? 'Default',
+            sortNumber: $data['sort_number'] ?? 0,
+            isActive: $data['is_active'] ?? false,
+            createdAt: $data['created_at'] ?? null,
+            updatedAt: $data['updated_at'] ?? null,
+            deletedAt: $data['deleted_at'] ?? null,
+       );
+    }
+
+    public static function fromRequest(ProductRequest $request): self
+    {
+        return new self(
+            id: (int) $request->input('id'),
+            content: $request->input('content'),
+            title: $request->input('title'),
+            sortNumber: (int) $request->input('sort_number'),
+            isActive: $request->has('is_active'),
+        );
+    }
+
+    public static function fromModel(Product $model): self
+    {
+        return new self(
+            id: (int) $model->id,
+            content: $model->content,
+            title: $model->title,
+            sortNumber: (int) $model->sort_number,
+            isActive: (bool) $model->is_active,
+            createdAt: $model->created_at?->format('Y-m-d H:i:s'),
+            updatedAt: $model->updated_at?->format('Y-m-d H:i:s'),
+            deletedAt: $model->deleted_at?->format('Y-m-d H:i:s'),
+        );
+    }
+    // Getters...
+    // toArray...
+}
+```
+Form:
 ```html
 <form action="{{ route('product.store') }}" method="POST">
     @csrf
@@ -98,16 +132,8 @@ Form
         <input id="sort_number" name="sort_number" value="{{ old('sort_number') }}" type="number"/>
     </div>
     <div>
-        <label for="user_id">user_id</label>
-        <input id="user_id" name="user_id" value="{{ old('user_id') }}" type="number"/>
-    </div>
-    <div>
-        <label for="category_id">category_id</label>
-        <input id="category_id" name="category_id" value="{{ old('category_id') }}" type="number"/>
-    </div>
-    <div>
         <label for="is_active">is_active</label>
-        <input id="is_active" name="is_active" value="{{ old('is_active') }}" type="number"/>
+        <input type="checkbox" id="is_active" name="is_active" value="1" @if(old('is_active')) checked @endif/>
     </div>
     <button type="submit">Submit</button>
 </form>
