@@ -26,7 +26,7 @@ final class CommandRouteTest extends TestCase
     #[Test]
     public function testProduct()
     {
-        $this->artisan('code:build product --only=route')
+        $this->artisan('code:build product --route')
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Where to generate the result?', '_default');
 
@@ -41,7 +41,7 @@ final class CommandRouteTest extends TestCase
     #[Test]
     public function testProductCustomName()
     {
-        $this->artisan('code:build foo --only=route')
+        $this->artisan('code:build foo --route')
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Where to generate the result?', '_default');
 

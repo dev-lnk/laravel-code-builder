@@ -6,9 +6,11 @@
 - [x] HasOne
 - [x] BelongsToMany
 - [x] DTO
-- [ ] TS interface support
+- [x] Improved console experience
+- [ ] Testing
 
 ### Roadmap after release:
+- [ ] TS interface support
 - [ ] Livewire support
 - [ ] Inertia support
 - [ ] SpatieLaravelData support

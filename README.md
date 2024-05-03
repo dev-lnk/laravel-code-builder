@@ -182,19 +182,6 @@ In the second option, all files will be generated in the `app/Generation` folder
 app/Generation/Models/User.php was created successfully!
 ...
 ```
-You can generate one thing using the only flag:
-```shell
-php artisan code:build user --only=model
-```
-Available options for the only flag:
-- model
-- addAction
-- editAction
-- request
-- controller
-- route
-- form
-
 In the `builders` configuration you can comment out those builders that you do not want to be executed
 ```php
 use DevLnk\LaravelCodeBuilder\Enums\BuildType;
@@ -202,6 +189,7 @@ use DevLnk\LaravelCodeBuilder\Enums\BuildType;
 return [
     'builders' => [
         BuildType::MODEL,
+//        BuildType::DTO,
 //        BuildType::ADD_ACTION,
 //        BuildType::EDIT_ACTION,
 //        BuildType::REQUEST,
@@ -211,6 +199,23 @@ return [
     ],
     //...
 ];
+```
+You can generate certain entities using flags:
+```shell
+php artisan code:build user --model --request
+```
+Available options for the only flag:
+- `--model`
+- `--request`
+- `--DTO`
+- `--addAction`
+- `--editAction`
+- `--controller`
+- `--route`
+- `--form`
+- `--builder` - Generates all builders specified in the `builders` configuration + your specified flag, for example:
+```shell
+php artisan code:build user --builders --request
 ```
 If you want to change the code generation option, you can publish the stubs and change them yourself:
 ```shell

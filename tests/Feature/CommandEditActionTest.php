@@ -26,7 +26,7 @@ class CommandEditActionTest extends TestCase
     #[Test]
     public function testProduct()
     {
-        $this->artisan('code:build product --only=editAction')
+        $this->artisan('code:build product --editAction')
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Where to generate the result?', '_default');
 
@@ -43,7 +43,7 @@ class CommandEditActionTest extends TestCase
     #[Test]
     public function testProductCustomName()
     {
-        $this->artisan('code:build foo --only=editAction')
+        $this->artisan('code:build foo --editAction')
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Where to generate the result?', '_default');
 

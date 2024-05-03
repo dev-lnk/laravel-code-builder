@@ -3,12 +3,12 @@
 namespace DevLnk\LaravelCodeBuilder\Commands;
 
 use DevLnk\LaravelCodeBuilder\Enums\BuildType;
+use DevLnk\LaravelCodeBuilder\Exceptions\CodeGenerateCommandException;
 use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
 use DevLnk\LaravelCodeBuilder\Services\Builders\BuildFactory;
 use DevLnk\LaravelCodeBuilder\Services\CodePath\CodePath;
 use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructure;
 use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructureFactory;
-use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
@@ -20,7 +20,7 @@ use function Laravel\Prompts\select;
 
 class LaravelCodeBuildCommand extends Command
 {
-    protected $signature = 'code:build {entity} {table?} {--only=} {--has-many=*} {--has-one=*} {--belongs-to-many=*}';
+    protected $signature = 'code:build {entity} {table?} {--model} {--request} {--addAction} {--editAction} {--request} {--controller} {--route} {--form} {--DTO} {--builders} {--has-many=*} {--has-one=*} {--belongs-to-many=*}';
 
     private CodePath $codePath;
 
@@ -43,13 +43,13 @@ class LaravelCodeBuildCommand extends Command
     {
         $stubDir = config('code_builder.stub_dir', __DIR__ . '/../../code_stubs') . '/';
 
-        $this->builders = config('code_builder.builders');
+        $this->prepareBuilders();
 
         $this->codePath = new CodePath();
 
         $tableStr = $this->argument('table') ?? '';
         if(is_array($tableStr)) {
-            throw new Exception('table must be a string');
+            throw new CodeGenerateCommandException('The table argument must not be an array');
         }
 
         $table = select(
@@ -62,7 +62,7 @@ class LaravelCodeBuildCommand extends Command
 
         $entity = $this->argument('entity');
         if(is_array($entity)) {
-            throw new Exception('entity must be a string');
+            throw new CodeGenerateCommandException('The entity argument must not be an array');
         }
 
         $confirmBelongsTo = config('code_builder.belongs_to');
@@ -72,17 +72,17 @@ class LaravelCodeBuildCommand extends Command
 
         $hasMany = $this->option('has-many');
         if(! is_array($hasMany)) {
-            throw new Exception('has-many flag must be an array');
+            throw new CodeGenerateCommandException('The has-many option must be an array');
         }
 
         $hasOne = $this->option('has-one');
         if(! is_array($hasOne)) {
-            throw new Exception('has-one flag must be an array');
+            throw new CodeGenerateCommandException('The has-one option must be an array');
         }
 
         $belongsToMany = $this->option('belongs-to-many');
         if(! is_array($belongsToMany)) {
-            throw new Exception('belongs-to-many flag must be an array');
+            throw new CodeGenerateCommandException('The belongs-to-many option must be an array');
         }
 
         $this->codeStructure = CodeStructureFactory::makeFromTable(
@@ -107,38 +107,56 @@ class LaravelCodeBuildCommand extends Command
 
         $this->prepareGeneration($path);
 
-        $onlyFlag = $this->option('only');
-        if(is_array($onlyFlag)) {
-            throw new Exception('only flag must be a string');
-        }
-
         $buildFactory = new BuildFactory(
             $this->codeStructure,
             $this->codePath,
         );
 
-        if($onlyFlag) {
-            $onlyBuilder = BuildType::tryFrom((string) $onlyFlag);
-            if(! is_null($onlyBuilder) && ! in_array($onlyBuilder, $this->builders)) {
-                $this->builders[] = $onlyBuilder;
+        foreach ($this->builders as $builder) {
+            $confirmed = true;
+            if(isset($this->replaceCautions[$builder->value])) {
+                $confirmed = confirm($this->replaceCautions[$builder->value]);
+            }
+
+            if($confirmed) {
+                $buildFactory->call($builder->value, $stubDir . $builder->stub());
+
+                $codePath = $this->codePath->path($builder->value);
+                $filePath = substr($codePath->file(), strpos($codePath->file(), '/app') + 1 );
+                $this->info($filePath . ' was created successfully!');
+            }
+        }
+    }
+
+    private function prepareBuilders(): void
+    {
+        $builders = [
+            BuildType::MODEL,
+            BuildType::ADD_ACTION,
+            BuildType::EDIT_ACTION,
+            BuildType::REQUEST,
+            BuildType::CONTROLLER,
+            BuildType::ROUTE,
+            BuildType::FORM,
+            BuildType::DTO,
+        ];
+
+        foreach ($builders as $builder) {
+            if($this->option($builder->value)) {
+                $this->builders[] = $builder;
             }
         }
 
-        foreach ($this->builders as $builder) {
-            if(! $onlyFlag || $onlyFlag === $builder->value) {
-                $confirmed = true;
-                if(isset($this->replaceCautions[$builder->value])) {
-                    $confirmed = confirm($this->replaceCautions[$builder->value]);
-                }
-
-                if($confirmed) {
-                    $buildFactory->call($builder->value, $stubDir . $builder->stub());
-
-                    $codePath = $this->codePath->path($builder->value);
-                    $filePath = substr($codePath->file(), strpos($codePath->file(), '/app') + 1 );
-                    $this->info($filePath . ' was created successfully!');
+        if($this->option('builders')) {
+            foreach (config('code_builder.builders', []) as $builder) {
+                if(! in_array($builder, $this->builders)) {
+                    $this->builders[] = $builder;
                 }
             }
+        }
+
+        if(empty($this->builders)) {
+            $this->builders = config('code_builder.builders');
         }
     }
 
@@ -153,17 +171,45 @@ class LaravelCodeBuildCommand extends Command
 
         $genPath = app_path($path);
 
-        if($isGenerationDir) {
-            $generateDirs = [
-                'Models',
-                'Actions',
-                'DTO',
-                'Http/Requests',
-                'Http/Controllers',
-                'routes',
-                'resources/views'
-            ];
+        $generateDirs = [];
+        $generateProjectDirs = [];
 
+        if(in_array(BuildType::MODEL, $this->builders)) {
+            $generateDirs[] = 'Models';
+        }
+
+        if(
+            in_array(BuildType::ADD_ACTION, $this->builders)
+            || in_array(BuildType::EDIT_ACTION, $this->builders)
+        ) {
+            $generateDirs[] = 'Actions';
+            $generateProjectDirs[] = 'Actions';
+        }
+
+        if(in_array(BuildType::DTO, $this->builders)) {
+            $generateDirs[] = 'DTO';
+            $generateProjectDirs[] = 'DTO';
+        }
+
+        if(in_array(BuildType::REQUEST, $this->builders)) {
+            $generateDirs[] = 'Http/Requests';
+            $generateProjectDirs[] = 'Http/Requests';
+        }
+
+        if(in_array(BuildType::CONTROLLER, $this->builders)) {
+            $generateDirs[] = 'Http/Controllers';
+            $generateProjectDirs[] = 'Http/Controllers';
+        }
+
+        if(in_array(BuildType::ROUTE, $this->builders)) {
+            $generateDirs[] = 'routes';
+        }
+
+        if(in_array(BuildType::FORM, $this->builders)) {
+            $generateDirs[] = 'resources/views';
+        }
+
+        if($isGenerationDir) {
             if(! $fileSystem->isDirectory($genPath)) {
                 $fileSystem->makeDirectory($genPath, recursive: true);
                 $fileSystem->put($genPath . '/.gitignore', "*\n!.gitignore");
@@ -175,13 +221,6 @@ class LaravelCodeBuildCommand extends Command
                 }
             }
         } else {
-            $generateProjectDirs = [
-                'Actions',
-                'DTO',
-                'Http/Requests',
-                'Http/Controllers',
-            ];
-
             foreach ($generateProjectDirs as $dir) {
                 if(! $fileSystem->isDirectory(app_path($dir))) {
                     $fileSystem->makeDirectory(app_path($dir));

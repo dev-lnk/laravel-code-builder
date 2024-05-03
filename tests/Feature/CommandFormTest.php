@@ -26,7 +26,7 @@ final class CommandFormTest extends TestCase
     #[Test]
     public function testProduct()
     {
-        $this->artisan('code:build product --only=form')
+        $this->artisan('code:build product --form')
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Where to generate the result?', '_default');
 
@@ -44,7 +44,7 @@ final class CommandFormTest extends TestCase
     #[Test]
     public function testProductBelongsToMany()
     {
-        $this->artisan('code:build product --only=form --belongs-to-many=properties')
+        $this->artisan('code:build product --form --belongs-to-many=properties')
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Where to generate the result?', '_default')
         ;
@@ -58,7 +58,7 @@ final class CommandFormTest extends TestCase
     #[Test]
     public function testUser()
     {
-        $this->artisan('code:build user --only=form')
+        $this->artisan('code:build user --form')
             ->expectsQuestion('Table', 'users')
             ->expectsQuestion('Where to generate the result?', '_default');
 
@@ -73,7 +73,7 @@ final class CommandFormTest extends TestCase
     #[Test]
     public function testProductCustomName()
     {
-        $this->artisan('code:build foo --only=form')
+        $this->artisan('code:build foo --form')
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Where to generate the result?', '_default');
 

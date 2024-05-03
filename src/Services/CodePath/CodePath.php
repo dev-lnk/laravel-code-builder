@@ -6,6 +6,14 @@ namespace DevLnk\LaravelCodeBuilder\Services\CodePath;
 
 use DevLnk\LaravelCodeBuilder\Enums\BuildType;
 use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
+use DevLnk\LaravelCodeBuilder\Services\CodePath\Core\AddActionPath;
+use DevLnk\LaravelCodeBuilder\Services\CodePath\Core\ControllerPath;
+use DevLnk\LaravelCodeBuilder\Services\CodePath\Core\DTOPath;
+use DevLnk\LaravelCodeBuilder\Services\CodePath\Core\EditActionPath;
+use DevLnk\LaravelCodeBuilder\Services\CodePath\Core\FormPath;
+use DevLnk\LaravelCodeBuilder\Services\CodePath\Core\ModelPath;
+use DevLnk\LaravelCodeBuilder\Services\CodePath\Core\RequestPath;
+use DevLnk\LaravelCodeBuilder\Services\CodePath\Core\RoutePath;
 
 final class CodePath
 {
