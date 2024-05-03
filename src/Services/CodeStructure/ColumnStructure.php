@@ -16,7 +16,9 @@ final class ColumnStructure
 
     public function __construct(
         private readonly string $column,
-        private string $name = ''
+        private string $name,
+        private readonly ?string $default,
+        private readonly bool $nullable
     ) {
         if(empty($this->name)) {
             $this->name = str($this->column)->camel()->ucfirst()->value();
@@ -41,6 +43,25 @@ final class ColumnStructure
     public function relation(): ?RelationStructure
     {
         return $this->relation;
+    }
+
+    public function default(): ?string
+    {
+        return $this->default;
+    }
+
+    public function defaultInStub(): ?string
+    {
+        if(! is_null($this->default) && $this->phpType() === 'string') {
+            return "'" . trim($this->default, "'") . "'";
+        }
+
+        return $this->default;
+    }
+
+    public function nullable(): bool
+    {
+        return $this->nullable;
     }
 
     public function setType(SqlTypeMap $type): void
@@ -93,6 +114,42 @@ final class ColumnStructure
 
         if($this->inputType === 'text') {
             return 'string';
+        }
+
+        if($this->inputType === 'checkbox') {
+            return 'accepted';
+        }
+
+        return $this->inputType;
+    }
+
+    public function phpType(): ?string
+    {
+        if(
+            $this->type() === SqlTypeMap::HAS_MANY
+            || $this->type() === SqlTypeMap::BELONGS_TO_MANY
+        ) {
+            return 'array';
+        }
+
+        if($this->type() === SqlTypeMap::HAS_ONE) {
+            return $this->relation()?->table()->ucFirstSingular() . 'DTO';
+        }
+
+        if($this->inputType === 'number') {
+            return 'int';
+        }
+
+        if(
+            $this->inputType === 'text'
+            || $this->inputType === 'email'
+            || $this->inputType === 'password'
+        ) {
+            return 'string';
+        }
+
+        if($this->inputType === 'checkbox') {
+            return 'bool';
         }
 
         return $this->inputType;

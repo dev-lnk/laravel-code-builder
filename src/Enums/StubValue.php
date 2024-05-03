@@ -6,6 +6,8 @@ namespace DevLnk\LaravelCodeBuilder\Enums;
 
 enum StubValue
 {
+    case USE_CONTROLLER;
+
     case USE_SOFT_DELETES;
 
     case SOFT_DELETES;
@@ -27,6 +29,7 @@ enum StubValue
     function key(): string
     {
         return match ($this) {
+            self::USE_CONTROLLER => '{use_controller}',
             self::USE_SOFT_DELETES => '{use_soft_deletes}',
             self::USE_BELONGS_TO => '{use_belongs_to}',
             self::USE_HAS_MANY => '{use_has_many}',
@@ -42,6 +45,7 @@ enum StubValue
     function value(): string
     {
         return match ($this) {
+            self::USE_CONTROLLER => "use App\Http\Controllers\Controller;",
             self::USE_SOFT_DELETES => "use Illuminate\Database\Eloquent\SoftDeletes;",
             self::SOFT_DELETES => "\tuse SoftDeletes;",
             self::TIMESTAMPS => "\tpublic \$timestamps = false;",

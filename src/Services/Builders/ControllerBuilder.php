@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace DevLnk\LaravelCodeBuilder\Services\Builders;
 
 use DevLnk\LaravelCodeBuilder\Enums\BuildType;
+use DevLnk\LaravelCodeBuilder\Enums\StubValue;
 use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
 use DevLnk\LaravelCodeBuilder\Services\StubBuilder;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 final class ControllerBuilder extends AbstractBuilder
 {
-
     /**
      * @throws FileNotFoundException
      * @throws NotFoundCodePathException
@@ -24,6 +24,11 @@ final class ControllerBuilder extends AbstractBuilder
         $requestPath = $this->codePath->path(BuildType::REQUEST->value);
 
         StubBuilder::make($this->stubFile)
+            ->setKey(
+                StubValue::USE_CONTROLLER->key(),
+                StubValue::USE_CONTROLLER->value(),
+                $controllerPath->namespace() !== 'App\\Http\\Controllers'
+            )
             ->makeFromStub($controllerPath->file(), [
                 '{namespace}' => $controllerPath->namespace(),
                 '{add_action_namespace}' => $addActionPath->namespace() . '\\' . $addActionPath->rawName(),

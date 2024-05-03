@@ -63,6 +63,11 @@ final readonly class BuildFactory
                 $this->codePath,
                 $stub,
             )->build(),
+            BuildType::DTO->value => DTOBuilder::make(
+                $this->codeStructure,
+                $this->codePath,
+                $stub,
+            )->build(),
             default => throw new NotFoundBuilderException()
         };
     }

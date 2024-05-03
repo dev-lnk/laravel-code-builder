@@ -1,0 +1,39 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {namespace};
+
+use {use_model};
+use {use_request};
+
+readonly class {name}
+{
+    public function __construct({properties}
+    ) {
+    }
+
+    public static function fromArray(array $data): self
+    {
+       return new self({array_inputs}
+       );
+    }
+
+    public static function fromRequest({request_name} $request): self
+    {
+        return new self({request_inputs}
+        );
+    }
+
+    public static function fromModel({model_name} $model): self
+    {
+        return new self({model_inputs}
+        );
+    }
+{getters}
+    public function toArray(): array
+    {
+        return [{to_array}
+        ];
+    }
+}

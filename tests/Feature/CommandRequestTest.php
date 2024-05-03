@@ -40,6 +40,7 @@ class CommandRequestTest extends TestCase
         $this->assertStringContainsString("'sort_number' => ['int', 'nullable']", $file);
         $this->assertStringContainsString("'user_id' => ['int', 'nullable']", $file);
         $this->assertStringContainsString("'category_id' => ['int', 'nullable']", $file);
+        $this->assertStringContainsString("'is_active' => ['accepted', 'sometimes']", $file);
     }
 
     #[Test]

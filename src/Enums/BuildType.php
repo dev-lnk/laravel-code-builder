@@ -20,6 +20,8 @@ enum BuildType: string
 
     case FORM = 'form';
 
+    case DTO = 'DTO';
+
     public function stub(): string
     {
         return match ($this) {
@@ -29,7 +31,8 @@ enum BuildType: string
             self::REQUEST => 'Request',
             self::CONTROLLER => 'Controller',
             self::ROUTE => 'Route',
-            self::FORM => 'Form'
+            self::FORM => 'Form',
+            self::DTO => 'DTO',
         };
     }
 }

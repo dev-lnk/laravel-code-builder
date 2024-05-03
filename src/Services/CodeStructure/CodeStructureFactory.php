@@ -52,11 +52,21 @@ final class CodeStructureFactory
         }
 
         foreach ($columns as $column) {
-            $columnStructure = new ColumnStructure($column['name'], $column['comment'] ?? '');
-
             $type = $column['name'] === $primaryKey
                 ? 'primary'
                 : preg_replace("/[0-9]+|\(|\)|,/", '', $column['type']);
+
+            $type = $column['type'] === 'tinyint(1)' ? 'boolean' : $type;
+            if($type === 'boolean' && ! is_null($column['default'])) {
+                $column['default'] = $column['default'] ? 'true' : 'false';
+            }
+
+            $columnStructure = new ColumnStructure(
+                $column['name'],
+                $column['comment'] ?? '',
+                $column['default'],
+                $column['nullable']
+            );
 
             if($isBelongsTo && isset($foreigns[$column['name']])) {
                 $columnStructure->setRelation(
@@ -72,7 +82,7 @@ final class CodeStructureFactory
         }
 
         foreach ($hasMany as $column) {
-            $columnStructure = new ColumnStructure($column);
+            $columnStructure = new ColumnStructure($column, '', '[]', false);
             $columnStructure->setRelation(
                 str($table)->singular()->snake()->value() . '_id',
                 $column
@@ -82,7 +92,7 @@ final class CodeStructureFactory
         }
 
         foreach ($hasOne as $column) {
-            $columnStructure = new ColumnStructure(str($column)->singular()->snake()->value());
+            $columnStructure = new ColumnStructure(str($column)->singular()->snake()->value(), '', NULL, true);
             $columnStructure->setRelation(
                 str($table)->singular()->snake()->value() . '_id',
                 $column
@@ -92,7 +102,7 @@ final class CodeStructureFactory
         }
 
         foreach ($belongsToMany as $column) {
-            $columnStructure = new ColumnStructure($column);
+            $columnStructure = new ColumnStructure($column, '', '[]', false);
             $columnStructure->setRelation(
                 str($table)->singular()->snake()->value() . '_id',
                 $column
