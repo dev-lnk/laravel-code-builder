@@ -157,7 +157,7 @@ class LaravelCodeBuildCommand extends Command
             $generateDirs = [
                 'Models',
                 'Actions',
-                'DTOs',
+                'DTO',
                 'Http/Requests',
                 'Http/Controllers',
                 'routes',
@@ -177,7 +177,7 @@ class LaravelCodeBuildCommand extends Command
         } else {
             $generateProjectDirs = [
                 'Actions',
-                'DTOs',
+                'DTO',
                 'Http/Requests',
                 'Http/Controllers',
             ];
@@ -227,7 +227,7 @@ class LaravelCodeBuildCommand extends Command
             )
             ->dto(
                 $this->codeStructure->entity()->ucFirstSingular() . 'DTO.php',
-                $isGenerationDir ? $genPath . "/DTOs" : app_path('DTOs'),
+                $isGenerationDir ? $genPath . "/DTO" : app_path('DTO'),
                 $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\DTOs' : 'App\\DTOs'
             )
         ;

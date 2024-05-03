@@ -38,7 +38,7 @@ class CommandSummaryTest extends TestCase
         $this->modelPath = app_path('Models/');
         $this->requestPath = app_path('Http/Requests/');
         $this->routePath = base_path('routes/');
-        $this->DTOPath = app_path('DTOs/');
+        $this->DTOPath = app_path('DTO/');
     }
 
     #[Test]
@@ -71,7 +71,7 @@ class CommandSummaryTest extends TestCase
         $this->modelPath = app_path('Generation/Models/');
         $this->requestPath = app_path('Generation/Http/Requests/');
         $this->routePath = app_path('Generation/routes/');
-        $this->DTOPath = app_path('Generation/DTOs/');
+        $this->DTOPath = app_path('Generation/DTO/');
 
         $this->assertFileExists($this->actionPath . 'AddProductAction.php');
         $this->assertFileExists($this->actionPath . 'EditProductAction.php');

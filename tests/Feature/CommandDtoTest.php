@@ -20,7 +20,7 @@ class CommandDtoTest extends TestCase
 
         $this->filesystem = new Filesystem();
 
-        $this->path = app_path('DTOs/');
+        $this->path = app_path('DTO/');
     }
 
     #[Test]
