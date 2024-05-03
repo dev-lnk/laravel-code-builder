@@ -25,7 +25,7 @@ class CommandModelTest extends TestCase
     #[Test]
     public function testProduct()
     {
-        $this->artisan('code:build product --only=model')
+        $this->artisan('code:build product --model')
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Where to generate the result?', '_default')
         ;
@@ -57,7 +57,7 @@ class CommandModelTest extends TestCase
     {
         Config::set('code_builder.belongs_to');
 
-        $this->artisan('code:build product --only=model')
+        $this->artisan('code:build product --model')
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Generate BelongsTo relations from foreign keys?', false)
             ->expectsQuestion('Where to generate the result?', '_default')
@@ -74,7 +74,7 @@ class CommandModelTest extends TestCase
     #[Test]
     public function testProductHasMany()
     {
-        $this->artisan('code:build product --only=model --has-many=comments')
+        $this->artisan('code:build product --model --has-many=comments')
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Where to generate the result?', '_default')
         ;
@@ -90,7 +90,7 @@ class CommandModelTest extends TestCase
     #[Test]
     public function testProductHasOne()
     {
-        $this->artisan('code:build product --only=model --has-one=comments')
+        $this->artisan('code:build product --model --has-one=comments')
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Where to generate the result?', '_default')
         ;
@@ -106,7 +106,7 @@ class CommandModelTest extends TestCase
     #[Test]
     public function testProductBelongsToMany()
     {
-        $this->artisan('code:build product --only=model --belongs-to-many=properties')
+        $this->artisan('code:build product --model --belongs-to-many=properties')
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Where to generate the result?', '_default')
         ;
@@ -123,7 +123,7 @@ class CommandModelTest extends TestCase
     #[Test]
     public function testProductCustomName()
     {
-        $this->artisan('code:build foo --only=model')
+        $this->artisan('code:build foo --model')
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Where to generate the result?', '_default')
         ;
@@ -151,7 +151,7 @@ class CommandModelTest extends TestCase
 
     public function testCategory()
     {
-        $this->artisan('code:build category --only=model')
+        $this->artisan('code:build category --model')
             ->expectsQuestion('Table', 'categories')
             ->expectsQuestion('Where to generate the result?', '_default')
         ;

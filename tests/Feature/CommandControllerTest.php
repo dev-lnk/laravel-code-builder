@@ -26,7 +26,7 @@ final class CommandControllerTest extends TestCase
     #[Test]
     public function testProduct()
     {
-        $this->artisan('code:build product --only=controller')
+        $this->artisan('code:build product --controller')
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Where to generate the result?', '_default');
 
@@ -44,7 +44,7 @@ final class CommandControllerTest extends TestCase
     #[Test]
     public function testProductCustomName()
     {
-        $this->artisan('code:build foo --only=controller')
+        $this->artisan('code:build foo --controller')
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Where to generate the result?', '_default');
 

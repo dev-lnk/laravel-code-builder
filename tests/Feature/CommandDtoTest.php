@@ -26,7 +26,7 @@ class CommandDtoTest extends TestCase
     #[Test]
     public function testProduct()
     {
-        $this->artisan('code:build product --has-one=images --has-many=comments --belongs-to-many=properties --only=DTO')
+        $this->artisan('code:build product --has-one=images --has-many=comments --belongs-to-many=properties --DTO')
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Where to generate the result?', '_default');
 

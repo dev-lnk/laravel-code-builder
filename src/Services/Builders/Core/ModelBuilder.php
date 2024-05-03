@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace DevLnk\LaravelCodeBuilder\Services\Builders;
+namespace DevLnk\LaravelCodeBuilder\Services\Builders\Core;
 
 use DevLnk\LaravelCodeBuilder\Enums\BuildType;
 use DevLnk\LaravelCodeBuilder\Enums\StubValue;
 use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
+use DevLnk\LaravelCodeBuilder\Services\Builders\AbstractBuilder;
 use DevLnk\LaravelCodeBuilder\Services\StubBuilder;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 

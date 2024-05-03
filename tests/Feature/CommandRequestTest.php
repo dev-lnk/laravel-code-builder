@@ -26,7 +26,7 @@ class CommandRequestTest extends TestCase
     #[Test]
     public function testProduct()
     {
-        $this->artisan('code:build product --only=request')
+        $this->artisan('code:build product --request')
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Where to generate the result?', '_default');
 
@@ -46,7 +46,7 @@ class CommandRequestTest extends TestCase
     #[Test]
     public function testProductBelongsToMany()
     {
-        $this->artisan('code:build product --only=request --belongs-to-many=properties')
+        $this->artisan('code:build product --request --belongs-to-many=properties')
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Where to generate the result?', '_default')
         ;
@@ -60,7 +60,7 @@ class CommandRequestTest extends TestCase
     #[Test]
     public function testUser()
     {
-        $this->artisan('code:build user --only=request')
+        $this->artisan('code:build user --request')
             ->expectsQuestion('Table', 'users')
             ->expectsQuestion('Where to generate the result?', '_default');
 
@@ -75,7 +75,7 @@ class CommandRequestTest extends TestCase
     #[Test]
     public function testProductCustomName()
     {
-        $this->artisan('code:build foo --only=request')
+        $this->artisan('code:build foo --request')
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Where to generate the result?', '_default');
 
