@@ -57,7 +57,7 @@ final class CodeStructureFactory
                 : preg_replace("/[0-9]+|\(|\)|,/", '', $column['type']);
 
             $type = $column['type'] === 'tinyint(1)' ? 'boolean' : $type;
-            if($type === 'boolean') {
+            if($type === 'boolean' && ! is_null($column['default'])) {
                 $column['default'] = $column['default'] ? 'true' : 'false';
             }
 
