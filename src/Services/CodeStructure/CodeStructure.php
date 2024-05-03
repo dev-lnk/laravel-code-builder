@@ -336,7 +336,7 @@ class CodeStructure
                 ->append($column->phpType() . ' ')
                 ->append('$' . str($column->column())->camel()->value())
                 ->when(! is_null($column->default()) && ! $column->nullable(),
-                    fn($str) => $str->append(' = ' . $column->default())
+                    fn($str) => $str->append(' = ' . $column->defaultInStub())
                 )
                 ->when($column->nullable(), fn($str) => $str->append(' = null'))
                 ->append(',')

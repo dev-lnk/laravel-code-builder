@@ -50,6 +50,13 @@ final class ColumnStructure
         return $this->default;
     }
 
+    public function defaultInStub(): ?string
+    {
+        dump($this->default);
+
+        return $this->default;
+    }
+
     public function nullable(): bool
     {
         return $this->nullable;
