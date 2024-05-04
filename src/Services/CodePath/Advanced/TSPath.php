@@ -6,5 +6,4 @@ namespace DevLnk\LaravelCodeBuilder\Services\CodePath\Advanced;
 
 readonly class TSPath
 {
-
 }

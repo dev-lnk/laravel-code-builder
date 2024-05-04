@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace DevLnk\LaravelCodeBuilder\Services\CodePath;
 
-use DevLnk\LaravelCodeBuilder\Enums\BuildType;
 use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
 use DevLnk\LaravelCodeBuilder\Services\CodePath\Core\AddActionPath;
 use DevLnk\LaravelCodeBuilder\Services\CodePath\Core\ControllerPath;
@@ -86,16 +85,17 @@ final class CodePath
             )
         ;
     }
-    
+
     public function setPath(AbstractPath $path): self
     {
         if(isset($this->paths[$path->getBuildType()->value])) {
             return $this;
         }
         $this->paths[$path->getBuildType()->value] = $path;
+
         return $this;
     }
-    
+
 
     /**
      * @throws NotFoundCodePathException
