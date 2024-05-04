@@ -7,6 +7,11 @@ use DevLnk\LaravelCodeBuilder\Services\CodeStructure\ColumnStructure;
 
 trait DTOColumns
 {
+    /**
+     * @var null|array<int, ColumnStructure>
+     */
+    private ?array $sortDTOColumns = null;
+
     public function columnsToDTO(): string
     {
         $result = "";
@@ -61,6 +66,7 @@ trait DTOColumns
             }
             $result .= str(str($column->column())->camel()->value() . ': ')
                 ->when($column->phpType() === 'int', fn ($str) => $str->append('(int) '))
+                ->when($column->phpType() === 'float', fn ($str) => $str->append('(float) '))
                 ->append("\$request->")
                 ->when(
                     $column->type() === SqlTypeMap::BOOLEAN,
@@ -83,6 +89,7 @@ trait DTOColumns
             $result .= str(str($column->column())->camel()->value() . ': ')
                 ->when($column->phpType() === 'int', fn ($str) => $str->append('(int) '))
                 ->when($column->phpType() === 'bool', fn ($str) => $str->append('(bool) '))
+                ->when($column->phpType() === 'float', fn ($str) => $str->append('(float) '))
                 ->when(
                     $column->type() === SqlTypeMap::HAS_ONE,
                     fn ($str) => $str->append("\$model->{$column->column()} ? " . $column->relation()?->table()->ucFirstSingular() . 'DTO::fromModel(')
@@ -147,29 +154,45 @@ trait DTOColumns
      */
     private function sortColumnsFromDefaultValue(): array
     {
-        $columns = [];
-        foreach ($this->columns() as $column) {
+        if(is_array($this->sortDTOColumns)) {
+            return $this->sortDTOColumns;
+        }
+
+        $searchColumns = $this->columns();
+
+        foreach ($searchColumns as $key => $column) {
             if(is_null($column->default())
                 && ! $column->nullable()
                 && ! in_array($column->column(), $this->dateColumns())
             ) {
-                $columns[] = $column;
+                $this->sortDTOColumns[] = $column;
+                unset($searchColumns[$key]);
             }
         }
-        foreach ($this->columns() as $column) {
+
+        foreach ($searchColumns as $key => $column) {
             if(
                 (! is_null($column->default()) || $column->nullable())
                 && ! in_array($column->column(), $this->dateColumns())
             ) {
-                $columns[] = $column;
-            }
-        }
-        foreach ($this->columns() as $column) {
-            if(in_array($column->column(), $this->dateColumns())) {
-                $columns[] = $column;
+                $this->sortDTOColumns[] = $column;
+                unset($searchColumns[$key]);
             }
         }
 
-        return $columns;
+        foreach ($searchColumns as $key => $column) {
+            if(in_array($column->column(), $this->dateColumns())) {
+                $this->sortDTOColumns[] = $column;
+                unset($searchColumns[$key]);
+            }
+        }
+
+        if(! empty($searchColumns)) {
+            foreach ($searchColumns as $column) {
+                $this->sortDTOColumns[] = $column;
+            }
+        }
+
+        return $this->sortDTOColumns;
     }
 }

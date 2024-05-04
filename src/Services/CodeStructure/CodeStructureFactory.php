@@ -56,9 +56,33 @@ final class CodeStructureFactory
                 ? 'primary'
                 : preg_replace("/[0-9]+|\(|\)|,/", '', $column['type']);
 
+            // For pgsql
+            if($type === 'primary') {
+                $column['default'] = null;
+            }
+
+            // For pgsql
+            if(! is_null($column['default']) && str_contains($column['default'], '::')) {
+                $column['default'] = substr($column['default'], 0, strpos($column['default'], '::'));
+            }
+
+            // For mysql
             $type = $column['type'] === 'tinyint(1)' ? 'boolean' : $type;
+
             if($type === 'boolean' && ! is_null($column['default'])) {
-                $column['default'] = $column['default'] ? 'true' : 'false';
+                // For mysql
+                if($column['default'] !== 'false' && $column['default'] !== true) {
+                    $column['default'] = $column['default'] ? 'true' : 'false';
+                }
+            }
+
+            if(
+                // For mysql
+                $column['default'] === 'current_timestamp()'
+                // For pgsql
+                || $column['default'] === 'CURRENT_TIMESTAMP'
+            ) {
+                $column['default'] = '';
             }
 
             $columnStructure = new ColumnStructure(
