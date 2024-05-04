@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" beStrictAboutTestsThatDoNotTestAnything="false" colors="true" processIsolation="false" stopOnError="false" stopOnFailure="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.1/phpunit.xsd" cacheDirectory=".phpunit.cache" backupStaticProperties="false">
   <testsuites>
-    <testsuite name="Laravel Code Builder Suite">
+    <testsuite name="Laravel Code Builder Pgsql Suite">
       <directory suffix="Test.php">./tests</directory>
     </testsuite>
   </testsuites>
   <php>
-    <env name="APP_KEY" value="base64:6H7KEyNMQw/8IEWoPor4nLQac7sYI5g7iQCzvQxkTiA="/>
+    <env name="APP_KEY" value="base64:2cSrghwzM9Jkjr88zurLfE8Onl3DbdRnNwhgB+wwchQ="/>
     <ini name="date.timezone" value="UTC"/>
     <ini name="intl.default_locale" value="C.UTF-8"/>
     <ini name="memory_limit" value="2048M"/>
-    <env name="DB_CONNECTION" value="mysql"/>
-    <env name="DB_HOST" value="localhost"/>
-    <env name="DB_DATABASE" value="tests"/>
-    <env name="DB_USERNAME" value="root"/>
-    <env name="DB_PASSWORD" value="root"/>
+    <env name="DB_CONNECTION" value="pgsql"/>
+    <env name="DB_DATABASE" value="postgres"/>
+    <env name="DB_USERNAME" value="postgres"/>
+    <env name="DB_PASSWORD" value="postgres"/>
   </php>
   <coverage/>
   <source>
