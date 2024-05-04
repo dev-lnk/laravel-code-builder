@@ -7,10 +7,11 @@ namespace DevLnk\LaravelCodeBuilder\Services\Builders\Core;
 use DevLnk\LaravelCodeBuilder\Enums\BuildType;
 use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
 use DevLnk\LaravelCodeBuilder\Services\Builders\AbstractBuilder;
+use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\FormBuilderContract;
 use DevLnk\LaravelCodeBuilder\Services\StubBuilder;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
-final class FormBuilder extends AbstractBuilder
+final class FormBuilder extends AbstractBuilder implements FormBuilderContract
 {
     /**
      * @throws NotFoundCodePathException

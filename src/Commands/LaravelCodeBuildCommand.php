@@ -171,107 +171,15 @@ class LaravelCodeBuildCommand extends Command
 
         $fileSystem = new Filesystem();
 
-        $genPath = app_path($path);
-
-        $generateDirs = [];
-        $generateProjectDirs = [];
-
-        if(in_array(BuildType::MODEL, $this->builders)) {
-            $generateDirs[] = 'Models';
-        }
-
-        if(
-            in_array(BuildType::ADD_ACTION, $this->builders)
-            || in_array(BuildType::EDIT_ACTION, $this->builders)
-        ) {
-            $generateDirs[] = 'Actions';
-            $generateProjectDirs[] = 'Actions';
-        }
-
-        if(in_array(BuildType::DTO, $this->builders)) {
-            $generateDirs[] = 'DTO';
-            $generateProjectDirs[] = 'DTO';
-        }
-
-        if(in_array(BuildType::REQUEST, $this->builders)) {
-            $generateDirs[] = 'Http/Requests';
-            $generateProjectDirs[] = 'Http/Requests';
-        }
-
-        if(in_array(BuildType::CONTROLLER, $this->builders)) {
-            $generateDirs[] = 'Http/Controllers';
-            $generateProjectDirs[] = 'Http/Controllers';
-        }
-
-        if(in_array(BuildType::ROUTE, $this->builders)) {
-            $generateDirs[] = 'routes';
-        }
-
-        if(in_array(BuildType::FORM, $this->builders)) {
-            $generateDirs[] = 'resources/views';
-        }
-
         if($isGenerationDir) {
+            $genPath = app_path($path);
             if(! $fileSystem->isDirectory($genPath)) {
                 $fileSystem->makeDirectory($genPath, recursive: true);
                 $fileSystem->put($genPath . '/.gitignore', "*\n!.gitignore");
             }
-
-            foreach ($generateDirs as $dir) {
-                if(! $fileSystem->isDirectory($genPath . '/' . $dir)) {
-                    $fileSystem->makeDirectory($genPath . '/' . $dir, recursive: true);
-                }
-            }
-        } else {
-            foreach ($generateProjectDirs as $dir) {
-                if(! $fileSystem->isDirectory(app_path($dir))) {
-                    $fileSystem->makeDirectory(app_path($dir));
-                }
-            }
         }
 
-        $this->codePath
-            ->model(
-                $this->codeStructure->entity()->ucFirstSingular() . '.php',
-                $isGenerationDir ? $genPath . "/Models" : app_path('Models'),
-                $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Models' : 'App\\Models'
-            )
-            ->addAction(
-                'Add' . $this->codeStructure->entity()->ucFirstSingular() . 'Action.php',
-                $isGenerationDir ? $genPath . "/Actions" : app_path('Actions'),
-                $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Actions' : 'App\\Actions'
-            )
-            ->editAction(
-                'Edit' . $this->codeStructure->entity()->ucFirstSingular() . 'Action.php',
-                $isGenerationDir ? $genPath . "/Actions" : app_path('Actions'),
-                $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Actions' : 'App\\Actions'
-            )
-            ->request(
-                $this->codeStructure->entity()->ucFirstSingular() . 'Request.php',
-                $isGenerationDir ? $genPath . "/Http/Requests" : app_path('Http/Requests'),
-                $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Http\\Requests' : 'App\\Http\\Requests'
-            )
-            ->controller(
-                $this->codeStructure->entity()->ucFirstSingular() . 'Controller.php',
-                $isGenerationDir ? $genPath . "/Http/Controllers" : app_path('Http/Controllers'),
-                $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Http\\Controllers' : 'App\\Http\\Controllers'
-            )
-            ->route(
-                $this->codeStructure->entity()->lower() . '.php',
-                $isGenerationDir ? $genPath . "/routes" : base_path('routes'),
-                ''
-            )
-            ->form(
-                $this->codeStructure->entity()->lower() . '.blade.php',
-                $isGenerationDir ? $genPath . "/resources/views" : base_path('resources/views'),
-                ''
-            )
-            ->dto(
-                $this->codeStructure->entity()->ucFirstSingular() . 'DTO.php',
-                $isGenerationDir ? $genPath . "/DTO" : app_path('DTO'),
-                $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\DTOs' : 'App\\DTOs'
-            )
-        ;
+        $this->codePath->initPaths($this->codeStructure, $path, $isGenerationDir);
 
         if(! $isGenerationDir) {
             foreach ($this->builders as $buildType) {
