@@ -6,5 +6,5 @@ namespace DevLnk\LaravelCodeBuilder\Services\CodePath\Advanced;
 
 readonly class TSPath
 {
-
+    // TODO TSPath extends AbstractPath
 }

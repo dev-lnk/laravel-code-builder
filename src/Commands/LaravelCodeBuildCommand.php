@@ -173,7 +173,6 @@ class LaravelCodeBuildCommand extends Command
 
         if($isGenerationDir) {
             $genPath = app_path($path);
-
             if(! $fileSystem->isDirectory($genPath)) {
                 $fileSystem->makeDirectory($genPath, recursive: true);
                 $fileSystem->put($genPath . '/.gitignore', "*\n!.gitignore");

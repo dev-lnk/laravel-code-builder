@@ -8,10 +8,11 @@ use DevLnk\LaravelCodeBuilder\Enums\BuildType;
 use DevLnk\LaravelCodeBuilder\Enums\StubValue;
 use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
 use DevLnk\LaravelCodeBuilder\Services\Builders\AbstractBuilder;
+use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\ControllerBuilderContract;
 use DevLnk\LaravelCodeBuilder\Services\StubBuilder;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
-final class ControllerBuilder extends AbstractBuilder
+final class ControllerBuilder extends AbstractBuilder implements ControllerBuilderContract
 {
     /**
      * @throws FileNotFoundException
