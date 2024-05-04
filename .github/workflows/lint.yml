@@ -1,6 +1,9 @@
 # .github/workflows/lint.yml
 
 on:
+    push:
+        branches:
+            - master
     pull_request:
         branches:
             - master
@@ -9,7 +12,7 @@ on:
 name: Check & fix styling
 jobs:
     php-cs-fixer:
-        if: ${{ github.event.pull_request.merged }}
+        if: ${{ github.event.pull_request.merged || github.ref == 'refs/heads/master' }}
         name: PHP-CS-Fixer
         runs-on: ubuntu-latest
         steps:
