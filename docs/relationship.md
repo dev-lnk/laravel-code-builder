@@ -136,7 +136,7 @@ class ProductRequest extends FormRequest
             'sort_number' => ['int', 'nullable'],
             'user_id' => ['int', 'nullable'],
             'category_id' => ['int', 'nullable'],
-            'is_active' => ['int', 'nullable'],
+            'is_active' => ['accepted', 'sometimes'],
             'properties' => ['array', 'nullable'],
         ];
     }
@@ -177,7 +177,7 @@ View:
     </div>
     <div>
         <label for="is_active">is_active</label>
-        <input id="is_active" name="is_active" value="{{ old('is_active') }}" type="number"/>
+        <input type="checkbox" id="is_active" name="is_active" value="1" @if(old('is_active')) checked @endif/>
     </div>
     <div>
         <label for="properties">properties</label>
@@ -187,4 +187,108 @@ View:
     </div>
     <button type="submit">Submit</button>
 </form>
+```
+DTO:
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Generation\DTOs;
+
+use App\Generation\Models\Product;
+use App\Generation\Http\Requests\ProductRequest;
+
+readonly class ProductDTO
+{
+    public function __construct(
+        private int $id,
+        private string $content,
+        private string $title = 'Default',
+        private int $sortNumber = 0,
+        private ?int $userId = null,
+        private ?int $categoryId = null,
+        private bool $isActive = false,
+        private array $comments = [],
+        private ?ImageDTO $image = null,
+        private array $properties = [],
+        private ?string $createdAt = null,
+        private ?string $updatedAt = null,
+        private ?string $deletedAt = null,
+    ) {
+    }
+
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            id: $data['id'],
+            content: $data['content'],
+            title: $data['title'] ?? 'Default',
+            sortNumber: $data['sort_number'] ?? 0,
+            userId: $data['user_id'] ?? null,
+            categoryId: $data['category_id'] ?? null,
+            isActive: $data['is_active'] ?? false,
+            comments: $data['comments'] ?? [],
+            image: $data['image'] ?? null,
+            properties: $data['properties'] ?? [],
+            createdAt: $data['created_at'] ?? null,
+            updatedAt: $data['updated_at'] ?? null,
+            deletedAt: $data['deleted_at'] ?? null,
+        );
+    }
+
+    public static function fromRequest(ProductRequest $request): self
+    {
+        return new self(
+            id: (int) $request->input('id'),
+            content: $request->input('content'),
+            title: $request->input('title'),
+            sortNumber: (int) $request->input('sort_number'),
+            userId: (int) $request->input('user_id'),
+            categoryId: (int) $request->input('category_id'),
+            isActive: $request->has('is_active'),
+            properties: $request->input('properties'),
+        );
+    }
+
+    public static function fromModel(Product $model): self
+    {
+        return new self(
+            id: (int) $model->id,
+            content: $model->content,
+            title: $model->title,
+            sortNumber: (int) $model->sort_number,
+            userId: (int) $model->user_id,
+            categoryId: (int) $model->category_id,
+            isActive: (bool) $model->is_active,
+            comments: $model->comments->toArray(),
+            image: $model->image ? ImageDTO::fromModel($model->image) : null,
+            properties: $model->properties->toArray(),
+            createdAt: $model->created_at?->format('Y-m-d H:i:s'),
+            updatedAt: $model->updated_at?->format('Y-m-d H:i:s'),
+            deletedAt: $model->deleted_at?->format('Y-m-d H:i:s'),
+        );
+    }
+    
+    // Getters...
+    
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'content' => $this->content,
+            'title' => $this->title,
+            'sort_number' => $this->sortNumber,
+            'user_id' => $this->userId,
+            'category_id' => $this->categoryId,
+            'is_active' => $this->isActive,
+            'comments' => $this->comments,
+            'image' => $this->image,
+            'properties' => $this->properties,
+            'created_at' => $this->createdAt,
+            'updated_at' => $this->updatedAt,
+            'deleted_at' => $this->deletedAt,
+        ];
+    }
+}
 ```
