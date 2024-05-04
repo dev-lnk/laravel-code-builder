@@ -179,13 +179,13 @@ enum SqlTypeMap: string
             'int unsigned' => self::UNSIGNED_INTEGER,
             'smallint unsigned' => self::UNSIGNED_SMALL_INTEGER,
             'tinyint unsigned' => self::UNSIGNED_TINY_INTEGER,
-            'decimal' => self::DECIMAL,
-            'double' => self::DOUBLE,
+            'decimal', 'numeric' => self::DECIMAL,
+            'double', 'double precision' => self::DOUBLE,
             'float' => self::FLOAT,
 
             /*Text*/
-            'char' => self::CHAR,
-            'varchar' => self::STRING,
+            'char', 'character' => self::CHAR,
+            'varchar', 'character varying' => self::STRING,
             'json' => self::JSON,
             'jsonb' => self::JSONB,
             'longtext' => self::LONG_TEXT,
