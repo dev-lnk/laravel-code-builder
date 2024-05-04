@@ -76,8 +76,12 @@ final class CodeStructureFactory
                 }
             }
 
-            // For mysql
-            if($column['default'] === 'current_timestamp()') {
+            if(
+                // For mysql
+                $column['default'] === 'current_timestamp()'
+                // For pgsql
+                || $column['default'] === 'CURRENT_TIMESTAMP'
+            ) {
                 $column['default'] = '';
             }
 

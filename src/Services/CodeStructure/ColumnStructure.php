@@ -56,7 +56,10 @@ final class ColumnStructure
             return "'" . trim($this->default, "'") . "'";
         }
 
-        if(! is_null($this->default) && $this->phpType() === 'float') {
+        if(
+            ! is_null($this->default)
+            && ($this->phpType() === 'float' || $this->phpType() === 'int')
+        ) {
             return trim($this->default, "'");
         }
 
