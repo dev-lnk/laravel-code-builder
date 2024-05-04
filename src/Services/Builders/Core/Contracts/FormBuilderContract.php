@@ -6,5 +6,4 @@ use DevLnk\LaravelCodeBuilder\Services\Builders\BuilderContract;
 
 interface FormBuilderContract extends BuilderContract
 {
-
 }
