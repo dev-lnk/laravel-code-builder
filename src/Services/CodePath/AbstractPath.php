@@ -27,6 +27,7 @@ abstract readonly class AbstractPath implements CodePathContract
         if(! is_dir($this->dir)) {
             mkdir($this->dir, recursive: true);
         }
+
         return $this->dir;
     }
 
