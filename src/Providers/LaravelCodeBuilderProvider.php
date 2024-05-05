@@ -30,6 +30,18 @@ class LaravelCodeBuilderProvider extends ServiceProvider
         LaravelCodeBuildCommand::class,
     ];
 
+    public function register(): void
+    {
+        $this->app->bind(AddActionBuilderContract::class, AddActionBuilder::class);
+        $this->app->bind(ControllerBuilderContract::class, ControllerBuilder::class);
+        $this->app->bind(DTOBuilderContract::class, DTOBuilder::class);
+        $this->app->bind(EditActionBuilderContract::class, EditActionBuilder::class);
+        $this->app->bind(FormBuilderContract::class, FormBuilder::class);
+        $this->app->bind(ModelBuilderContract::class, ModelBuilder::class);
+        $this->app->bind(RequestBuilderContract::class, RequestBuilder::class);
+        $this->app->bind(RouteBuilderContract::class, RouteBuilder::class);
+    }
+
     public function boot(): void
     {
         if ($this->app->runningInConsole()) {
@@ -48,14 +60,5 @@ class LaravelCodeBuilderProvider extends ServiceProvider
             __DIR__ . '/../../config/code_builder.php',
             'code_builder'
         );
-
-        $this->app->bind(AddActionBuilderContract::class, AddActionBuilder::class);
-        $this->app->bind(ControllerBuilderContract::class, ControllerBuilder::class);
-        $this->app->bind(DTOBuilderContract::class, DTOBuilder::class);
-        $this->app->bind(EditActionBuilderContract::class, EditActionBuilder::class);
-        $this->app->bind(FormBuilderContract::class, FormBuilder::class);
-        $this->app->bind(ModelBuilderContract::class, ModelBuilder::class);
-        $this->app->bind(RequestBuilderContract::class, RequestBuilder::class);
-        $this->app->bind(RouteBuilderContract::class, RouteBuilder::class);
     }
 }

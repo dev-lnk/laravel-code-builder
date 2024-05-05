@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace DevLnk\LaravelCodeBuilder\Services\CodeStructure;
 
 use DevLnk\LaravelCodeBuilder\Enums\SqlTypeMap;
+use DevLnk\LaravelCodeBuilder\Support\Traits\DataTrait;
 
 final class ColumnStructure
 {
-    private SqlTypeMap $type;
+    use DataTrait;
 
     private ?string $inputType = null;
 
@@ -17,12 +18,15 @@ final class ColumnStructure
     public function __construct(
         private readonly string $column,
         private string $name,
+        private SqlTypeMap $type,
         private readonly ?string $default,
         private readonly bool $nullable
     ) {
         if(empty($this->name)) {
             $this->name = str($this->column)->camel()->ucfirst()->value();
         }
+
+        $this->setInputType();
     }
 
     public function type(): SqlTypeMap
@@ -69,13 +73,6 @@ final class ColumnStructure
     public function nullable(): bool
     {
         return $this->nullable;
-    }
-
-    public function setType(SqlTypeMap $type): void
-    {
-        $this->type = $type;
-
-        $this->setInputType();
     }
 
     public function setRelation(string $foreignColumn, string $table): void

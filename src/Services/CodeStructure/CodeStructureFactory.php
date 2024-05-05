@@ -4,134 +4,34 @@ declare(strict_types=1);
 
 namespace DevLnk\LaravelCodeBuilder\Services\CodeStructure;
 
-use DevLnk\LaravelCodeBuilder\Enums\SqlTypeMap;
-use Illuminate\Support\Facades\Schema;
+use DevLnk\LaravelCodeBuilder\Services\SchemaStructure\SchemaStructure;
 
 final class CodeStructureFactory
 {
-    /**
-     * @param string $table
-     * @param string $entity
-     * @param bool   $isBelongsTo
-     * @param array<int, string>  $hasMany
-     * @param array<int, string>  $hasOne
-     * @param array<int, string>  $belongsToMany
-     *
-     * @return CodeStructure
-     */
-    public static function makeFromTable(
-        string $table,
-        string $entity,
-        bool $isBelongsTo,
-        array $hasMany,
-        array $hasOne,
-        array $belongsToMany
-    ): CodeStructure {
-        $columns = Schema::getColumns($table);
+    public static function make(string $entity, SchemaStructure $schemeStructure): CodeStructure
+    {
+        $codeStructure = new CodeStructure($schemeStructure->table(), $entity);
 
-        $indexes = Schema::getIndexes($table);
+        $codeStructure->setData($schemeStructure->data());
 
-        $foreignKeys = $isBelongsTo ? Schema::getForeignKeys($table) : [];
-        $foreigns = [];
-        foreach ($foreignKeys as $value) {
-            $foreigns[$value['columns'][0]] = [
-                'table' => $value['foreign_table'],
-                'foreign_column' => $value['foreign_columns'][0],
-            ];
-        }
-
-        $codeStructure = new CodeStructure($table, $entity);
-
-        $primaryKey = 'id';
-        foreach ($indexes as $index) {
-            if($index['name'] === 'primary') {
-                $primaryKey = $index['columns'][0];
-
-                break;
-            }
-        }
-
-        foreach ($columns as $column) {
-            $type = $column['name'] === $primaryKey
-                ? 'primary'
-                : preg_replace("/[0-9]+|\(|\)|,/", '', $column['type']);
-
-            // For pgsql
-            if($type === 'primary') {
-                $column['default'] = null;
-            }
-
-            // For pgsql
-            if(! is_null($column['default']) && str_contains($column['default'], '::')) {
-                $column['default'] = substr($column['default'], 0, strpos($column['default'], '::'));
-            }
-
-            // For mysql
-            $type = $column['type'] === 'tinyint(1)' ? 'boolean' : $type;
-
-            if($type === 'boolean' && ! is_null($column['default'])) {
-                // For mysql
-                if($column['default'] !== 'false' && $column['default'] !== true) {
-                    $column['default'] = $column['default'] ? 'true' : 'false';
-                }
-            }
-
-            if(
-                // For mysql
-                $column['default'] === 'current_timestamp()'
-                // For pgsql
-                || $column['default'] === 'CURRENT_TIMESTAMP'
-            ) {
-                $column['default'] = '';
-            }
-
+        foreach ($schemeStructure->columns() as $column) {
             $columnStructure = new ColumnStructure(
-                $column['name'],
-                $column['comment'] ?? '',
-                $column['default'],
-                $column['nullable']
+                $column->name(),
+                $column->comment() ?? '',
+                $column->type(),
+                $column->default(),
+                $column->nullable()
             );
 
-            if($isBelongsTo && isset($foreigns[$column['name']])) {
+            if($column->foreign()) {
                 $columnStructure->setRelation(
-                    $foreigns[$column['name']]['foreign_column'],
-                    $foreigns[$column['name']]['table']
+                    $column->foreign()->column(),
+                    $column->foreign()->table()
                 );
-                $columnStructure->setType(SqlTypeMap::BELONGS_TO);
-            } else {
-                $columnStructure->setType(SqlTypeMap::fromSqlType($type));
             }
 
-            $codeStructure->addColumn($columnStructure);
-        }
+            $columnStructure->setData($column->data());
 
-        foreach ($hasMany as $column) {
-            $columnStructure = new ColumnStructure($column, '', '[]', false);
-            $columnStructure->setRelation(
-                str($table)->singular()->snake()->value() . '_id',
-                $column
-            );
-            $columnStructure->setType(SqlTypeMap::HAS_MANY);
-            $codeStructure->addColumn($columnStructure);
-        }
-
-        foreach ($hasOne as $column) {
-            $columnStructure = new ColumnStructure(str($column)->singular()->snake()->value(), '', null, true);
-            $columnStructure->setRelation(
-                str($table)->singular()->snake()->value() . '_id',
-                $column
-            );
-            $columnStructure->setType(SqlTypeMap::HAS_ONE);
-            $codeStructure->addColumn($columnStructure);
-        }
-
-        foreach ($belongsToMany as $column) {
-            $columnStructure = new ColumnStructure($column, '', '[]', false);
-            $columnStructure->setRelation(
-                str($table)->singular()->snake()->value() . '_id',
-                $column
-            );
-            $columnStructure->setType(SqlTypeMap::BELONGS_TO_MANY);
             $codeStructure->addColumn($columnStructure);
         }
 

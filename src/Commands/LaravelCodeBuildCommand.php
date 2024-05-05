@@ -4,21 +4,19 @@ namespace DevLnk\LaravelCodeBuilder\Commands;
 
 use DevLnk\LaravelCodeBuilder\Enums\BuildType;
 use DevLnk\LaravelCodeBuilder\Exceptions\CodeGenerateCommandException;
+use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundBuilderException;
 use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
 use DevLnk\LaravelCodeBuilder\Services\Builders\BuildFactory;
 use DevLnk\LaravelCodeBuilder\Services\CodePath\CodePath;
 use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructure;
 use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructureFactory;
+use DevLnk\LaravelCodeBuilder\Services\SchemaStructure\SchemaFromMysql;
+use DevLnk\LaravelCodeBuilder\Services\SchemaStructure\SchemaStructure;
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Schema;
-
 use function Laravel\Prompts\confirm;
-
 use function Laravel\Prompts\select;
-
-use Throwable;
 
 class LaravelCodeBuildCommand extends Command
 {
@@ -39,7 +37,9 @@ class LaravelCodeBuildCommand extends Command
     private array $builders = [];
 
     /**
-     * @throws FileNotFoundException|Throwable
+     * @throws NotFoundCodePathException
+     * @throws CodeGenerateCommandException
+     * @throws NotFoundBuilderException
      */
     public function handle(): void
     {
@@ -49,52 +49,7 @@ class LaravelCodeBuildCommand extends Command
 
         $this->codePath = new CodePath();
 
-        $tableStr = $this->argument('table') ?? '';
-        if(is_array($tableStr)) {
-            throw new CodeGenerateCommandException('The table argument must not be an array');
-        }
-
-        $table = select(
-            'Table',
-            collect(Schema::getTables())
-                ->filter(fn ($v) => str_contains((string) $v['name'], (string) $tableStr))
-                ->mapWithKeys(fn ($v) => [$v['name'] => $v['name']]),
-            default: 'jobs'
-        );
-
-        $entity = $this->argument('entity');
-        if(is_array($entity)) {
-            throw new CodeGenerateCommandException('The entity argument must not be an array');
-        }
-
-        $confirmBelongsTo = config('code_builder.belongs_to');
-        if(is_null($confirmBelongsTo)) {
-            $confirmBelongsTo = confirm("Generate BelongsTo relations from foreign keys?");
-        }
-
-        $hasMany = $this->option('has-many');
-        if(! is_array($hasMany)) {
-            throw new CodeGenerateCommandException('The has-many option must be an array');
-        }
-
-        $hasOne = $this->option('has-one');
-        if(! is_array($hasOne)) {
-            throw new CodeGenerateCommandException('The has-one option must be an array');
-        }
-
-        $belongsToMany = $this->option('belongs-to-many');
-        if(! is_array($belongsToMany)) {
-            throw new CodeGenerateCommandException('The belongs-to-many option must be an array');
-        }
-
-        $this->codeStructure = CodeStructureFactory::makeFromTable(
-            (string) $table,
-            (string) $entity,
-            $confirmBelongsTo,
-            $hasMany,
-            $hasOne,
-            $belongsToMany
-        );
+        $this->codeStructure = CodeStructureFactory::make((string) $this->entity(), $this->getSchema());
 
         $this->codeStructure->setStubDir($stubDir);
 
@@ -130,7 +85,66 @@ class LaravelCodeBuildCommand extends Command
         }
     }
 
-    private function prepareBuilders(): void
+    /**
+     * @throws CodeGenerateCommandException
+     */
+    protected function entity(): bool|string|null
+    {
+        $entity = $this->argument('entity');
+        if(is_array($entity)) {
+            throw new CodeGenerateCommandException('The entity argument must not be an array');
+        }
+        return $entity;
+    }
+
+    /**
+     * @throws CodeGenerateCommandException
+     */
+    protected function getSchema(): SchemaStructure
+    {
+        $tableStr = $this->argument('table') ?? '';
+        if(is_array($tableStr)) {
+            throw new CodeGenerateCommandException('The table argument must not be an array');
+        }
+
+        $table = select(
+            'Table',
+            collect(Schema::getTables())
+                ->filter(fn ($v) => str_contains((string) $v['name'], (string) $tableStr))
+                ->mapWithKeys(fn ($v) => [$v['name'] => $v['name']]),
+            default: 'jobs'
+        );
+
+        $confirmBelongsTo = config('code_builder.belongs_to');
+        if(is_null($confirmBelongsTo)) {
+            $confirmBelongsTo = confirm("Generate BelongsTo relations from foreign keys?");
+        }
+
+        $hasMany = $this->option('has-many');
+        if(! is_array($hasMany)) {
+            throw new CodeGenerateCommandException('The has-many option must be an array');
+        }
+
+        $hasOne = $this->option('has-one');
+        if(! is_array($hasOne)) {
+            throw new CodeGenerateCommandException('The has-one option must be an array');
+        }
+
+        $belongsToMany = $this->option('belongs-to-many');
+        if(! is_array($belongsToMany)) {
+            throw new CodeGenerateCommandException('The belongs-to-many option must be an array');
+        }
+
+        return SchemaFromMysql::make(
+            (string) $table,
+            $confirmBelongsTo,
+            $hasMany,
+            $hasOne,
+            $belongsToMany
+        );
+    }
+
+    protected function prepareBuilders(): void
     {
         $builders = [
             BuildType::MODEL,
@@ -165,7 +179,7 @@ class LaravelCodeBuildCommand extends Command
     /**
      * @throws NotFoundCodePathException
      */
-    private function prepareGeneration(string $path): void
+    protected function prepareGeneration(string $path): void
     {
         $isGenerationDir = $path !== '_default';
 

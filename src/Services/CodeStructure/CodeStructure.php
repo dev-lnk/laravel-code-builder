@@ -10,6 +10,7 @@ use DevLnk\LaravelCodeBuilder\Services\CodeStructure\Traits\FormColumns;
 use DevLnk\LaravelCodeBuilder\Services\CodeStructure\Traits\ModelColumns;
 use DevLnk\LaravelCodeBuilder\Services\CodeStructure\Traits\RequestColumns;
 use DevLnk\LaravelCodeBuilder\Support\NameStr;
+use DevLnk\LaravelCodeBuilder\Support\Traits\DataTrait;
 
 class CodeStructure
 {
@@ -17,6 +18,7 @@ class CodeStructure
     use RequestColumns;
     use FormColumns;
     use DTOColumns;
+    use DataTrait;
 
     /**
      * @var array<int, ColumnStructure>
