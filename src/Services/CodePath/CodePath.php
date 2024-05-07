@@ -24,7 +24,7 @@ final class CodePath
 
     public function initPaths(CodeStructure $codeStructure, string $path, bool $isGenerationDir): void
     {
-        $genPath = $isGenerationDir ? app_path($path) : '';
+        $genPath = $isGenerationDir ? base_path($path) : '';
 
         $this
             ->setPath(

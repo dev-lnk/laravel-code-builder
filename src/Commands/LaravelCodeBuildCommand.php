@@ -4,21 +4,18 @@ namespace DevLnk\LaravelCodeBuilder\Commands;
 
 use DevLnk\LaravelCodeBuilder\Enums\BuildType;
 use DevLnk\LaravelCodeBuilder\Exceptions\CodeGenerateCommandException;
+use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundBuilderException;
 use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
 use DevLnk\LaravelCodeBuilder\Services\Builders\BuildFactory;
 use DevLnk\LaravelCodeBuilder\Services\CodePath\CodePath;
 use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructure;
-use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructureFactory;
+use DevLnk\LaravelCodeBuilder\Services\CodeStructure\Factories\CodeStructureFromMysql;
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Schema;
 
 use function Laravel\Prompts\confirm;
-
 use function Laravel\Prompts\select;
-
-use Throwable;
 
 class LaravelCodeBuildCommand extends Command
 {
@@ -27,6 +24,8 @@ class LaravelCodeBuildCommand extends Command
     private CodePath $codePath;
 
     private CodeStructure $codeStructure;
+
+    private ?string $entity = '';
 
     /**
      * @var array<string, string>
@@ -39,7 +38,9 @@ class LaravelCodeBuildCommand extends Command
     private array $builders = [];
 
     /**
-     * @throws FileNotFoundException|Throwable
+     * @throws NotFoundCodePathException
+     * @throws CodeGenerateCommandException
+     * @throws NotFoundBuilderException
      */
     public function handle(): void
     {
@@ -47,8 +48,65 @@ class LaravelCodeBuildCommand extends Command
 
         $this->prepareBuilders();
 
+        $this->setEntity();
+
         $this->codePath = new CodePath();
 
+        $this->codeStructure = $this->getCodeStructure();
+
+        $this->codeStructure->setStubDir($stubDir);
+
+        $path = config('code_builder.generation_path') ?? select(
+            label: 'Where to generate the result?',
+            options: [
+                '_default' => 'In the project directories',
+                'app/Generation' => 'To the generation folder: `app/Generation`',
+            ],
+            default: '_default'
+        );
+
+        $this->prepareGeneration($path);
+
+        $buildFactory = new BuildFactory(
+            $this->codeStructure,
+            $this->codePath,
+        );
+
+        foreach ($this->builders as $builder) {
+            $confirmed = true;
+            if(isset($this->replaceCautions[$builder->value])) {
+                $confirmed = confirm($this->replaceCautions[$builder->value]);
+            }
+
+            if(! $confirmed) {
+                continue;
+            }
+
+            $buildFactory->call($builder->value, $stubDir . $builder->stub());
+
+            $codePath = $this->codePath->path($builder->value);
+            $filePath = substr($codePath->file(), strpos($codePath->file(), '/app') + 1);
+            $this->info($filePath . ' was created successfully!');
+        }
+    }
+
+    /**
+     * @throws CodeGenerateCommandException
+     */
+    protected function setEntity(): void
+    {
+        $entity = $this->argument('entity');
+        if(is_array($entity)) {
+            throw new CodeGenerateCommandException('The entity argument must not be an array');
+        }
+        $this->entity = $entity;
+    }
+
+    /**
+     * @throws CodeGenerateCommandException
+     */
+    protected function getCodeStructure(): CodeStructure
+    {
         $tableStr = $this->argument('table') ?? '';
         if(is_array($tableStr)) {
             throw new CodeGenerateCommandException('The table argument must not be an array');
@@ -61,11 +119,6 @@ class LaravelCodeBuildCommand extends Command
                 ->mapWithKeys(fn ($v) => [$v['name'] => $v['name']]),
             default: 'jobs'
         );
-
-        $entity = $this->argument('entity');
-        if(is_array($entity)) {
-            throw new CodeGenerateCommandException('The entity argument must not be an array');
-        }
 
         $confirmBelongsTo = config('code_builder.belongs_to');
         if(is_null($confirmBelongsTo)) {
@@ -87,50 +140,17 @@ class LaravelCodeBuildCommand extends Command
             throw new CodeGenerateCommandException('The belongs-to-many option must be an array');
         }
 
-        $this->codeStructure = CodeStructureFactory::makeFromTable(
+        return CodeStructureFromMysql::make(
             (string) $table,
-            (string) $entity,
+            $this->entity,
             $confirmBelongsTo,
             $hasMany,
             $hasOne,
             $belongsToMany
         );
-
-        $this->codeStructure->setStubDir($stubDir);
-
-        $path = config('code_builder.generation_path') ?? select(
-            label: 'Where to generate the result?',
-            options: [
-                '_default' => 'In the project directories',
-                'Generation' => 'To the generation folder: `app/Generation`',
-            ],
-            default: '_default'
-        );
-
-        $this->prepareGeneration($path);
-
-        $buildFactory = new BuildFactory(
-            $this->codeStructure,
-            $this->codePath,
-        );
-
-        foreach ($this->builders as $builder) {
-            $confirmed = true;
-            if(isset($this->replaceCautions[$builder->value])) {
-                $confirmed = confirm($this->replaceCautions[$builder->value]);
-            }
-
-            if($confirmed) {
-                $buildFactory->call($builder->value, $stubDir . $builder->stub());
-
-                $codePath = $this->codePath->path($builder->value);
-                $filePath = substr($codePath->file(), strpos($codePath->file(), '/app') + 1);
-                $this->info($filePath . ' was created successfully!');
-            }
-        }
     }
 
-    private function prepareBuilders(): void
+    protected function prepareBuilders(): void
     {
         $builders = [
             BuildType::MODEL,
@@ -165,14 +185,14 @@ class LaravelCodeBuildCommand extends Command
     /**
      * @throws NotFoundCodePathException
      */
-    private function prepareGeneration(string $path): void
+    protected function prepareGeneration(string $path): void
     {
         $isGenerationDir = $path !== '_default';
 
         $fileSystem = new Filesystem();
 
         if($isGenerationDir) {
-            $genPath = app_path($path);
+            $genPath = base_path($path);
             if(! $fileSystem->isDirectory($genPath)) {
                 $fileSystem->makeDirectory($genPath, recursive: true);
                 $fileSystem->put($genPath . '/.gitignore', "*\n!.gitignore");

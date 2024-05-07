@@ -48,6 +48,8 @@ class CommandSummaryTest extends TestCase
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Where to generate the result?', '_default');
 
+        //dd($this->actionPath . 'AddProductAction.php');
+
         $this->assertFileExists($this->actionPath . 'AddProductAction.php');
         $this->assertFileExists($this->actionPath . 'EditProductAction.php');
         $this->assertFileExists($this->controllerPath . 'ProductController.php');
@@ -63,7 +65,7 @@ class CommandSummaryTest extends TestCase
     {
         $this->artisan('code:build product')
             ->expectsQuestion('Table', 'products')
-            ->expectsQuestion('Where to generate the result?', 'Generation');
+            ->expectsQuestion('Where to generate the result?', 'app/Generation');
 
         $this->actionPath = app_path('Generation/Actions/');
         $this->controllerPath = app_path('Generation/Http/Controllers/');
