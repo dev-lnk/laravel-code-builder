@@ -28,6 +28,7 @@ final class CodeStructureFromMysql
         foreach ($indexes as $index) {
             if($index['name'] === 'primary') {
                 $primaryKey = $index['columns'][0];
+
                 break;
             }
         }
@@ -53,7 +54,7 @@ final class CodeStructureFromMysql
             }
 
             // For pgsql
-            if (!is_null($column['default']) && str_contains($column['default'], '::')) {
+            if (! is_null($column['default']) && str_contains($column['default'], '::')) {
                 $column['default'] = substr(
                     $column['default'],
                     0,
@@ -64,7 +65,7 @@ final class CodeStructureFromMysql
             // For mysql
             $type = $column['type'] === 'tinyint(1)' ? 'boolean' : $type;
 
-            if ($type === 'boolean' && !is_null($column['default'])) {
+            if ($type === 'boolean' && ! is_null($column['default'])) {
                 // For mysql
                 if ($column['default'] !== 'false'
                     && $column['default'] !== true
