@@ -75,9 +75,9 @@ final class ColumnStructure
         return $this->nullable;
     }
 
-    public function setRelation(string $foreignColumn, string $table): void
+    public function setRelation(RelationStructure $relation): void
     {
-        $this->relation = new RelationStructure($foreignColumn, $table);
+        $this->relation = $relation;
     }
 
     public function inputType(): ?string

@@ -9,12 +9,11 @@ use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
 use DevLnk\LaravelCodeBuilder\Services\Builders\BuildFactory;
 use DevLnk\LaravelCodeBuilder\Services\CodePath\CodePath;
 use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructure;
-use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructureFactory;
-use DevLnk\LaravelCodeBuilder\Services\SchemaStructure\SchemaFromMysql;
-use DevLnk\LaravelCodeBuilder\Services\SchemaStructure\SchemaStructure;
+use DevLnk\LaravelCodeBuilder\Services\CodeStructure\Factories\CodeStructureFromMysql;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Schema;
+
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\select;
 
@@ -25,6 +24,8 @@ class LaravelCodeBuildCommand extends Command
     private CodePath $codePath;
 
     private CodeStructure $codeStructure;
+
+    private ?string $entity = '';
 
     /**
      * @var array<string, string>
@@ -47,9 +48,11 @@ class LaravelCodeBuildCommand extends Command
 
         $this->prepareBuilders();
 
+        $this->setEntity();
+
         $this->codePath = new CodePath();
 
-        $this->codeStructure = CodeStructureFactory::make((string) $this->entity(), $this->getSchema());
+        $this->codeStructure = $this->getCodeStructure();
 
         $this->codeStructure->setStubDir($stubDir);
 
@@ -75,32 +78,34 @@ class LaravelCodeBuildCommand extends Command
                 $confirmed = confirm($this->replaceCautions[$builder->value]);
             }
 
-            if($confirmed) {
-                $buildFactory->call($builder->value, $stubDir . $builder->stub());
-
-                $codePath = $this->codePath->path($builder->value);
-                $filePath = substr($codePath->file(), strpos($codePath->file(), '/app') + 1);
-                $this->info($filePath . ' was created successfully!');
+            if(! $confirmed) {
+                continue;
             }
+
+            $buildFactory->call($builder->value, $stubDir . $builder->stub());
+
+            $codePath = $this->codePath->path($builder->value);
+            $filePath = substr($codePath->file(), strpos($codePath->file(), '/app') + 1);
+            $this->info($filePath . ' was created successfully!');
         }
     }
 
     /**
      * @throws CodeGenerateCommandException
      */
-    protected function entity(): bool|string|null
+    protected function setEntity(): void
     {
         $entity = $this->argument('entity');
         if(is_array($entity)) {
             throw new CodeGenerateCommandException('The entity argument must not be an array');
         }
-        return $entity;
+        $this->entity = $entity;
     }
 
     /**
      * @throws CodeGenerateCommandException
      */
-    protected function getSchema(): SchemaStructure
+    protected function getCodeStructure(): CodeStructure
     {
         $tableStr = $this->argument('table') ?? '';
         if(is_array($tableStr)) {
@@ -135,8 +140,9 @@ class LaravelCodeBuildCommand extends Command
             throw new CodeGenerateCommandException('The belongs-to-many option must be an array');
         }
 
-        return SchemaFromMysql::make(
+        return CodeStructureFromMysql::make(
             (string) $table,
+            $this->entity,
             $confirmBelongsTo,
             $hasMany,
             $hasOne,
