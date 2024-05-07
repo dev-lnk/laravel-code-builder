@@ -60,7 +60,7 @@ class LaravelCodeBuildCommand extends Command
             label: 'Where to generate the result?',
             options: [
                 '_default' => 'In the project directories',
-                'Generation' => 'To the generation folder: `app/Generation`',
+                'app/Generation' => 'To the generation folder: `app/Generation`',
             ],
             default: '_default'
         );
@@ -192,7 +192,7 @@ class LaravelCodeBuildCommand extends Command
         $fileSystem = new Filesystem();
 
         if($isGenerationDir) {
-            $genPath = app_path($path);
+            $genPath = base_path($path);
             if(! $fileSystem->isDirectory($genPath)) {
                 $fileSystem->makeDirectory($genPath, recursive: true);
                 $fileSystem->put($genPath . '/.gitignore', "*\n!.gitignore");
