@@ -26,40 +26,45 @@ final class CodePath
     {
         $genPath = $isGenerationDir ? base_path($path) : '';
 
+        $namespace = implode('/', array_map(
+            fn ($dir) => str($dir)->camel()->ucfirst()->value(),
+            explode("/", $path)
+        ));
+
         $this
             ->setPath(
                 new ModelPath(
                     $codeStructure->entity()->ucFirstSingular() . '.php',
                     $genPath ? $genPath . "/Models" : app_path('Models'),
-                    $genPath ? 'App\\' . str_replace('/', '\\', $path) . '\\Models' : 'App\\Models'
+                    $genPath ? str_replace('/', '\\', $namespace) . '\\Models' : 'App\\Models'
                 )
             )
             ->setPath(
                 new AddActionPath(
                     'Add' . $codeStructure->entity()->ucFirstSingular() . 'Action.php',
                     $genPath ? $genPath . "/Actions" : app_path('Actions'),
-                    $genPath ? 'App\\' . str_replace('/', '\\', $path) . '\\Actions' : 'App\\Actions'
+                    $genPath ? str_replace('/', '\\', $namespace) . '\\Actions' : 'App\\Actions'
                 )
             )
             ->setPath(
                 new EditActionPath(
                     'Edit' . $codeStructure->entity()->ucFirstSingular() . 'Action.php',
                     $genPath ? $genPath . "/Actions" : app_path('Actions'),
-                    $genPath ? 'App\\' . str_replace('/', '\\', $path) . '\\Actions' : 'App\\Actions'
+                    $genPath ? str_replace('/', '\\', $namespace) . '\\Actions' : 'App\\Actions'
                 )
             )
             ->setPath(
                 new RequestPath(
                     $codeStructure->entity()->ucFirstSingular() . 'Request.php',
                     $genPath ? $genPath . "/Http/Requests" : app_path('Http/Requests'),
-                    $genPath ? 'App\\' . str_replace('/', '\\', $path) . '\\Http\\Requests' : 'App\\Http\\Requests'
+                    $genPath ? str_replace('/', '\\', $namespace) . '\\Http\\Requests' : 'App\\Http\\Requests'
                 )
             )
             ->setPath(
                 new ControllerPath(
                     $codeStructure->entity()->ucFirstSingular() . 'Controller.php',
                     $genPath ? $genPath . "/Http/Controllers" : app_path('Http/Controllers'),
-                    $genPath ? 'App\\' . str_replace('/', '\\', $path) . '\\Http\\Controllers' : 'App\\Http\\Controllers'
+                    $genPath ? str_replace('/', '\\', $namespace) . '\\Http\\Controllers' : 'App\\Http\\Controllers'
                 )
             )
             ->setPath(
@@ -80,7 +85,7 @@ final class CodePath
                 new DTOPath(
                     $codeStructure->entity()->ucFirstSingular() . 'DTO.php',
                     $genPath ? $genPath . "/DTO" : app_path('DTO'),
-                    $genPath ? 'App\\' . str_replace('/', '\\', $path) . '\\DTOs' : 'App\\DTOs'
+                    $genPath ? str_replace('/', '\\', $namespace) . '\\DTO' : 'App\\DTO'
                 )
             )
         ;

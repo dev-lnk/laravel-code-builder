@@ -33,6 +33,7 @@ class CommandDtoTest extends TestCase
         $this->assertFileExists($this->path . 'ProductDTO.php');
 
         $file = $this->filesystem->get($this->path . 'ProductDTO.php');
+        $this->assertStringContainsString('namespace App\DTO;', $file);
         $this->assertStringContainsString('use App\Models\Product;', $file);
         $this->assertStringContainsString('use App\Http\Requests\ProductRequest;', $file);
         $this->assertStringContainsString('private int $id', $file);

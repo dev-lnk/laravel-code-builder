@@ -33,6 +33,7 @@ class CommandRequestTest extends TestCase
         $this->assertFileExists($this->path . 'ProductRequest.php');
 
         $file = $this->filesystem->get($this->path . 'ProductRequest.php');
+        $this->assertStringContainsString('namespace App\Http\Requests;', $file);
         $this->assertStringContainsString('class ProductRequest extends FormRequest', $file);
         $this->assertStringContainsString("'id' => ['int', 'nullable']", $file);
         $this->assertStringContainsString("'title' => ['string', 'nullable']", $file);

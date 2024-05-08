@@ -75,6 +75,15 @@ class CommandSummaryTest extends TestCase
         $this->routePath = app_path('Generation/routes/');
         $this->DTOPath = app_path('Generation/DTO/');
 
+        $controller = $this->filesystem->get($this->controllerPath . 'ProductController.php');
+        $this->assertStringContainsString('namespace App\Generation\Http\Controllers;', $controller);
+        $this->assertStringContainsString('use App\Generation\Http\Requests\ProductRequest;', $controller);
+
+        $dto = $this->filesystem->get($this->DTOPath . 'ProductDTO.php');
+        $this->assertStringContainsString('namespace App\Generation\DTO;', $dto);
+        $this->assertStringContainsString('use App\Generation\Models\Product;', $dto);
+        $this->assertStringContainsString('use App\Generation\Http\Requests\ProductRequest;', $dto);
+
         $this->assertFileExists($this->actionPath . 'AddProductAction.php');
         $this->assertFileExists($this->actionPath . 'EditProductAction.php');
         $this->assertFileExists($this->controllerPath . 'ProductController.php');
