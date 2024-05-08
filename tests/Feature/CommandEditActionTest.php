@@ -33,7 +33,7 @@ class CommandEditActionTest extends TestCase
         $this->assertFileExists($this->path . 'EditProductAction.php');
 
         $file = $this->filesystem->get($this->path . 'EditProductAction.php');
-
+        $this->assertStringContainsString('namespace App\Actions;', $file);
         $this->assertStringContainsString('use App\Models\Product;', $file);
         $this->assertStringContainsString('final class EditProductAction', $file);
         $this->assertStringContainsString('public function handle(int $id, array $data): Product', $file);
