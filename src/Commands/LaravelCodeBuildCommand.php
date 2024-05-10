@@ -19,7 +19,7 @@ use function Laravel\Prompts\select;
 
 class LaravelCodeBuildCommand extends Command
 {
-    protected $signature = 'code:build {entity} {table?} {--model} {--request} {--addAction} {--editAction} {--request} {--controller} {--route} {--form} {--DTO} {--builders} {--has-many=*} {--has-one=*} {--belongs-to-many=*}';
+    protected $signature = 'code:build {entity} {table?} {--model} {--request} {--addAction} {--editAction} {--request} {--controller} {--route} {--form} {--DTO} {--table} {--builders} {--has-many=*} {--has-one=*} {--belongs-to-many=*}';
 
     private CodePath $codePath;
 
@@ -161,6 +161,7 @@ class LaravelCodeBuildCommand extends Command
             BuildType::ROUTE,
             BuildType::FORM,
             BuildType::DTO,
+            BuildType::TABLE,
         ];
 
         foreach ($builders as $builder) {

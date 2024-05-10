@@ -51,6 +51,11 @@ final readonly class NameStr
 
     public function plural(): string
     {
-        return str($this->lower())->plural()->value();
+        return str($this->camel())->plural()->value();
+    }
+
+    public function singular(): string
+    {
+        return str($this->camel())->singular()->value();
     }
 }

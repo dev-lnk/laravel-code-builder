@@ -5,18 +5,27 @@ declare(strict_types=1);
 namespace {namespace};
 
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\View\View;
 {use_controller}
 use {add_action_namespace};
 use {edit_action_namespace};
 use {request_namespace};
+use {model_namespace};
 
 class {name} extends Controller
 {
+    public function index(): View
+    {
+        ${entity_plural} = {model}::query()->get();
+
+        return view('{entity_singular}.index', compact('{entity_plural}'));
+    }
+
     public function store({request_name} $request, {add_action_name} $action): RedirectResponse
     {
         $data = $request->validated();
         
-        $model = $action->handle($data);
+        ${entity_singular} = $action->handle($data);
 
         return back();
     }
@@ -25,7 +34,7 @@ class {name} extends Controller
     {
         $data = $request->validated();
 
-        $model = $action->handle((int) $id, $data);
+        ${entity_singular} = $action->handle((int) $id, $data);
 
         return back();
     }

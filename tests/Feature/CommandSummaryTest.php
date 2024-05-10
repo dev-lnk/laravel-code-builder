@@ -16,6 +16,8 @@ class CommandSummaryTest extends TestCase
 
     private string $formPath = '';
 
+    private string $tablePath = '';
+
     private string $modelPath = '';
 
     private string $requestPath = '';
@@ -34,7 +36,8 @@ class CommandSummaryTest extends TestCase
 
         $this->actionPath = app_path('Actions/');
         $this->controllerPath = app_path('Http/Controllers/');
-        $this->formPath = base_path('resources/views/');
+        $this->formPath = base_path('resources/views/product/');
+        $this->tablePath = base_path('resources/views/product/');
         $this->modelPath = app_path('Models/');
         $this->requestPath = app_path('Http/Requests/');
         $this->routePath = base_path('routes/');
@@ -53,7 +56,8 @@ class CommandSummaryTest extends TestCase
         $this->assertFileExists($this->actionPath . 'AddProductAction.php');
         $this->assertFileExists($this->actionPath . 'EditProductAction.php');
         $this->assertFileExists($this->controllerPath . 'ProductController.php');
-        $this->assertFileExists($this->formPath . 'product.blade.php');
+        $this->assertFileExists($this->formPath . 'form.blade.php');
+        $this->assertFileExists($this->formPath . 'table.blade.php');
         $this->assertFileExists($this->modelPath . 'Product.php');
         $this->assertFileExists($this->requestPath . 'ProductRequest.php');
         $this->assertFileExists($this->routePath . 'product.php');
@@ -69,7 +73,8 @@ class CommandSummaryTest extends TestCase
 
         $this->actionPath = app_path('Generation/Actions/');
         $this->controllerPath = app_path('Generation/Http/Controllers/');
-        $this->formPath = app_path('Generation/resources/views/');
+        $this->formPath = app_path('Generation/resources/views/product/');
+        $this->tablePath = app_path('Generation/resources/views/product/');
         $this->modelPath = app_path('Generation/Models/');
         $this->requestPath = app_path('Generation/Http/Requests/');
         $this->routePath = app_path('Generation/routes/');
@@ -87,7 +92,8 @@ class CommandSummaryTest extends TestCase
         $this->assertFileExists($this->actionPath . 'AddProductAction.php');
         $this->assertFileExists($this->actionPath . 'EditProductAction.php');
         $this->assertFileExists($this->controllerPath . 'ProductController.php');
-        $this->assertFileExists($this->formPath . 'product.blade.php');
+        $this->assertFileExists($this->formPath . 'form.blade.php');
+        $this->assertFileExists($this->tablePath . 'table.blade.php');
         $this->assertFileExists($this->modelPath . 'Product.php');
         $this->assertFileExists($this->requestPath . 'ProductRequest.php');
         $this->assertFileExists($this->routePath . 'product.php');
@@ -99,7 +105,8 @@ class CommandSummaryTest extends TestCase
         $this->filesystem->delete($this->actionPath . 'AddProductAction.php');
         $this->filesystem->delete($this->actionPath . 'EditProductAction.php');
         $this->filesystem->delete($this->controllerPath . 'ProductController.php');
-        $this->filesystem->delete($this->formPath . 'product.blade.php');
+        $this->filesystem->delete($this->formPath . 'form.blade.php');
+        $this->filesystem->delete($this->tablePath . 'table.blade.php');
         $this->filesystem->delete($this->modelPath . 'Product.php');
         $this->filesystem->delete($this->requestPath . 'ProductRequest.php');
         $this->filesystem->delete($this->routePath . 'product.php');

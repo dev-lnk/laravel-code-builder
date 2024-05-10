@@ -24,6 +24,7 @@ final class ControllerBuilder extends AbstractBuilder implements ControllerBuild
         $addActionPath = $this->codePath->path(BuildType::ADD_ACTION->value);
         $editActionPath = $this->codePath->path(BuildType::EDIT_ACTION->value);
         $requestPath = $this->codePath->path(BuildType::REQUEST->value);
+        $modelPath = $this->codePath->path(BuildType::MODEL->value);
 
         StubBuilder::make($this->stubFile)
             ->setKey(
@@ -35,8 +36,12 @@ final class ControllerBuilder extends AbstractBuilder implements ControllerBuild
                 '{namespace}' => $controllerPath->namespace(),
                 '{add_action_namespace}' => $addActionPath->namespace() . '\\' . $addActionPath->rawName(),
                 '{edit_action_namespace}' => $editActionPath->namespace() . '\\' . $editActionPath->rawName(),
+                '{model_namespace}' => $modelPath->namespace() . '\\' . $modelPath->rawName(),
+                '{model}' => $modelPath->rawName(),
                 '{request_namespace}' => $requestPath->namespace() . '\\' . $requestPath->rawName(),
                 '{name}' => $controllerPath->rawName(),
+                '{entity_plural}' => $this->codeStructure->entity()->plural(),
+                '{entity_singular}' => $this->codeStructure->entity()->singular(),
                 '{request_name}' => $requestPath->rawName(),
                 '{add_action_name}' => $addActionPath->rawName(),
                 '{edit_action_name}' => $editActionPath->rawName(),
