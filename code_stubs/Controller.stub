@@ -18,7 +18,12 @@ class {name} extends Controller
     {
         ${entity_plural} = {model}::query()->get();
 
-        return view('{entity_singular}.index', compact('{entity_plural}'));
+        return view('{entity_singular}.table', compact('{entity_plural}'));
+    }
+
+    public function create(): View
+    {
+        return view('{entity_singular}.form');
     }
 
     public function store({request_name} $request, {add_action_name} $action): RedirectResponse
@@ -30,11 +35,25 @@ class {name} extends Controller
         return back();
     }
 
-    public function edit(string $id, {request_name} $request, {edit_action_name} $action): RedirectResponse
+    public function edit(string $id)
+    {
+        ${entity_singular} = {model}::query()->where('id', $id)->firstOrFail();
+
+        return view('{entity_singular}.form', compact('{entity_singular}'));
+    }
+
+    public function update(string $id, {request_name} $request, {edit_action_name} $action): RedirectResponse
     {
         $data = $request->validated();
 
         ${entity_singular} = $action->handle((int) $id, $data);
+
+        return back();
+    }
+
+    public function destroy(string $id)
+    {
+        {model}::query()->where('id', $id)->delete();
 
         return back();
     }

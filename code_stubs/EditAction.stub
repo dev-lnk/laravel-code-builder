@@ -8,16 +8,20 @@ use {model_namespace};
 
 final class {name}
 {
-    public function handle(int $id, array $data): {model_name}
+    public function handle(int $id, array $data): ?{model_name}
     {
-        $model = {model_name}::query()->where('id', $id)->first();
-        
-        $model->fill($data);
+        ${entity_singular} = {model_name}::query()->where('id', $id)->first();
 
-        $model->save();
+        if(is_null(${entity_singular})) {
+            return null;
+        }
 
-        $model->refresh();
+        ${entity_singular}->fill($data);
 
-        return $model;
+        ${entity_singular}->save();
+
+        ${entity_singular}->refresh();
+
+        return ${entity_singular};
     }
 }

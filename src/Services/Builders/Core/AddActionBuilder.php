@@ -28,6 +28,7 @@ class AddActionBuilder extends AbstractBuilder implements AddActionBuilderContra
                 '{model_namespace}' => $modelPath->namespace() . '\\' . $modelPath->rawName(),
                 '{name}' => $actionPath->rawName(),
                 '{model_name}' => $modelPath->rawName(),
+                '{entity_singular}' => $this->codeStructure->entity()->singular(),
             ]);
     }
 }

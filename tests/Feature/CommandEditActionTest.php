@@ -36,8 +36,8 @@ class CommandEditActionTest extends TestCase
         $this->assertStringContainsString('namespace App\Actions;', $file);
         $this->assertStringContainsString('use App\Models\Product;', $file);
         $this->assertStringContainsString('final class EditProductAction', $file);
-        $this->assertStringContainsString('public function handle(int $id, array $data): Product', $file);
-        $this->assertStringContainsString("\$model = Product::query()->where('id', \$id)->first();", $file);
+        $this->assertStringContainsString('public function handle(int $id, array $data): ?Product', $file);
+        $this->assertStringContainsString("\$product = Product::query()->where('id', \$id)->first();", $file);
     }
 
     #[Test]
@@ -53,8 +53,8 @@ class CommandEditActionTest extends TestCase
 
         $this->assertStringContainsString('use App\Models\Foo;', $file);
         $this->assertStringContainsString('final class EditFooAction', $file);
-        $this->assertStringContainsString('public function handle(int $id, array $data): Foo', $file);
-        $this->assertStringContainsString("\$model = Foo::query()->where('id', \$id)->first();", $file);
+        $this->assertStringContainsString('public function handle(int $id, array $data): ?Foo', $file);
+        $this->assertStringContainsString("\$foo = Foo::query()->where('id', \$id)->first();", $file);
     }
 
     public function tearDown(): void

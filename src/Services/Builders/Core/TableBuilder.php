@@ -22,6 +22,11 @@ final class TableBuilder extends AbstractBuilder implements TableBuilderContract
         $tablePath = $this->codePath->path(BuildType::TABLE->value);
 
         StubBuilder::make($this->stubFile)
-            ->makeFromStub($tablePath->file());
+            ->makeFromStub($tablePath->file(), [
+                '{thead}' => $this->codeStructure->columnsToThead(),
+                '{entity_plural}' => $this->codeStructure->entity()->plural(),
+                '{entity_singular}' => $this->codeStructure->entity()->singular(),
+                '{tbody}' => $this->codeStructure->columnsToTbody(),
+            ]);
     }
 }

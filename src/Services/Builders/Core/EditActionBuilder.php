@@ -27,6 +27,7 @@ final class EditActionBuilder extends AbstractBuilder implements EditActionBuild
                 '{namespace}' => $actionPath->namespace(),
                 '{model_namespace}' => $modelPath->namespace() . '\\' . $modelPath->rawName(),
                 '{name}' => $actionPath->rawName(),
+                '{entity_singular}' => $this->codeStructure->entity()->singular(),
                 '{model_name}' => $modelPath->rawName(),
             ]);
     }

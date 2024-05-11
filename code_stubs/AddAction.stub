@@ -10,14 +10,14 @@ final class {name}
 {
     public function handle(array $data): {model_name}
     {
-        $model = new {model_name}();
+        ${entity_singular} = new {model_name}();
 
-        $model->fill($data);
+        ${entity_singular}->fill($data);
 
-        $model->save();
+        ${entity_singular}->save();
 
-        $model->refresh();
+        ${entity_singular}->refresh();
 
-        return $model;
+        return ${entity_singular};
     }
 }

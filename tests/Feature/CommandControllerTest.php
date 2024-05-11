@@ -36,7 +36,7 @@ final class CommandControllerTest extends TestCase
         $this->assertStringContainsString('namespace App\Http\Controllers;', $file);
         $this->assertStringContainsString('class ProductController extends Controller', $file);
         $this->assertStringContainsString(
-            'public function edit(string $id, ProductRequest $request, EditProductAction $action): RedirectResponse',
+            'public function update(string $id, ProductRequest $request, EditProductAction $action): RedirectResponse',
             $file
         );
         $this->assertStringContainsString('ProductRequest $request, EditProductAction $action', $file);

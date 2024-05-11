@@ -1,7 +1,12 @@
 <table>
-<tbody>
-<tr>
-<td>1<td>
-<\tr>
-</tbody>
+    <thead>
+        <tr>{thead}
+        </tr>
+    </thead>
+    <tbody>
+    @foreach(${entity_plural} as ${entity_singular})
+        <tr>{tbody}
+        </tr>
+    @endforeach
+    </tbody>
 </table>

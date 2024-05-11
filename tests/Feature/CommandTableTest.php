@@ -31,6 +31,15 @@ final class CommandTableTest extends TestCase
             ->expectsQuestion('Where to generate the result?', '_default');
 
         $this->assertFileExists($this->path . 'table.blade.php');
+
+        $file = $this->filesystem->get($this->path . 'table.blade.php');
+        $this->assertStringContainsString("<th>id</th>", $file);
+        $this->assertStringContainsString("<th>user_id</th>", $file);
+        $this->assertStringContainsString("<th>created_at</th>", $file);
+        $this->assertStringContainsString("@foreach(\$products as \$product)", $file);
+        $this->assertStringContainsString("<td>{{ \$product->id }}</td>", $file);
+        $this->assertStringContainsString("<td>{{ \$product->user_id }}</td>", $file);
+        $this->assertStringContainsString("<td>{{ \$product->created_at }}</td>", $file);
     }
 
     public function tearDown(): void
