@@ -1,4 +1,4 @@
-### Customization of templates and methods
+## Customization of templates and methods
 #### Stubs
 If you want to change stubs, you can publish them in your base_dir
 ```shell
