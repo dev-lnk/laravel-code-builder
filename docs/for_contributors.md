@@ -102,3 +102,7 @@ return [
 7. Write the logic in your `build()` method of the `Services/Builders/Advanced/JobBuilder.php` file
 8. Write tests
 9. During PR the code will be analyzed on phpstan with level 4
+### Documentation
+- **[Relationship](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/relationship.md)**
+- **[Customization](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/customization.md)**
+- **[For contributors](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/for_contributors.md)**

@@ -10,6 +10,7 @@ This package allows you to generate code from the schema of your SQL table. The 
 - Actions
 - Route
 - Form
+- Table
 ### Installation
 ```shell
 composer require dev-lnk/laravel-code-builder --dev
@@ -195,6 +196,7 @@ return [
 //        BuildType::REQUEST,
 //        BuildType::CONTROLLER,
 //        BuildType::ROUTE,
+//        BuildType::TABLE,
         BuildType::FORM,
     ],
     //...
@@ -213,18 +215,12 @@ Available options for the only flag:
 - `--controller`
 - `--route`
 - `--form`
+- `--table`
 - `--builder` - Generates all builders specified in the `builders` configuration + your specified flag, for example:
 ```shell
 php artisan code:build user --builders --request
 ```
-If you want to change the code generation option, you can publish the stubs and change them yourself:
-```shell
-php artisan vendor:publish --tag=laravel-code-builder-stubs
-```
-Stubs will be copied to the directory `<your-base-bath>/code_stubs`.Don't forget to specify your directory in the `stub_dir` setting.
-
-### Relationship
-Relationship **[documentation](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/relationship.md)**.
-
- ### Beta
-This is a beta version of the package! Stubs and commands may change during development. Work tested on MySQL and PostgreSQL. Plans for adding new functionality and information for contributors **[here](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/for_contributors.md)**.
+### Documentation
+- **[Relationship](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/relationship.md)**
+- **[Customization](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/customization.md)**
+- **[For contributors](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/for_contributors.md)**

@@ -292,3 +292,7 @@ readonly class ProductDTO
     }
 }
 ```
+### Documentation
+- **[Relationship](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/relationship.md)**
+- **[Customization](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/customization.md)**
+- **[For contributors](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/for_contributors.md)**
