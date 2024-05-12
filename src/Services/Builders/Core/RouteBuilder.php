@@ -25,7 +25,7 @@ final class RouteBuilder extends AbstractBuilder implements RouteBuilderContract
         StubBuilder::make($this->stubFile)
             ->makeFromStub($routePath->file(), [
                 '{controller_namespace}' => $controllerPath->namespace() . '\\' . $controllerPath->rawName(),
-                '{name}' => $routePath->rawName(),
+                '{entity_plural}' => $this->codeStructure->entity()->plural(),
                 '{controller_name}' => $controllerPath->rawName(),
             ]);
     }

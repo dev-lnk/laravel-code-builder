@@ -33,9 +33,13 @@ final class CommandRouteTest extends TestCase
         $this->assertFileExists($this->path . 'product.php');
         $file = $this->filesystem->get($this->path . 'product.php');
         $this->assertStringContainsString('use App\Http\Controllers\ProductController;', $file);
-        $this->assertStringContainsString("Route::prefix('product')->controller(ProductController::class)->group(function (): void {", $file);
-        $this->assertStringContainsString("Route::post('/', 'store')->name('product.store');", $file);
-        $this->assertStringContainsString("Route::post('/{id}', 'edit')->name('product.edit');", $file);
+        $this->assertStringContainsString("Route::prefix('products')->controller(ProductController::class)->group(function (): void {", $file);
+        $this->assertStringContainsString("Route::get('/', 'index')->name('products.index');", $file);
+        $this->assertStringContainsString("Route::get('/create', 'create')->name('products.create');", $file);
+        $this->assertStringContainsString("Route::post('/', 'store')->name('products.store');", $file);
+        $this->assertStringContainsString("Route::get('/{id}/edit', 'edit')->name('products.edit');", $file);
+        $this->assertStringContainsString("Route::put('/{id}', 'update')->name('products.update');", $file);
+        $this->assertStringContainsString("Route::delete('/{id}', 'destroy')->name('products.destroy');", $file);
     }
 
     #[Test]
@@ -48,9 +52,9 @@ final class CommandRouteTest extends TestCase
         $this->assertFileExists($this->path . 'foo.php');
         $file = $this->filesystem->get($this->path . 'foo.php');
         $this->assertStringContainsString('use App\Http\Controllers\FooController;', $file);
-        $this->assertStringContainsString("Route::prefix('foo')->controller(FooController::class)->group(function (): void {", $file);
-        $this->assertStringContainsString("Route::post('/', 'store')->name('foo.store');", $file);
-        $this->assertStringContainsString("Route::post('/{id}', 'edit')->name('foo.edit');", $file);
+        $this->assertStringContainsString("Route::prefix('foos')->controller(FooController::class)->group(function (): void {", $file);
+        $this->assertStringContainsString("Route::post('/', 'store')->name('foos.store');", $file);
+        $this->assertStringContainsString("Route::put('/{id}', 'update')->name('foos.update');", $file);
     }
 
     public function tearDown(): void

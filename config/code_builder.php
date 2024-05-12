@@ -13,6 +13,7 @@ return [
         BuildType::ROUTE,
         BuildType::FORM,
         BuildType::DTO,
+        BuildType::TABLE,
         // Additionally
     ],
 

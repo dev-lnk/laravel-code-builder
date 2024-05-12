@@ -30,10 +30,10 @@ final class CommandFormTest extends TestCase
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Where to generate the result?', '_default');
 
-        $this->assertFileExists($this->path . 'product.blade.php');
+        $this->assertFileExists($this->path . 'product/form.blade.php');
 
-        $file = $this->filesystem->get($this->path . 'product.blade.php');
-        $this->assertStringContainsString("<form action=\"{{ route('product.store') }}\" method=\"POST\">", $file);
+        $file = $this->filesystem->get($this->path . 'product/form.blade.php');
+        $this->assertStringContainsString("<form action=\"{{ route('products.store') }}\" method=\"POST\">", $file);
         $this->assertStringContainsString('<input id="content" name="content" value="{{ old(\'content\') }}"/>', $file);
         $this->assertStringContainsString('<input id="sort_number" name="sort_number" value="{{ old(\'sort_number\') }}" type="number"/>', $file);
         $this->assertStringContainsString('<select id="user_id" name="user_id">', $file);
@@ -49,9 +49,9 @@ final class CommandFormTest extends TestCase
             ->expectsQuestion('Where to generate the result?', '_default')
         ;
 
-        $this->assertFileExists($this->path . 'product.blade.php');
+        $this->assertFileExists($this->path . 'product/form.blade.php');
 
-        $file = $this->filesystem->get($this->path . 'product.blade.php');
+        $file = $this->filesystem->get($this->path . 'product/form.blade.php');
         $this->assertStringContainsString('<select id="properties" name="properties" multiple>', $file);
     }
 
@@ -62,10 +62,10 @@ final class CommandFormTest extends TestCase
             ->expectsQuestion('Table', 'users')
             ->expectsQuestion('Where to generate the result?', '_default');
 
-        $this->assertFileExists($this->path . 'user.blade.php');
+        $this->assertFileExists($this->path . 'user/form.blade.php');
 
-        $file = $this->filesystem->get($this->path . 'user.blade.php');
-        $this->assertStringContainsString("<form action=\"{{ route('user.store') }}\" method=\"POST\">", $file);
+        $file = $this->filesystem->get($this->path . 'user/form.blade.php');
+        $this->assertStringContainsString("<form action=\"{{ route('users.store') }}\" method=\"POST\">", $file);
         $this->assertStringContainsString('<input id="email" name="email" value="{{ old(\'email\') }}" type="email"/>', $file);
         $this->assertStringContainsString('<input id="password" name="password" value="{{ old(\'password\') }}" type="password"/>', $file);
     }
@@ -77,16 +77,16 @@ final class CommandFormTest extends TestCase
             ->expectsQuestion('Table', 'products')
             ->expectsQuestion('Where to generate the result?', '_default');
 
-        $this->assertFileExists($this->path . 'foo.blade.php');
-        $file = $this->filesystem->get($this->path . 'foo.blade.php');
-        $this->assertStringContainsString("<form action=\"{{ route('foo.store') }}\" method=\"POST\">", $file);
+        $this->assertFileExists($this->path . 'foo/form.blade.php');
+        $file = $this->filesystem->get($this->path . 'foo/form.blade.php');
+        $this->assertStringContainsString("<form action=\"{{ route('foos.store') }}\" method=\"POST\">", $file);
     }
 
     public function tearDown(): void
     {
-        $this->filesystem->delete($this->path . 'product.blade.php');
-        $this->filesystem->delete($this->path . 'foo.blade.php');
-        $this->filesystem->delete($this->path . 'user.blade.php');
+        $this->filesystem->delete($this->path . 'product/form.blade.php');
+        $this->filesystem->delete($this->path . 'foo/form.blade.php');
+        $this->filesystem->delete($this->path . 'user/form.blade.php');
         parent::tearDown();
     }
 }

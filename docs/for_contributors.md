@@ -14,12 +14,11 @@
 - [ ] Livewire support
 - [ ] Inertia support
 - [ ] SpatieLaravelData support
-- [ ] MoonShine support
 
 
 ### How to add support for new code generation
-1. Add a new type to Enums/BuildType.php, `job` for example.
-2. Add new CodePath type in Services/CodePath, for example:
+1. Add a new type to Enums/BuildType.php, `JOB` for example.
+2. Add new CodePath type in Services/CodePath/Advanced, for example: 
 ```php
 <?php
 
@@ -29,32 +28,31 @@ namespace DevLnk\LaravelCodeBuilder\Services\CodePath;
 
 readonly class JobPath extends AbstractPath
 {
-
-}
-```
-3. Add a new method to Services/CodePath/CodePath.php for your `job`
-```php
-public function job(string $name, string $dir, string $namespace): self
-{
-    if(isset($this->paths[BuildType::JOB->value])) {
-        return $this;
+    public function getBuildType(): BuildType
+    {
+        return BuildType::JOB;
     }
-    $this->paths[BuildType::JOB->value] = new JobPath($name, $dir, $namespace);
-    return $this;
 }
 ```
-4. In the `prepareGeneration` method of the `Commands/LaravelCodeBuildCommand.php` file, find the place where all the directories for your builder are written:
+3. Add a new code to Services/CodePath/CodePath.php for your `job`
 ```php
-$this->codePath
-    ->job(
-        $this->codeStructure->entity()->ucFirstSingular() . '.php',
-        $isGenerationDir ? $genPath . "/Jobs" : app_path('Jobs'),
-        $isGenerationDir ? 'App\\' . str_replace('/', '\\', $path) . '\\Jobs' : 'App\\Models'
+->setPath(
+    new JobPath(
+        'filename.php',
+        'filedir',
+        'namespace'
     )
+)
 ```
-5. Create a new builder in `Services/Builders`
+4. Create a new contract in the `Services/Builders/Advanced/Contracts`:
 ```php
-final class JobBuilder extends AbstractBuilder
+interface JobBuilderContract extends BuilderContract
+{
+}
+```
+Create a new builder in the `Services/Builders/Advanced` and implement your contract in the builder:
+```php
+final class JobBuilder extends AbstractBuilder implements JobBuilderContract
 {
     /**
      * @throws NotFoundCodePathException
@@ -66,19 +64,27 @@ final class JobBuilder extends AbstractBuilder
     }
 }
 ```
-and add its call to the factory `Services/Builders/BuildFactory.php`
+Bind your contract in the LaravelCodeBuilderProvider:
+```php
+public function register(): void
+{
+    //...
+    $this->app->bind(JobBuilderContract::class, JobBuilder::class);
+}
+```
+
+Add code to the factory `Services/Builders/BuildFactory.php`
 ```php
 public function call(string $buildType, string $stub): void
 {
     match($buildType) {
         //...
-        BuildType::JOB->value => JobBuilder::make(
-            $this->codeStructure,
-            $this->codePath,
-            $stub,
-        )->build()
+        BuildType::JOB->value => app(
+            JobBuilderContract::class,
+            $classParameters
+        ),
 ```
-6. Write your new builder in the configuration file
+5. Write your new builder in the configuration file
 ```php
 <?php
 
@@ -92,7 +98,7 @@ return [
         BuildType::JOB
     ],
 ```
-7. Create `Job.stub` in `code_stubs`
-8. Write the logic in your `build()` method of the `Services/Builders/JobBuilder.php` file
-9. Write tests
-10. During PR the code will be analyzed on phpstan with level 4
+6. Create `Job.stub` in `code_stubs`
+7. Write the logic in your `build()` method of the `Services/Builders/Advanced/JobBuilder.php` file
+8. Write tests
+9. During PR the code will be analyzed on phpstan with level 4

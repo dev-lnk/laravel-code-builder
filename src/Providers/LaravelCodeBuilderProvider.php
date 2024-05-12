@@ -12,6 +12,7 @@ use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\FormBuilderContra
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\ModelBuilderContract;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\RequestBuilderContract;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\RouteBuilderContract;
+use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\TableBuilderContract;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\ControllerBuilder;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\DTOBuilder;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\EditActionBuilder;
@@ -19,6 +20,7 @@ use DevLnk\LaravelCodeBuilder\Services\Builders\Core\FormBuilder;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\ModelBuilder;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\RequestBuilder;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\RouteBuilder;
+use DevLnk\LaravelCodeBuilder\Services\Builders\Core\TableBuilder;
 use Illuminate\Support\ServiceProvider;
 
 class LaravelCodeBuilderProvider extends ServiceProvider
@@ -40,6 +42,7 @@ class LaravelCodeBuilderProvider extends ServiceProvider
         $this->app->bind(ModelBuilderContract::class, ModelBuilder::class);
         $this->app->bind(RequestBuilderContract::class, RequestBuilder::class);
         $this->app->bind(RouteBuilderContract::class, RouteBuilder::class);
+        $this->app->bind(TableBuilderContract::class, TableBuilder::class);
     }
 
     public function boot(): void

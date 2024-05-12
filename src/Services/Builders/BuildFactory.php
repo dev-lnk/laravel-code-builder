@@ -14,6 +14,7 @@ use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\FormBuilderContra
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\ModelBuilderContract;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\RequestBuilderContract;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\RouteBuilderContract;
+use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\TableBuilderContract;
 use DevLnk\LaravelCodeBuilder\Services\CodePath\CodePath;
 use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructure;
 
@@ -70,6 +71,10 @@ final readonly class BuildFactory
             ),
             BuildType::DTO->value => app(
                 DTOBuilderContract::class,
+                $classParameters
+            ),
+            BuildType::TABLE->value => app(
+                TableBuilderContract::class,
                 $classParameters
             ),
             default => throw new NotFoundBuilderException()

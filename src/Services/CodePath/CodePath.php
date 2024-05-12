@@ -13,6 +13,7 @@ use DevLnk\LaravelCodeBuilder\Services\CodePath\Core\FormPath;
 use DevLnk\LaravelCodeBuilder\Services\CodePath\Core\ModelPath;
 use DevLnk\LaravelCodeBuilder\Services\CodePath\Core\RequestPath;
 use DevLnk\LaravelCodeBuilder\Services\CodePath\Core\RoutePath;
+use DevLnk\LaravelCodeBuilder\Services\CodePath\Core\TablePath;
 use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructure;
 
 final class CodePath
@@ -76,8 +77,8 @@ final class CodePath
             )
             ->setPath(
                 new FormPath(
-                    $codeStructure->entity()->lower() . '.blade.php',
-                    $genPath ? $genPath . "/resources/views" : base_path('resources/views'),
+                    'form.blade.php',
+                    $genPath ? $genPath . "/resources/views/" . $codeStructure->entity()->lower() : base_path('resources/views/' . $codeStructure->entity()->lower()),
                     ''
                 )
             )
@@ -86,6 +87,13 @@ final class CodePath
                     $codeStructure->entity()->ucFirstSingular() . 'DTO.php',
                     $genPath ? $genPath . "/DTO" : app_path('DTO'),
                     $genPath ? str_replace('/', '\\', $namespace) . '\\DTO' : 'App\\DTO'
+                )
+            )
+            ->setPath(
+                new TablePath(
+                    'table.blade.php',
+                    $genPath ? $genPath . "/resources/views/" . $codeStructure->entity()->lower() : base_path('resources/views/' . $codeStructure->entity()->lower()),
+                    ''
                 )
             )
         ;

@@ -7,11 +7,11 @@ namespace DevLnk\LaravelCodeBuilder\Services\Builders\Core;
 use DevLnk\LaravelCodeBuilder\Enums\BuildType;
 use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
 use DevLnk\LaravelCodeBuilder\Services\Builders\AbstractBuilder;
-use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\FormBuilderContract;
+use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\TableBuilderContract;
 use DevLnk\LaravelCodeBuilder\Services\StubBuilder;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
-final class FormBuilder extends AbstractBuilder implements FormBuilderContract
+final class TableBuilder extends AbstractBuilder implements TableBuilderContract
 {
     /**
      * @throws NotFoundCodePathException
@@ -19,12 +19,14 @@ final class FormBuilder extends AbstractBuilder implements FormBuilderContract
      */
     public function build(): void
     {
-        $formPath = $this->codePath->path(BuildType::FORM->value);
+        $tablePath = $this->codePath->path(BuildType::TABLE->value);
 
         StubBuilder::make($this->stubFile)
-            ->makeFromStub($formPath->file(), [
+            ->makeFromStub($tablePath->file(), [
+                '{thead}' => $this->codeStructure->columnsToThead(),
                 '{entity_plural}' => $this->codeStructure->entity()->plural(),
-                '{inputs}' => $this->codeStructure->columnsToForm(),
+                '{entity_singular}' => $this->codeStructure->entity()->singular(),
+                '{tbody}' => $this->codeStructure->columnsToTbody(),
             ]);
     }
 }

@@ -37,7 +37,7 @@ class CommandAddActionTest extends TestCase
         $this->assertStringContainsString('use App\Models\Product;', $file);
         $this->assertStringContainsString('final class AddProductAction', $file);
         $this->assertStringContainsString('public function handle(array $data): Product', $file);
-        $this->assertStringContainsString('$model = new Product()', $file);
+        $this->assertStringContainsString('$product = new Product()', $file);
     }
 
     #[Test]
@@ -54,7 +54,7 @@ class CommandAddActionTest extends TestCase
         $this->assertStringContainsString('use App\Models\Foo;', $file);
         $this->assertStringContainsString('final class AddFooAction', $file);
         $this->assertStringContainsString('public function handle(array $data): Foo', $file);
-        $this->assertStringContainsString('$model = new Foo()', $file);
+        $this->assertStringContainsString('$foo = new Foo()', $file);
     }
 
     public function tearDown(): void
