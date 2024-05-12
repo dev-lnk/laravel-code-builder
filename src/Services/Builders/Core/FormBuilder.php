@@ -19,12 +19,11 @@ final class FormBuilder extends AbstractBuilder implements FormBuilderContract
      */
     public function build(): void
     {
-        $routePath = $this->codePath->path(BuildType::ROUTE->value);
         $formPath = $this->codePath->path(BuildType::FORM->value);
 
         StubBuilder::make($this->stubFile)
             ->makeFromStub($formPath->file(), [
-                '{name}' => $routePath->rawName(),
+                '{entity_plural}' => $this->codeStructure->entity()->plural(),
                 '{inputs}' => $this->codeStructure->columnsToForm(),
             ]);
     }

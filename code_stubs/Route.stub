@@ -5,7 +5,11 @@ declare(strict_types=1);
 use {controller_namespace};
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('{name}')->controller({controller_name}::class)->group(function (): void {
-    Route::post('/', 'store')->name('{name}.store');
-    Route::post('/{id}', 'edit')->name('{name}.edit');
+Route::prefix('{entity_plural}')->controller({controller_name}::class)->group(function (): void {
+    Route::get('/', 'index')->name('{entity_plural}.index');
+    Route::get('/create', 'create')->name('{entity_plural}.create');
+    Route::post('/', 'store')->name('{entity_plural}.store');
+    Route::get('/{id}/edit', 'edit')->name('{entity_plural}.edit');
+    Route::put('/{id}', 'update')->name('{entity_plural}.update');
+    Route::delete('/{id}', 'destroy')->name('{entity_plural}.destroy');
 });
