@@ -34,8 +34,12 @@ final class CommandRouteTest extends TestCase
         $file = $this->filesystem->get($this->path . 'product.php');
         $this->assertStringContainsString('use App\Http\Controllers\ProductController;', $file);
         $this->assertStringContainsString("Route::prefix('products')->controller(ProductController::class)->group(function (): void {", $file);
+        $this->assertStringContainsString("Route::get('/', 'index')->name('products.index');", $file);
+        $this->assertStringContainsString("Route::get('/create', 'create')->name('products.create');", $file);
         $this->assertStringContainsString("Route::post('/', 'store')->name('products.store');", $file);
+        $this->assertStringContainsString("Route::get('/{id}/edit', 'edit')->name('products.edit');", $file);
         $this->assertStringContainsString("Route::put('/{id}', 'update')->name('products.update');", $file);
+        $this->assertStringContainsString("Route::delete('/{id}', 'destroy')->name('products.destroy');", $file);
     }
 
     #[Test]
