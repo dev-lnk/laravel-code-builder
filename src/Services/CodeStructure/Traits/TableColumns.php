@@ -15,6 +15,7 @@ trait TableColumns
                 ->value()
             ;
         }
+
         return $result;
     }
 
@@ -29,6 +30,7 @@ trait TableColumns
                 ->value()
             ;
         }
+
         return $result;
     }
 }

@@ -8,5 +8,4 @@ use DevLnk\LaravelCodeBuilder\Services\Builders\BuilderContract;
 
 interface TableBuilderContract extends BuilderContract
 {
-
 }
