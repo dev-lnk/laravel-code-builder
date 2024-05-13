@@ -1,8 +1,7 @@
 ## Generating laravel code from SQL table schema
 
 ### Description
-Hello Laravel users!
-This package allows you to generate code from the schema of your SQL table. The following entities are generated:
+Hello Laravel users! This package allows you to generate code from the schema of your SQL table. The following entities will be generated:
 - [Controller](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/examples/controller.md)
 - [Model](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/examples/model.md)
 - [FormRequest](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/examples/request.md)
@@ -13,7 +12,7 @@ This package allows you to generate code from the schema of your SQL table. The 
 - [Form](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/examples/form.md)
 - [Table](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/examples/table.md)
 
-These examples were generated from a table created from migration:
+These examples have been generated from a table created by migration:
 ```php
 Schema::create('products', function (Blueprint $table) {
     $table->id();
@@ -31,7 +30,7 @@ Schema::create('products', function (Blueprint $table) {
 });
 ```
 ### What is this package for?
-This package allows you to significantly reduce the amount of routine code writing and focus on development.
+This package allows you to significantly reduce the amount of routine code written and focus on developing.
 
 ### Installation
 ```shell
@@ -46,7 +45,7 @@ php artisan vendor:publish --tag=laravel-code-builder
 ```shell
 php artisan code:build user
 ```
-You will be offered a list of your tables, choose which table to generate the code based on:
+You will be presented with a list of your tables, choose which table you want to generate the code based on:
 ```shell
  ┌ Table ───────────────────────────────────────────────────────┐
  │   ○ migrations                                             │ │
@@ -63,14 +62,14 @@ php artisan code:build user us
  │ › ● users                                                    │
  └──────────────────────────────────────────────────────────────┘
 ```
-If you did not specify a `generation_path` in the configuration file, you will be offered 2 options:
+If you have not specified a `generation_path' in the configuration file, you will be offered 2 options:
 ```shell
  ┌ Where to generate the result? ───────────────────────────────┐
  │ › ● In the project directories                               │
  │   ○ To the generation folder: `app/Generation`               │
  └──────────────────────────────────────────────────────────────┘
 ```
-In the first option, all files will be generated according to the folders of your app_path directory. If a file with the same name is found, you will be prompted to replace it:
+The first option will create all files according to the folders in your `app_path` directory. If a file with the same name is found, you will be prompted to replace it:
 ```shell
 app/Models/User.php was created successfully!
 ...
