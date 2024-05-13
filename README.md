@@ -3,14 +3,36 @@
 ### Description
 Hello Laravel users!
 This package allows you to generate code from the schema of your SQL table. The following entities are generated:
-- Model
-- FormRequest
-- DTO
-- Controller (with store and edit methods)
-- Actions
-- Route
-- Form
-- Table
+- [Controller](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/examples/controller.md)
+- [Model](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/examples/model.md)
+- [FormRequest](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/examples/request.md)
+- [DTO](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/examples/dto.md)
+- [AddAction](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/examples/add_action.md)
+- [EditAction](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/examples/edit_action.md)
+- [Route](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/examples/route.md)
+- [Form](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/examples/form.md)
+- [Table](https://github.com/dev-lnk/laravel-code-builder/blob/master/docs/examples/table.md)
+
+These examples were generated from a table created from migration:
+```php
+Schema::create('products', function (Blueprint $table) {
+    $table->id();
+    $table->string('title')->default('Default');
+    $table->text('content');
+    $table->foreignIdFor(User::class)
+        ->nullable()
+        ->constrained()
+        ->nullOnDelete()
+        ->cascadeOnUpdate();
+    $table->smallInteger('sort_number')->default(0);
+    $table->boolean('is_active')->default(0);
+    $table->timestamps();
+    $table->softDeletes();
+});
+```
+### What is this package for?
+This package allows you to significantly reduce the amount of routine code writing and focus on development.
+
 ### Installation
 ```shell
 composer require dev-lnk/laravel-code-builder --dev
@@ -19,125 +41,6 @@ composer require dev-lnk/laravel-code-builder --dev
 Publish the package configuration file:
 ```shell
 php artisan vendor:publish --tag=laravel-code-builder
-```
-### Examples
-Model:
-```php
-class Product extends Model
-{
-    use SoftDeletes;
-
-    protected $fillable = [
-        'title',
-        'content',
-        'sort_number',
-        'user_id',
-        'category_id',
-        'is_active',
-    ];
-}
-```
-FormRequest:
-```php
-class ProductRequest extends FormRequest
-{
-    public function rules(): array
-    {
-        return [
-            'id' => ['int', 'nullable'],
-            'content' => ['string', 'nullable'],
-            'title' => ['string', 'nullable'],
-            'sort_number' => ['int', 'nullable'],
-            'is_active' => ['accepted', 'sometimes'],
-        ];
-    }
-
-    public function authorize(): bool
-    {
-        return true;
-    }
-}
-```
-DTO:
-```php
-readonly class ProductDTO
-{
-    public function __construct(
-        private int $id,
-        private string $content,
-        private string $title = 'Default',
-        private int $sortNumber = 0,
-        private bool $isActive = false,
-        private ?string $createdAt = null,
-        private ?string $updatedAt = null,
-        private ?string $deletedAt = null,
-    ) {
-    }
-
-    public static function fromArray(array $data): self
-    {
-       return new self(
-            id: $data['id'],
-            content: $data['content'],
-            title: $data['title'] ?? 'Default',
-            sortNumber: $data['sort_number'] ?? 0,
-            isActive: $data['is_active'] ?? false,
-            createdAt: $data['created_at'] ?? null,
-            updatedAt: $data['updated_at'] ?? null,
-            deletedAt: $data['deleted_at'] ?? null,
-       );
-    }
-
-    public static function fromRequest(ProductRequest $request): self
-    {
-        return new self(
-            id: (int) $request->input('id'),
-            content: $request->input('content'),
-            title: $request->input('title'),
-            sortNumber: (int) $request->input('sort_number'),
-            isActive: $request->has('is_active'),
-        );
-    }
-
-    public static function fromModel(Product $model): self
-    {
-        return new self(
-            id: (int) $model->id,
-            content: $model->content,
-            title: $model->title,
-            sortNumber: (int) $model->sort_number,
-            isActive: (bool) $model->is_active,
-            createdAt: $model->created_at?->format('Y-m-d H:i:s'),
-            updatedAt: $model->updated_at?->format('Y-m-d H:i:s'),
-            deletedAt: $model->deleted_at?->format('Y-m-d H:i:s'),
-        );
-    }
-    // Getters...
-    // toArray...
-}
-```
-Form:
-```html
-<form action="{{ route('product.store') }}" method="POST">
-    @csrf
-    <div>
-        <label for="title">title</label>
-        <input id="title" name="title" value="{{ old('title') }}"/>
-    </div>
-    <div>
-        <label for="content">content</label>
-        <input id="content" name="content" value="{{ old('content') }}"/>
-    </div>
-    <div>
-        <label for="sort_number">sort_number</label>
-        <input id="sort_number" name="sort_number" value="{{ old('sort_number') }}" type="number"/>
-    </div>
-    <div>
-        <label for="is_active">is_active</label>
-        <input type="checkbox" id="is_active" name="is_active" value="1" @if(old('is_active')) checked @endif/>
-    </div>
-    <button type="submit">Submit</button>
-</form>
 ```
 ### Usage
 ```shell
