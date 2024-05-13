@@ -25,6 +25,8 @@ final class CodePath
 
     public function initPaths(CodeStructure $codeStructure, string $path, bool $isGenerationDir): void
     {
+        $path = str_replace(base_path('/'), '', $path);
+
         $genPath = $isGenerationDir ? base_path($path) : '';
 
         $namespace = implode('/', array_map(
