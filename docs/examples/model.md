@@ -4,27 +4,27 @@
 
 declare(strict_types=1);
 
-namespace App\Generation\Http\Requests;
+namespace App\Generation\Models;
 
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ProductRequest extends FormRequest
+class Product extends Model
 {
-    public function rules(): array
-    {
-        return [
-			'id' => ['int', 'nullable'],
-			'title' => ['string', 'nullable'],
-			'content' => ['string', 'nullable'],
-			'user_id' => ['int', 'nullable'],
-			'sort_number' => ['int', 'nullable'],
-			'is_active' => ['accepted', 'sometimes'],
-        ];
-    }
+    use SoftDeletes;
 
-    public function authorize(): bool
+    protected $fillable = [
+        'title',
+        'content',
+        'user_id',
+        'sort_number',
+        'is_active',
+    ];
+
+    public function user(): BelongsTo
     {
-        return true;
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
 ```
