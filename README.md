@@ -30,7 +30,7 @@ Schema::create('products', function (Blueprint $table) {
 });
 ```
 ### What is this package for?
-This package allows you to significantly reduce the amount of routine code written and focus on developing.
+This package allows you to significantly reduce the  routine while coding and focus on developing.
 
 ### Installation
 ```shell
