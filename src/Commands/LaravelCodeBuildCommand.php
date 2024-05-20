@@ -109,7 +109,7 @@ class LaravelCodeBuildCommand extends Command
                 $hasMany,
                 $hasOne,
                 $belongsToMany
-            )
+            ),
         ];
     }
 
