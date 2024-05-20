@@ -5,18 +5,11 @@ declare(strict_types=1);
 namespace DevLnk\LaravelCodeBuilder\Services\CodeStructure;
 
 use DevLnk\LaravelCodeBuilder\Enums\SqlTypeMap;
-use DevLnk\LaravelCodeBuilder\Services\CodeStructure\Traits\DTOColumns;
-use DevLnk\LaravelCodeBuilder\Services\CodeStructure\Traits\FormColumns;
-use DevLnk\LaravelCodeBuilder\Services\CodeStructure\Traits\ModelColumns;
-use DevLnk\LaravelCodeBuilder\Services\CodeStructure\Traits\RequestColumns;
-use DevLnk\LaravelCodeBuilder\Services\CodeStructure\Traits\TableColumns;
 use DevLnk\LaravelCodeBuilder\Support\NameStr;
 use DevLnk\LaravelCodeBuilder\Support\Traits\DataTrait;
 
 class CodeStructure
 {
-    use RequestColumns;
-    use TableColumns;
     use DataTrait;
 
     /**

@@ -21,10 +21,40 @@ final class TableBuilder extends AbstractBuilder implements TableBuilderContract
 
         StubBuilder::make($this->stubFile)
             ->makeFromStub($tablePath->file(), [
-                '{thead}' => $this->codeStructure->columnsToThead(),
+                '{thead}' => $this->columnsToThead(),
                 '{entity_plural}' => $this->codeStructure->entity()->plural(),
                 '{entity_singular}' => $this->codeStructure->entity()->singular(),
-                '{tbody}' => $this->codeStructure->columnsToTbody(),
+                '{tbody}' => $this->columnsToTbody(),
             ]);
+    }
+
+    public function columnsToThead(): string
+    {
+        $result = "";
+        foreach ($this->codeStructure->columns() as $column) {
+            $result .= str('')
+                ->newLine()
+                ->append("\t\t\t")
+                ->append("<th>{$column->name()}</th>")
+                ->value()
+            ;
+        }
+
+        return $result;
+    }
+
+    public function columnsToTbody(): string
+    {
+        $result = "";
+        foreach ($this->codeStructure->columns() as $column) {
+            $result .= str('')
+                ->newLine()
+                ->append("\t\t\t")
+                ->append("<td>{{ \${$this->codeStructure->entity()->singular()}->{$column->column()} }}</td>")
+                ->value()
+            ;
+        }
+
+        return $result;
     }
 }
