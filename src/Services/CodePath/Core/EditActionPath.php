@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace DevLnk\LaravelCodeBuilder\Services\CodePath\Core;
 
 use DevLnk\LaravelCodeBuilder\Enums\BuildType;
-use DevLnk\LaravelCodeBuilder\Services\CodePath\AbstractPath;
+use DevLnk\LaravelCodeBuilder\Services\CodePath\AbstractPathItem;
 
-readonly class EditActionPath extends AbstractPath
+readonly class EditActionPath extends AbstractPathItem
 {
     public function getBuildType(): BuildType
     {

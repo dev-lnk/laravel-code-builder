@@ -12,7 +12,6 @@ class CustomAddActionBuilder extends AbstractBuilder implements AddActionBuilder
 {
     /**
      * @throws FileNotFoundException
-     * @throws NotFoundCodePathException
      */
     public function build(): void
     {

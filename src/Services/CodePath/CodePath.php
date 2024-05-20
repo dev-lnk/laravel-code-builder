@@ -16,10 +16,10 @@ use DevLnk\LaravelCodeBuilder\Services\CodePath\Core\RoutePath;
 use DevLnk\LaravelCodeBuilder\Services\CodePath\Core\TablePath;
 use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructure;
 
-final class CodePath
+class CodePath implements CodePathContract
 {
     /**
-     * @var array<string, CodePathContract>
+     * @var array<string, CodePathItemContract>
      */
     private array $paths = [];
 
@@ -101,7 +101,7 @@ final class CodePath
         ;
     }
 
-    public function setPath(AbstractPath $path): self
+    public function setPath(AbstractPathItem $path): self
     {
         if(isset($this->paths[$path->getBuildType()->value])) {
             return $this;
@@ -115,7 +115,7 @@ final class CodePath
     /**
      * @throws NotFoundCodePathException
      */
-    public function path(string $alias): CodePathContract
+    public function path(string $alias): CodePathItemContract
     {
         return $this->paths[$alias] ?? throw new NotFoundCodePathException("CodePath alias '$alias' not found");
     }

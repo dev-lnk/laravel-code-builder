@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace DevLnk\LaravelCodeBuilder\Services\Builders\Core;
 
 use DevLnk\LaravelCodeBuilder\Enums\BuildType;
-use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
 use DevLnk\LaravelCodeBuilder\Services\Builders\AbstractBuilder;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\DTOBuilderContract;
 use DevLnk\LaravelCodeBuilder\Services\StubBuilder;
@@ -15,7 +14,6 @@ class DTOBuilder extends AbstractBuilder implements DTOBuilderContract
 {
     /**
      * @throws FileNotFoundException
-     * @throws NotFoundCodePathException
      */
     public function build(): void
     {
