@@ -17,7 +17,6 @@ class CodeStructure
 {
     use RequestColumns;
     use FormColumns;
-    use DTOColumns;
     use TableColumns;
     use DataTrait;
 
