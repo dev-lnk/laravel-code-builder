@@ -26,7 +26,7 @@ declare(strict_types=1);
 
 namespace DevLnk\LaravelCodeBuilder\Services\CodePath;
 
-readonly class JobPath extends AbstractPath
+readonly class JobPath extends AbstractPathItem
 {
     public function getBuildType(): BuildType
     {
@@ -55,7 +55,6 @@ Create a new builder in the `Services/Builders/Advanced` and implement your cont
 final class JobBuilder extends AbstractBuilder implements JobBuilderContract
 {
     /**
-     * @throws NotFoundCodePathException
      * @throws FileNotFoundException
      */
     public function build(): void

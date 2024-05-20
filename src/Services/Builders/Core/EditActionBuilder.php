@@ -15,7 +15,6 @@ final class EditActionBuilder extends AbstractBuilder implements EditActionBuild
 {
     /**
      * @throws FileNotFoundException
-     * @throws NotFoundCodePathException
      */
     public function build(): void
     {

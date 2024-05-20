@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace DevLnk\LaravelCodeBuilder\Services\CodePath\Core;
 
 use DevLnk\LaravelCodeBuilder\Enums\BuildType;
-use DevLnk\LaravelCodeBuilder\Services\CodePath\AbstractPath;
+use DevLnk\LaravelCodeBuilder\Services\CodePath\AbstractPathItem;
 
-readonly class FormPath extends AbstractPath
+readonly class FormPath extends AbstractPathItem
 {
-    public function getBuildType(): BuildType
+    public function getBuildAlias(): string
     {
-        return BuildType::FORM;
+        return BuildType::FORM->value;
     }
 }

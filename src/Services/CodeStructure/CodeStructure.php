@@ -5,21 +5,11 @@ declare(strict_types=1);
 namespace DevLnk\LaravelCodeBuilder\Services\CodeStructure;
 
 use DevLnk\LaravelCodeBuilder\Enums\SqlTypeMap;
-use DevLnk\LaravelCodeBuilder\Services\CodeStructure\Traits\DTOColumns;
-use DevLnk\LaravelCodeBuilder\Services\CodeStructure\Traits\FormColumns;
-use DevLnk\LaravelCodeBuilder\Services\CodeStructure\Traits\ModelColumns;
-use DevLnk\LaravelCodeBuilder\Services\CodeStructure\Traits\RequestColumns;
-use DevLnk\LaravelCodeBuilder\Services\CodeStructure\Traits\TableColumns;
 use DevLnk\LaravelCodeBuilder\Support\NameStr;
 use DevLnk\LaravelCodeBuilder\Support\Traits\DataTrait;
 
 class CodeStructure
 {
-    use ModelColumns;
-    use RequestColumns;
-    use FormColumns;
-    use DTOColumns;
-    use TableColumns;
     use DataTrait;
 
     /**
@@ -47,7 +37,7 @@ class CodeStructure
 
     public function __construct(
         private readonly string $table,
-        string $entity
+        string $entity,
     ) {
         $this->entity = new NameStr(str($entity)->camel()->value());
     }

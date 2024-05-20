@@ -16,7 +16,6 @@ final class ControllerBuilder extends AbstractBuilder implements ControllerBuild
 {
     /**
      * @throws FileNotFoundException
-     * @throws NotFoundCodePathException
      */
     public function build(): void
     {

@@ -1,16 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DevLnk\LaravelCodeBuilder\Services\CodePath;
+
+use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructure;
 
 interface CodePathContract
 {
-    public function name(): string;
+    public function initPaths(CodeStructure $codeStructure, string $generationPath, bool $isGenerationDir): void;
 
-    public function rawName(): string;
+    public function setPath(AbstractPathItem $path): CodePathContract;
 
-    public function dir(): string;
-
-    public function file(): string;
-
-    public function namespace(): string;
+    public function path(string $alias): CodePathItemContract;
 }
