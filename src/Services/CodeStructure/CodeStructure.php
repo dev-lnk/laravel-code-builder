@@ -15,7 +15,6 @@ use DevLnk\LaravelCodeBuilder\Support\Traits\DataTrait;
 
 class CodeStructure
 {
-    use ModelColumns;
     use RequestColumns;
     use FormColumns;
     use DTOColumns;
