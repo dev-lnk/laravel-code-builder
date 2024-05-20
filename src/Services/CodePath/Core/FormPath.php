@@ -9,8 +9,8 @@ use DevLnk\LaravelCodeBuilder\Services\CodePath\AbstractPathItem;
 
 readonly class FormPath extends AbstractPathItem
 {
-    public function getBuildType(): BuildType
+    public function getBuildAlias(): string
     {
-        return BuildType::FORM;
+        return BuildType::FORM->value;
     }
 }

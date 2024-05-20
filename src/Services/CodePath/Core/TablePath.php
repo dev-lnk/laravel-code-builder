@@ -9,8 +9,8 @@ use DevLnk\LaravelCodeBuilder\Services\CodePath\AbstractPathItem;
 
 readonly class TablePath extends AbstractPathItem
 {
-    public function getBuildType(): BuildType
+    public function getBuildAlias(): string
     {
-        return BuildType::TABLE;
+        return BuildType::TABLE->value;
     }
 }

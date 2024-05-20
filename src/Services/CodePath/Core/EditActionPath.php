@@ -9,8 +9,8 @@ use DevLnk\LaravelCodeBuilder\Services\CodePath\AbstractPathItem;
 
 readonly class EditActionPath extends AbstractPathItem
 {
-    public function getBuildType(): BuildType
+    public function getBuildAlias(): string
     {
-        return BuildType::EDIT_ACTION;
+        return BuildType::EDIT_ACTION->value;
     }
 }

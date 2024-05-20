@@ -8,7 +8,7 @@ use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructure;
 
 interface CodePathContract
 {
-    public function initPaths(CodeStructure $codeStructure, string $path, bool $isGenerationDir): void;
+    public function initPaths(CodeStructure $codeStructure, string $generationPath, bool $isGenerationDir): void;
 
     public function setPath(AbstractPathItem $path): CodePathContract;
 

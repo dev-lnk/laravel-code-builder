@@ -47,7 +47,7 @@ class CodeStructure
 
     public function __construct(
         private readonly string $table,
-        string $entity
+        string $entity,
     ) {
         $this->entity = new NameStr(str($entity)->camel()->value());
     }

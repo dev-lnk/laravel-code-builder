@@ -9,8 +9,8 @@ use DevLnk\LaravelCodeBuilder\Services\CodePath\AbstractPathItem;
 
 readonly class RoutePath extends AbstractPathItem
 {
-    public function getBuildType(): BuildType
+    public function getBuildAlias(): string
     {
-        return BuildType::ROUTE;
+        return BuildType::ROUTE->value;
     }
 }

@@ -9,8 +9,8 @@ use DevLnk\LaravelCodeBuilder\Services\CodePath\AbstractPathItem;
 
 readonly class ControllerPath extends AbstractPathItem
 {
-    public function getBuildType(): BuildType
+    public function getBuildAlias(): string
     {
-        return BuildType::CONTROLLER;
+        return BuildType::CONTROLLER->value;
     }
 }

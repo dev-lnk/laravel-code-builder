@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace DevLnk\LaravelCodeBuilder\Services\CodePath;
 
-use DevLnk\LaravelCodeBuilder\Enums\BuildType;
-
 abstract readonly class AbstractPathItem implements CodePathItemContract
 {
     public function __construct(
@@ -15,7 +13,7 @@ abstract readonly class AbstractPathItem implements CodePathItemContract
     ) {
     }
 
-    abstract public function getBuildType(): BuildType;
+    abstract public function getBuildAlias(): string;
 
     public function name(): string
     {

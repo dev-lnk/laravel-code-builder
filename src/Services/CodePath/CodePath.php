@@ -23,78 +23,78 @@ class CodePath implements CodePathContract
      */
     private array $paths = [];
 
-    public function initPaths(CodeStructure $codeStructure, string $path, bool $isGenerationDir): void
+    public function initPaths(CodeStructure $codeStructure, string $generationPath, bool $isGenerationDir): void
     {
-        $path = str_replace(base_path('/'), '', $path);
+        $generationPath = str_replace(base_path('/'), '', $generationPath);
 
-        $genPath = $isGenerationDir ? base_path($path) : '';
+        $resGenPath = $isGenerationDir ? base_path($generationPath) : '';
 
         $namespace = implode('/', array_map(
             fn ($dir) => str($dir)->camel()->ucfirst()->value(),
-            explode("/", $path)
+            explode("/", $generationPath)
         ));
 
         $this
             ->setPath(
                 new ModelPath(
                     $codeStructure->entity()->ucFirstSingular() . '.php',
-                    $genPath ? $genPath . "/Models" : app_path('Models'),
-                    $genPath ? str_replace('/', '\\', $namespace) . '\\Models' : 'App\\Models'
+                    $resGenPath ? $resGenPath . "/Models" : app_path('Models'),
+                    $resGenPath ? str_replace('/', '\\', $namespace) . '\\Models' : 'App\\Models'
                 )
             )
             ->setPath(
                 new AddActionPath(
                     'Add' . $codeStructure->entity()->ucFirstSingular() . 'Action.php',
-                    $genPath ? $genPath . "/Actions" : app_path('Actions'),
-                    $genPath ? str_replace('/', '\\', $namespace) . '\\Actions' : 'App\\Actions'
+                    $resGenPath ? $resGenPath . "/Actions" : app_path('Actions'),
+                    $resGenPath ? str_replace('/', '\\', $namespace) . '\\Actions' : 'App\\Actions'
                 )
             )
             ->setPath(
                 new EditActionPath(
                     'Edit' . $codeStructure->entity()->ucFirstSingular() . 'Action.php',
-                    $genPath ? $genPath . "/Actions" : app_path('Actions'),
-                    $genPath ? str_replace('/', '\\', $namespace) . '\\Actions' : 'App\\Actions'
+                    $resGenPath ? $resGenPath . "/Actions" : app_path('Actions'),
+                    $resGenPath ? str_replace('/', '\\', $namespace) . '\\Actions' : 'App\\Actions'
                 )
             )
             ->setPath(
                 new RequestPath(
                     $codeStructure->entity()->ucFirstSingular() . 'Request.php',
-                    $genPath ? $genPath . "/Http/Requests" : app_path('Http/Requests'),
-                    $genPath ? str_replace('/', '\\', $namespace) . '\\Http\\Requests' : 'App\\Http\\Requests'
+                    $resGenPath ? $resGenPath . "/Http/Requests" : app_path('Http/Requests'),
+                    $resGenPath ? str_replace('/', '\\', $namespace) . '\\Http\\Requests' : 'App\\Http\\Requests'
                 )
             )
             ->setPath(
                 new ControllerPath(
                     $codeStructure->entity()->ucFirstSingular() . 'Controller.php',
-                    $genPath ? $genPath . "/Http/Controllers" : app_path('Http/Controllers'),
-                    $genPath ? str_replace('/', '\\', $namespace) . '\\Http\\Controllers' : 'App\\Http\\Controllers'
+                    $resGenPath ? $resGenPath . "/Http/Controllers" : app_path('Http/Controllers'),
+                    $resGenPath ? str_replace('/', '\\', $namespace) . '\\Http\\Controllers' : 'App\\Http\\Controllers'
                 )
             )
             ->setPath(
                 new RoutePath(
                     $codeStructure->entity()->lower() . '.php',
-                    $genPath ? $genPath . "/routes" : base_path('routes'),
+                    $resGenPath ? $resGenPath . "/routes" : base_path('routes'),
                     ''
                 )
             )
             ->setPath(
                 new FormPath(
                     'form.blade.php',
-                    $genPath ? $genPath . "/resources/views/" . $codeStructure->entity()->lower() : base_path('resources/views/' . $codeStructure->entity()->lower()),
+                    $resGenPath ? $resGenPath . "/resources/views/" . $codeStructure->entity()->lower() : base_path('resources/views/' . $codeStructure->entity()->lower()),
                     ''
                 )
             )
             ->setPath(
                 new DTOPath(
                     $codeStructure->entity()->ucFirstSingular() . 'DTO.php',
-                    $genPath ? $genPath . "/DTO" : app_path('DTO'),
-                    $genPath ? str_replace('/', '\\', $namespace) . '\\DTO' : 'App\\DTO'
+                    $resGenPath ? $resGenPath . "/DTO" : app_path('DTO'),
+                    $resGenPath ? str_replace('/', '\\', $namespace) . '\\DTO' : 'App\\DTO'
                 )
             )
             ->setPath(
                 new TablePath(
                     'table.blade.php',
-                    $genPath ? $genPath . "/resources/views/" . $codeStructure->entity()->lower() : base_path('resources/views/' . $codeStructure->entity()->lower()),
+                    $resGenPath ? $resGenPath . "/resources/views/" . $codeStructure->entity()->lower() : base_path('resources/views/' . $codeStructure->entity()->lower()),
                     ''
                 )
             )
@@ -103,14 +103,13 @@ class CodePath implements CodePathContract
 
     public function setPath(AbstractPathItem $path): self
     {
-        if(isset($this->paths[$path->getBuildType()->value])) {
+        if(isset($this->paths[$path->getBuildAlias()])) {
             return $this;
         }
-        $this->paths[$path->getBuildType()->value] = $path;
+        $this->paths[$path->getBuildAlias()] = $path;
 
         return $this;
     }
-
 
     /**
      * @throws NotFoundCodePathException
