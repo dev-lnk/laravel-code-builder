@@ -42,8 +42,13 @@ Publish the package configuration file:
 php artisan vendor:publish --tag=laravel-code-builder
 ```
 ### Usage
+The basic command signature looks like this:
 ```shell
-php artisan code:build user
+code:build {entity} {table?}
+```
+Let's say we want to create classes for the base table `users` based on the `User` entity. To do this you need to run the following command:
+```shell
+php artisan code:build User
 ```
 You will be presented with a list of your tables, choose which table you want to generate the code based on:
 ```shell
@@ -57,12 +62,12 @@ You will be presented with a list of your tables, choose which table you want to
 ```
 You can also specify part of the table name to shorten the list
 ```shell
-php artisan code:build user us
+php artisan code:build User us
  ┌ Table ───────────────────────────────────────────────────────┐
  │ › ● users                                                    │
  └──────────────────────────────────────────────────────────────┘
 ```
-If you have not specified a `generation_path' in the configuration file, you will be offered 2 options:
+If you have not specified a `generation_path` in the configuration file, you will be offered 2 options:
 ```shell
  ┌ Where to generate the result? ───────────────────────────────┐
  │ › ● In the project directories                               │

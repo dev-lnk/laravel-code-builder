@@ -30,13 +30,16 @@ public function register(): void
 }
 ```
 #### Command
-You can create your own generation command and create your own CodeStructure object:
+You can create your own generation command and create your own CodeStructure array:
 ```php
 class MyCodeBuildCommand extends LaravelCodeBuildCommand
 {
     protected $signature = 'my-code:build {entity} {table?} {--model} {--request} {--addAction} {--editAction} {--request} {--controller} {--route} {--form} {--table} {--DTO} {--builders} {--has-many=*} {--has-one=*} {--belongs-to-many=*}';
 
-    protected function getCodeStructure(): CodeStructure
+     /**
+     * @return array<int, CodeStructure>
+     */
+    protected function codeStructures(): array
     {
         //Your CodeStructure content, maybe from json or xml?
     }

@@ -28,9 +28,9 @@ namespace DevLnk\LaravelCodeBuilder\Services\CodePath;
 
 readonly class JobPath extends AbstractPathItem
 {
-    public function getBuildType(): BuildType
+    public function getBuildAlias(): string
     {
-        return BuildType::JOB;
+        return BuildType::JOB->value;
     }
 }
 ```
