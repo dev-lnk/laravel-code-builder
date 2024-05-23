@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace DevLnk\LaravelCodeBuilder\Services\Builders;
+namespace DevLnk\LaravelCodeBuilder\Services\Builders\Factory;
 
 use DevLnk\LaravelCodeBuilder\Enums\BuildType;
 use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundBuilderException;
+use DevLnk\LaravelCodeBuilder\Services\Builders\AbstractBuilder;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\AddActionBuilderContract;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\ControllerBuilderContract;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\DTOBuilderContract;
@@ -15,17 +16,10 @@ use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\ModelBuilderContr
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\RequestBuilderContract;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\RouteBuilderContract;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\TableBuilderContract;
-use DevLnk\LaravelCodeBuilder\Services\CodePath\CodePath;
-use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructure;
 
-final readonly class BuildFactory
+
+final readonly class BuildFactory extends AbstractBuildFactory
 {
-    public function __construct(
-        private CodeStructure $codeStructure,
-        private CodePath $codePath,
-    ) {
-    }
-
     /**
      * @throws NotFoundBuilderException
      */
