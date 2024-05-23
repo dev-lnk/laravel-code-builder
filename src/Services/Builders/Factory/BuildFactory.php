@@ -17,7 +17,6 @@ use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\RequestBuilderCon
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\RouteBuilderContract;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\TableBuilderContract;
 
-
 final readonly class BuildFactory extends AbstractBuildFactory
 {
     /**
