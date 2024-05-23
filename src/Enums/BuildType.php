@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace DevLnk\LaravelCodeBuilder\Enums;
 
-enum BuildType: string
+enum BuildType: string implements BuildTypeContract
 {
     case MODEL = 'model';
 
@@ -23,6 +23,11 @@ enum BuildType: string
     case DTO = 'DTO';
 
     case TABLE = 'table';
+
+    public function value(): string
+    {
+        return $this->value;
+    }
 
     public function stub(): string
     {

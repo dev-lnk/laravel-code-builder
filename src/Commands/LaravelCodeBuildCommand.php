@@ -3,9 +3,10 @@
 namespace DevLnk\LaravelCodeBuilder\Commands;
 
 use DevLnk\LaravelCodeBuilder\Enums\BuildType;
+use DevLnk\LaravelCodeBuilder\Enums\BuildTypeContract;
 use DevLnk\LaravelCodeBuilder\Exceptions\CodeGenerateCommandException;
-use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundBuilderException;
-use DevLnk\LaravelCodeBuilder\Services\Builders\BuildFactory;
+use DevLnk\LaravelCodeBuilder\Services\Builders\Factory\AbstractBuildFactory;
+use DevLnk\LaravelCodeBuilder\Services\Builders\Factory\BuildFactory;
 use DevLnk\LaravelCodeBuilder\Services\CodePath\CodePath;
 use DevLnk\LaravelCodeBuilder\Services\CodePath\CodePathContract;
 use DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructure;
@@ -21,23 +22,22 @@ class LaravelCodeBuildCommand extends Command
 {
     protected $signature = 'code:build {entity} {table?} {--model} {--request} {--addAction} {--editAction} {--request} {--controller} {--route} {--form} {--DTO} {--table} {--builders} {--has-many=*} {--has-one=*} {--belongs-to-many=*}';
 
-    private ?string $entity = '';
+    protected ?string $entity = '';
 
-    private ?string $stubDir = '';
+    protected ?string $stubDir = '';
 
     /**
      * @var array<string, string>
      */
-    private array $replaceCautions = [];
+    protected array $replaceCautions = [];
 
     /**
-     * @var array<int, BuildType>
+     * @var array<int, BuildTypeContract>
      */
-    private array $builders = [];
+    protected array $builders = [];
 
     /**
      * @throws CodeGenerateCommandException
-     * @throws NotFoundBuilderException
      */
     public function handle(): int
     {
@@ -52,9 +52,6 @@ class LaravelCodeBuildCommand extends Command
         $generationPath = $this->generationPath();
 
         foreach ($codeStructures as $codeStructure) {
-            if(! $codeStructure instanceof CodeStructure) {
-                throw new CodeGenerateCommandException('codeStructure is not DevLnk\LaravelCodeBuilder\Services\CodeStructure\CodeStructure');
-            }
             $this->make($codeStructure, $generationPath);
         }
 
@@ -113,15 +110,26 @@ class LaravelCodeBuildCommand extends Command
         ];
     }
 
+    public function generationPath(): string
+    {
+        return config('code_builder.generation_path') ?? select(
+            label: 'Where to generate the result?',
+            options: [
+                '_default' => 'In the project directories',
+                'app/Generation' => 'To the generation folder: `app/Generation`',
+            ],
+            default: '_default'
+        );
+    }
+
     /**
-     * @throws NotFoundBuilderException
      * @throws CodeGenerateCommandException
      */
     protected function make(CodeStructure $codeStructure, string $generationPath): void
     {
         $codeStructure->setStubDir($this->stubDir);
 
-        $codePath = $this->getCodePath();
+        $codePath = $this->codePath();
 
         $this->prepareGeneration($generationPath, $codeStructure, $codePath);
 
@@ -129,33 +137,32 @@ class LaravelCodeBuildCommand extends Command
     }
 
     /**
-     * @throws NotFoundBuilderException
      * @throws CodeGenerateCommandException
      */
     protected function buildCode(CodeStructure $codeStructure, CodePathContract $codePath): void
     {
-        $buildFactory = new BuildFactory(
+        $buildFactory = $this->buildFactory(
             $codeStructure,
             $codePath,
         );
 
         foreach ($this->builders as $builder) {
-            if(! $builder instanceof BuildType) {
-                throw new CodeGenerateCommandException('builder is not DevLnk\LaravelCodeBuilder\Enums\BuildType');
+            if(! $builder instanceof BuildTypeContract) {
+                throw new CodeGenerateCommandException('builder is not DevLnk\LaravelCodeBuilder\Enums\BuildTypeContract');
             }
 
             $confirmed = true;
-            if(isset($this->replaceCautions[$builder->value])) {
-                $confirmed = confirm($this->replaceCautions[$builder->value]);
+            if(isset($this->replaceCautions[$builder->value()])) {
+                $confirmed = confirm($this->replaceCautions[$builder->value()]);
             }
 
             if(! $confirmed) {
                 continue;
             }
 
-            $buildFactory->call($builder->value, $this->stubDir . $builder->stub());
+            $buildFactory->call($builder->value(), $this->stubDir . $builder->stub());
 
-            $codePathItem = $codePath->path($builder->value);
+            $codePathItem = $codePath->path($builder->value());
             $filePath = substr($codePathItem->file(), strpos($codePathItem->file(), '/app') + 1);
             $this->info($filePath . ' was created successfully!');
         }
@@ -178,29 +185,12 @@ class LaravelCodeBuildCommand extends Command
         $this->entity = $entity;
     }
 
-    public function getCodePath(): CodePathContract
-    {
-        return new CodePath();
-    }
-
-    public function generationPath(): string
-    {
-        return config('code_builder.generation_path') ?? select(
-            label: 'Where to generate the result?',
-            options: [
-                '_default' => 'In the project directories',
-                'app/Generation' => 'To the generation folder: `app/Generation`',
-            ],
-            default: '_default'
-        );
-    }
-
     protected function prepareBuilders(): void
     {
         $builders = $this->builders();
 
         foreach ($builders as $builder) {
-            if($this->option($builder->value)) {
+            if($this->option($builder->value())) {
                 $this->builders[] = $builder;
             }
         }
@@ -236,15 +226,30 @@ class LaravelCodeBuildCommand extends Command
 
         if(! $isGenerationDir) {
             foreach ($this->builders as $buildType) {
-                if($fileSystem->isFile($codePath->path($buildType->value)->file())) {
-                    $this->replaceCautions[$buildType->value] = $buildType->stub() . " already exists, are you sure you want to replace it?";
+                if($fileSystem->isFile($codePath->path($buildType->value())->file())) {
+                    $this->replaceCautions[$buildType->value()] = $buildType->stub() . " already exists, are you sure you want to replace it?";
                 }
             }
         }
     }
 
+    protected function codePath(): CodePathContract
+    {
+        return new CodePath();
+    }
+
+    protected function buildFactory(
+        CodeStructure $codeStructure,
+        CodePathContract $codePath
+    ): AbstractBuildFactory {
+        return new BuildFactory(
+            $codeStructure,
+            $codePath
+        );
+    }
+
     /**
-     * @return array<int, BuildType>
+     * @return array<int, BuildTypeContract>
      */
     protected function builders(): array
     {
