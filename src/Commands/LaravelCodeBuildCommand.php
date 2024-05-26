@@ -161,10 +161,8 @@ class LaravelCodeBuildCommand extends Command
             }
 
             $buildFactory->call($builder->value(), $this->stubDir . $builder->stub());
-
-            $codePathItem = $codePath->path($builder->value());
-            $filePath = substr($codePathItem->file(), strpos($codePathItem->file(), '/app') + 1);
-            $this->info($filePath . ' was created successfully!');
+            $filePath = $codePath->path($builder->value())->file();
+            $this->info($this->projectFileName($filePath) . ' was created successfully!');
         }
     }
 
@@ -227,7 +225,8 @@ class LaravelCodeBuildCommand extends Command
         if(! $isGenerationDir) {
             foreach ($this->builders as $buildType) {
                 if($fileSystem->isFile($codePath->path($buildType->value())->file())) {
-                    $this->replaceCautions[$buildType->value()] = $buildType->stub() . " already exists, are you sure you want to replace it?";
+                    $this->replaceCautions[$buildType->value()] =
+                        $this->projectFileName($codePath->path($buildType->value())->file()) . " already exists, are you sure you want to replace it?";
                 }
             }
         }
@@ -264,5 +263,18 @@ class LaravelCodeBuildCommand extends Command
             BuildType::DTO,
             BuildType::TABLE,
         ];
+    }
+
+    protected function projectFileName(string $filePath): string
+    {
+        if(str_contains($filePath, '/resources/views')) {
+            return substr($filePath, strpos($filePath, '/resources/views') + 1);
+        }
+
+        if(str_contains($filePath, '/routes')) {
+            return substr($filePath, strpos($filePath, '/routes') + 1);
+        }
+
+        return substr($filePath, strpos($filePath, '/app') + 1);
     }
 }
