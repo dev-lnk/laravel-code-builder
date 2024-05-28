@@ -1,4 +1,13 @@
 ## Generating laravel code from SQL table schema
+<p align="center">
+<a href="https://packagist.org/packages/dev-lnk/laravel-code-builder"><img src="https://img.shields.io/packagist/dt/dev-lnk/laravel-code-builder" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/dev-lnk/laravel-code-builder"><img src="https://img.shields.io/packagist/v/dev-lnk/laravel-code-builder" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/dev-lnk/laravel-code-builder"><img src="https://img.shields.io/packagist/l/dev-lnk/laravel-code-builder" alt="License"></a>
+</p>
+<p align="center">
+    <a href="https://laravel.com"><img alt="Laravel 10+" src="https://img.shields.io/badge/Laravel-10+-FF2D20?style=for-the-badge&logo=laravel"></a>
+    <a href="https://laravel.com"><img alt="PHP 8+" src="https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php"></a>
+</p>
 
 ### Description
 Hello Laravel users! This package allows you to generate code from the schema of your SQL table. The following entities will be generated:
