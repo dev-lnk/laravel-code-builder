@@ -271,6 +271,7 @@ class LaravelCodeBuildCommand extends Command
     protected function configBuilders(): array
     {
         $builders = (array) config('code_builder.builders', []);
+
         return array_map(function ($builder) {
             return ($builder instanceof BuildType) ? $builder : BuildType::from($builder);
         }, $builders);
