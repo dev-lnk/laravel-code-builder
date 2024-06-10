@@ -147,8 +147,8 @@ class ModelBuilder extends AbstractBuilder implements ModelBuilderContract
             $result = $result->newLine()->newLine()->append(
                 $stubBuilder->getFromStub([
                     '{relation}' => $relation,
-                    '{relation_model}' => $column->relation()->table()->ucFirstSingular(),
                     '{relation_column}' => $relationColumn,
+                    '{relation_model}' => $column->relation()->model(),
                 ])
             );
         }
