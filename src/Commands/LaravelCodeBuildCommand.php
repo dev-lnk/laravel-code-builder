@@ -194,7 +194,7 @@ class LaravelCodeBuildCommand extends Command
         }
 
         if($this->option('builders')) {
-            foreach (config('code_builder.builders', []) as $builder) {
+            foreach ($this->configBuilders() as $builder) {
                 if(! in_array($builder, $this->builders)) {
                     $this->builders[] = $builder;
                 }
@@ -202,7 +202,7 @@ class LaravelCodeBuildCommand extends Command
         }
 
         if(empty($this->builders)) {
-            $this->builders = config('code_builder.builders');
+            $this->builders = $this->configBuilders();
         }
     }
 
@@ -263,6 +263,17 @@ class LaravelCodeBuildCommand extends Command
             BuildType::DTO,
             BuildType::TABLE,
         ];
+    }
+
+    /**
+     * @return array<int, BuildTypeContract>
+     */
+    protected function configBuilders(): array
+    {
+        $builders = (array) config('code_builder.builders', []);
+        return array_map(function ($builder) {
+            return ($builder instanceof BuildType) ? $builder : BuildType::from($builder);
+        }, $builders);
     }
 
     protected function projectFileName(string $filePath): string

@@ -26,4 +26,14 @@ final class RelationStructure
     {
         return $this->table;
     }
+
+    public function model(): string
+    {
+        return $this->table
+            ->str()
+            ->camel()
+            ->singular()
+            ->ucfirst()
+            ->value();
+    }
 }
