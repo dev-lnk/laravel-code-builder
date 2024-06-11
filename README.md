@@ -99,7 +99,6 @@ app/Generation/Models/User.php was created successfully!
 ```
 In the `builders` configuration you can comment out those builders that you do not want to be executed
 ```php
-use DevLnk\LaravelCodeBuilder\Enums\BuildType;
 
 return [
     'builders' => [
