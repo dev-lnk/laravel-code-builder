@@ -30,7 +30,7 @@
         }
     },
     "conflict": {
-        "laravel/laravel": "<10.0"
+        "laravel/framework": "<10.0"
     },
     "scripts": {
         "test": "vendor/bin/phpstan analyse -c phpstan.neon && vendor/bin/phpunit"
