@@ -15,7 +15,7 @@ return [
         // Additionally
     ],
 
-//    'generation_path' => 'Generation',
+//    'generation_path' => 'app/Generation',
 
 //    'stub_dir' => base_path('code_stubs'),
 
