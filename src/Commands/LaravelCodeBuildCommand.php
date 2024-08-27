@@ -20,7 +20,7 @@ use function Laravel\Prompts\select;
 
 class LaravelCodeBuildCommand extends Command
 {
-    protected $signature = 'code:build {entity} {table?} {--model} {--request} {--addAction} {--editAction} {--request} {--controller} {--route} {--form} {--DTO} {--table} {--builders} {--has-many=*} {--has-one=*} {--belongs-to-many=*}';
+    protected $signature = 'code:build {entity} {table?} {--model} {--request} {--addAction} {--editAction} {--request} {--controller} {--route} {--form} {--DTO} {--table} {--typeScript} {--builders} {--has-many=*} {--has-one=*} {--belongs-to-many=*}';
 
     protected ?string $entity = '';
 
@@ -262,6 +262,7 @@ class LaravelCodeBuildCommand extends Command
             BuildType::FORM,
             BuildType::DTO,
             BuildType::TABLE,
+            BuildType::TYPE_SCRIPT,
         ];
     }
 
