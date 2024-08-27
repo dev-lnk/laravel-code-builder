@@ -27,7 +27,7 @@ class TypeScriptBuilder extends AbstractBuilder implements TypeScriptContract
         StubBuilder::make($this->stubFile)
             ->makeFromStub($tsPath->file(), [
                 '{name}' => str($tsPath->name())->replace('.ts', '')->singular()->ucfirst()->value(),
-                '{properties}' => $this->columnsToTypeScript()
+                '{properties}' => $this->columnsToTypeScript(),
             ]);
     }
 
@@ -45,7 +45,7 @@ class TypeScriptBuilder extends AbstractBuilder implements TypeScriptContract
 
         return $result;
     }
-    
+
     public function getTsType(ColumnStructure $column): string
     {
         return match ($column->type()) {
@@ -85,14 +85,14 @@ class TypeScriptBuilder extends AbstractBuilder implements TypeScriptContract
             SqlTypeMap::MEDIUM_TEXT,
             SqlTypeMap::TINY_TEXT,
             SqlTypeMap::UUID,
-                /*Date*/
+            /*Date*/
             SqlTypeMap::TIMESTAMP,
             SqlTypeMap::TIME,
             SqlTypeMap::DATE_TIME,
             SqlTypeMap::DATE,
             SqlTypeMap::DATE_TIME_TZ,
             SqlTypeMap::YEAR,
-                /*Enum*/
+            /*Enum*/
             SqlTypeMap::ENUM,
             => 'string',
 
