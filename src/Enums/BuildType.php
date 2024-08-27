@@ -24,6 +24,8 @@ enum BuildType: string implements BuildTypeContract
 
     case TABLE = 'table';
 
+    case TYPE_SCRIPT = 'typeScript';
+
     public function value(): string
     {
         return $this->value;
@@ -41,6 +43,7 @@ enum BuildType: string implements BuildTypeContract
             self::FORM => 'Form',
             self::DTO => 'DTO',
             self::TABLE => 'Table',
+            self::TYPE_SCRIPT => 'TypeScript',
         };
     }
 }

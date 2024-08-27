@@ -8,16 +8,13 @@ use DevLnk\LaravelCodeBuilder\Enums\BuildType;
 use DevLnk\LaravelCodeBuilder\Enums\SqlTypeMap;
 use DevLnk\LaravelCodeBuilder\Services\Builders\AbstractBuilder;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\DTOBuilderContract;
-use DevLnk\LaravelCodeBuilder\Services\CodeStructure\ColumnStructure;
+use DevLnk\LaravelCodeBuilder\Services\Builders\Traits\SortColumnsFromDefaultValue;
 use DevLnk\LaravelCodeBuilder\Services\StubBuilder;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 class DTOBuilder extends AbstractBuilder implements DTOBuilderContract
 {
-    /**
-     * @var null|array<int, ColumnStructure>
-     */
-    private ?array $sortDTOColumns = null;
+    use SortColumnsFromDefaultValue;
 
     /**
      * @throws FileNotFoundException
@@ -180,52 +177,5 @@ class DTOBuilder extends AbstractBuilder implements DTOBuilderContract
         }
 
         return $result;
-    }
-
-    /**
-     * @return array<int, ColumnStructure>
-     */
-    private function sortColumnsFromDefaultValue(): array
-    {
-        if(is_array($this->sortDTOColumns)) {
-            return $this->sortDTOColumns;
-        }
-
-        $searchColumns = $this->codeStructure->columns();
-
-        foreach ($searchColumns as $key => $column) {
-            if(is_null($column->default())
-                && ! $column->nullable()
-                && ! in_array($column->column(), $this->codeStructure->dateColumns())
-            ) {
-                $this->sortDTOColumns[] = $column;
-                unset($searchColumns[$key]);
-            }
-        }
-
-        foreach ($searchColumns as $key => $column) {
-            if(
-                (! is_null($column->default()) || $column->nullable())
-                && ! in_array($column->column(), $this->codeStructure->dateColumns())
-            ) {
-                $this->sortDTOColumns[] = $column;
-                unset($searchColumns[$key]);
-            }
-        }
-
-        foreach ($searchColumns as $key => $column) {
-            if(in_array($column->column(), $this->codeStructure->dateColumns())) {
-                $this->sortDTOColumns[] = $column;
-                unset($searchColumns[$key]);
-            }
-        }
-
-        if(! empty($searchColumns)) {
-            foreach ($searchColumns as $column) {
-                $this->sortDTOColumns[] = $column;
-            }
-        }
-
-        return $this->sortDTOColumns;
     }
 }

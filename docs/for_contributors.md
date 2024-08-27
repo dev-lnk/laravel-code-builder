@@ -72,7 +72,7 @@ public function register(): void
 }
 ```
 
-Add code to the factory `Services/Builders/BuildFactory.php`
+Add code to the factory `Services/Builders/Factory/BuildFactory.php`
 ```php
 public function call(string $buildType, string $stub): void
 {
@@ -97,7 +97,7 @@ return [
         BuildType::JOB
     ],
 ```
-6. Create `Job.stub` in `code_stubs`
+6. Create `Job.stub` in `code_stubs` and add path to `Enums/BuildType.php` in `stub` method
 7. Write the logic in your `build()` method of the `Services/Builders/Advanced/JobBuilder.php` file
 8. Write tests
 9. During PR the code will be analyzed on phpstan with level 4

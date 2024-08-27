@@ -7,6 +7,7 @@ namespace DevLnk\LaravelCodeBuilder\Services\Builders\Factory;
 use DevLnk\LaravelCodeBuilder\Enums\BuildType;
 use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundBuilderException;
 use DevLnk\LaravelCodeBuilder\Services\Builders\AbstractBuilder;
+use DevLnk\LaravelCodeBuilder\Services\Builders\Advanced\Contracts\TypeScriptContract;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\AddActionBuilderContract;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\ControllerBuilderContract;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\DTOBuilderContract;
@@ -68,6 +69,10 @@ final readonly class BuildFactory extends AbstractBuildFactory
             ),
             BuildType::TABLE->value => app(
                 TableBuilderContract::class,
+                $classParameters
+            ),
+            BuildType::TYPE_SCRIPT->value => app(
+                TypeScriptContract::class,
                 $classParameters
             ),
             default => throw new NotFoundBuilderException()

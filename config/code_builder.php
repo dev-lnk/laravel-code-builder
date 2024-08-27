@@ -12,7 +12,8 @@ return [
         'form',
         'DTO',
         'table',
-        // Additionally
+        /* Additionally */
+        //'typeScript',
     ],
 
 //    'generation_path' => 'app/Generation',

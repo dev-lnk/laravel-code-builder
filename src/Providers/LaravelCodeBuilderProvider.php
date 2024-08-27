@@ -3,6 +3,8 @@
 namespace DevLnk\LaravelCodeBuilder\Providers;
 
 use DevLnk\LaravelCodeBuilder\Commands\LaravelCodeBuildCommand;
+use DevLnk\LaravelCodeBuilder\Services\Builders\Advanced\Contracts\TypeScriptContract;
+use DevLnk\LaravelCodeBuilder\Services\Builders\Advanced\TypeScriptBuilder;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\AddActionBuilder;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\AddActionBuilderContract;
 use DevLnk\LaravelCodeBuilder\Services\Builders\Core\Contracts\ControllerBuilderContract;
@@ -43,6 +45,7 @@ class LaravelCodeBuilderProvider extends ServiceProvider
         $this->app->bind(RequestBuilderContract::class, RequestBuilder::class);
         $this->app->bind(RouteBuilderContract::class, RouteBuilder::class);
         $this->app->bind(TableBuilderContract::class, TableBuilder::class);
+        $this->app->bind(TypeScriptContract::class, TypeScriptBuilder::class);
     }
 
     public function boot(): void

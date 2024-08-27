@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DevLnk\LaravelCodeBuilder\Services\CodePath;
 
 use DevLnk\LaravelCodeBuilder\Exceptions\NotFoundCodePathException;
+use DevLnk\LaravelCodeBuilder\Services\CodePath\Advanced\TypeScriptPath;
 use DevLnk\LaravelCodeBuilder\Services\CodePath\Core\AddActionPath;
 use DevLnk\LaravelCodeBuilder\Services\CodePath\Core\ControllerPath;
 use DevLnk\LaravelCodeBuilder\Services\CodePath\Core\DTOPath;
@@ -95,6 +96,13 @@ class CodePath implements CodePathContract
                 new TablePath(
                     'table.blade.php',
                     $resGenPath ? $resGenPath . "/resources/views/" . $codeStructure->entity()->lower() : base_path('resources/views/' . $codeStructure->entity()->lower()),
+                    ''
+                )
+            )
+            ->setPath(
+                new TypeScriptPath(
+                    $codeStructure->entity()->lower() . '.ts',
+                    $resGenPath ? $resGenPath . "/resources/ts/" . $codeStructure->entity()->lower() : base_path('resources/ts/' . $codeStructure->entity()->lower()),
                     ''
                 )
             )

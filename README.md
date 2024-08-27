@@ -129,6 +129,7 @@ Available options for the only flag:
 - `--route`
 - `--form`
 - `--table`
+- `--typeScript`
 - `--builder` - Generates all builders specified in the `builders` configuration + your specified flag, for example:
 ```shell
 php artisan code:build user --builders --request
